@@ -47,7 +47,7 @@ public class TrechoDados implements Crud<Trecho>{
                         && trecho.getCompanhia().equals(companhia));
     }
 
-    public Optional<Trecho> buscarTrecho(String destino, String origem, Companhia companhia) {
+    public Optional<Trecho> buscarTrecho(String origem, String destino, Companhia companhia) {
         return this.getListaDeTrechos().stream().filter(trecho ->
                 trecho.getDestino().equals(destino)
                 && trecho.getOrigem().equals(origem)

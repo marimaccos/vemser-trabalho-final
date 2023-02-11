@@ -20,6 +20,16 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Integer opcao = 0;
 
+        // CLASSES PARA TESTARMOS
+
+        Companhia companhiaTeste = new Companhia("cp", "cp", "cp", Tipo.COMPANHIA, "123");
+        Comprador compradorTeste = new Comprador("teste", "teste", "teste", Tipo.COMPRADOR, "123");
+        Trecho trechoTeste = new Trecho("FOR", "SP", companhiaTeste);
+
+        companhiaDados.adicionar(companhiaTeste);
+        compradorDados.adicionar(compradorTeste);
+        companhiaTeste.criarTrecho(trechoTeste, trechoDados);
+
         // MENU
         while (opcao != 3) {
             System.out.println("[1] - Cadastrar Usuário\n" +
@@ -156,7 +166,7 @@ public class Main {
 
             opcao = scanner.nextLine();
 
-            final DateTimeFormatter FORMATACAO_DATA = DateTimeFormatter.ofPattern("dd-mm-yyyy");
+            final DateTimeFormatter FORMATACAO_DATA = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 
             switch (opcao) {
@@ -164,19 +174,19 @@ public class Main {
                     System.out.println("-------------------------------");
                     System.out.println("COMPANHIA -- CADASTRAR PASSAGEM");
                     System.out.println("-------------------------------");
-                    System.out.print("Insira a data de partida");
+                    System.out.print("Insira a data de partida: Ex: dd-MM-yyyy ");
                     LocalDate dataPartida = LocalDate.parse(scanner.nextLine(), FORMATACAO_DATA);
-                    System.out.print("Insira a data de partida");
+                    System.out.print("Insira a data de chegada: Ex: dd-MM-yyyy");
                     LocalDate dataChegada = LocalDate.parse(scanner.nextLine(), FORMATACAO_DATA);
-                    System.out.print("Insira o trecho correspondente. Ex: BEL/CWB");
+                    System.out.print("Insira o trecho correspondente: Ex: BEL/CWB ");
                     String trecho = scanner.nextLine();
-                    System.out.print("Insira o valor da passagem");
+                    System.out.print("Insira o valor da passagem: ");
                     BigDecimal valor = BigDecimal.valueOf(Double.valueOf(scanner.nextLine()));
 
                     String[] origemEDestino = trecho.split("/");
 
                     Optional<Trecho> trechoOptional = trechoDados.buscarTrecho(origemEDestino[0],
-                            origemEDestino[2], companhia);
+                            origemEDestino[1], companhia);
                     if(trechoOptional.isPresent()) {
                         Passagem passagem = new Passagem(dataPartida, dataChegada,
                                 trechoOptional.get(), true, valor);
@@ -197,15 +207,15 @@ public class Main {
                     System.out.println("Digite a passagem a ser editada:");
                     Integer index = scanner.nextInt();
                     scanner.nextLine();
-                    System.out.print("Insira a data de partida");
+                    System.out.print("Insira a data de partida: Ex: dd-MM-yyyy ");
                     LocalDate novaDataPartida = LocalDate.parse(scanner.nextLine(), FORMATACAO_DATA);
-                    System.out.print("Insira a data de partida");
+                    System.out.print("Insira a data de chegada:  Ex: dd-MM-yyyy ");
                     LocalDate novaDataChegada = LocalDate.parse(scanner.nextLine(), FORMATACAO_DATA);
-                    System.out.print("Insira o trecho correspondente. Ex: BEL/CWB");
+                    System.out.print("Insira o trecho correspondente. Ex: BEL/CWB ");
                     String novoTrecho = scanner.nextLine();
-                    System.out.print("Insira o valor da passagem");
+                    System.out.print("Insira o valor da passagem: ");
                     BigDecimal novoValor = BigDecimal.valueOf(Double.valueOf(scanner.nextLine()));
-                    System.out.println("Disponibilidade: 1 - true/2 - false");
+                    System.out.println("Disponibilidade:\n[1] - disponivel\n[2] - indisponivel");
                     String disponivel = scanner.nextLine();
                     boolean novoDisponivel = false;
                     if (disponivel.equals("1")) {
@@ -215,7 +225,7 @@ public class Main {
                     String[] novoOrigemEDestino = novoTrecho.split("/");
 
                     Optional<Trecho> novoTrechoOptional = trechoDados.buscarTrecho(novoOrigemEDestino[0],
-                            novoOrigemEDestino[2], companhia);
+                            novoOrigemEDestino[1], companhia);
                     if(novoTrechoOptional.isPresent()) {
                         Passagem passagem = new Passagem(novaDataPartida, novaDataChegada,
                                 novoTrechoOptional.get(), novoDisponivel, novoValor);
@@ -249,30 +259,54 @@ public class Main {
                     System.out.println("COMPANHIA -- CADASTRAR TRECHO");
                     System.out.println("-------------------------------");
                     System.out.println("Digite a origem: Ex: BEL");
-                    String origem = scanner.nextLine();
+                    String cadastrarOrigem = scanner.nextLine();
                     System.out.println("Digite o destino: Ex: CWB");
-                    String destino = scanner.nextLine();
+                    String cadastrarDestino = scanner.nextLine();
 
-                    if (companhia.criarTrecho(new Trecho(origem, destino, companhia), trechoDados)) {
-                        System.out.println("Trecho criado");
+                    if (companhia.criarTrecho(new Trecho(cadastrarOrigem, cadastrarDestino,
+                            companhia), trechoDados)) {
+                        System.out.println("Trecho criado!");
                     } else {
-                        System.err.println("Trecho já cadastrado");
+                        System.err.println("Trecho já cadastrado!");
                     }
                     break;
                 case "6":
                     System.out.println("-------------------------------");
                     System.out.println("COMPANHIA -- EDITAR TRECHO");
                     System.out.println("-------------------------------");
+                    System.out.println("Digite o index do trecho: Ex: 1");
+                    Integer indexEditarTrecho = Integer.parseInt(scanner.nextLine());
+                    System.out.println("Digite a origem: Ex: BEL");
+                    String editarOrigem = scanner.nextLine();
+                    System.out.println("Digite o destino: Ex: CWB");
+                    String editarDestino = scanner.nextLine();
+
+                    if (companhia.editarTrecho(indexEditarTrecho, new Trecho(editarOrigem, editarDestino,
+                            companhia), trechoDados)) {
+                        System.out.println("Trecho editado!");
+                    } else {
+                        System.err.println("Trecho já cadastrado!");
+                    }
+
                     break;
                 case "7":
                     System.out.println("-------------------------------");
                     System.out.println("COMPANHIA -- REMOVER TRECHO");
                     System.out.println("-------------------------------");
+                    System.out.println("Digite o index do trecho: Ex: 1");
+                    Integer indexDeletarTrecho = Integer.parseInt(scanner.nextLine());
+                    companhia.deletarTrecho(indexDeletarTrecho, trechoDados);
                     break;
                 case "8":
                     System.out.println("-------------------------------");
                     System.out.println("COMPANHIA -- TRECHOS CADASTRADOS");
                     System.out.println("-------------------------------");
+                    for (int i = 0; i < companhia.getTrechosCadastrados().size(); i++) {
+                        if(companhia.getTrechosCadastrados().get(i) != null) {
+                            System.out.println("id= " + i + " | "
+                                    + companhia.getTrechosCadastrados().get(i));
+                        }
+                    }
                     break;
                 case "9":
                     System.out.println("-------------------------------");

@@ -81,10 +81,58 @@ public class Companhia extends Usuario implements Historico {
 
         if(!oTrechoExiste) {
             trechoDados.adicionar(trechoDesejado);
+            this.getTrechosCadastrados().add(trechoDesejado);
             return true;
         }
 
         System.err.println("Trecho já cadastrado!");
         return false;
+    }
+
+    public boolean editarTrecho(Integer index, Trecho trechoDesejado, TrechoDados trechoDados) {
+
+        boolean oTrechoExiste = trechoDados.checaSeOTrechoExiste(trechoDesejado.getDestino(),
+                trechoDesejado.getOrigem(), this);
+
+        if(!oTrechoExiste) {
+            trechoDados.editar(index, trechoDesejado);
+            return true;
+        }
+
+        System.err.println("Trecho já cadastrado!");
+        return false;
+    }
+
+    public boolean deletarTrecho(Integer index, TrechoDados trechoDados) {
+
+        if(index > this.getTrechosCadastrados().size()) {
+            System.err.println("Index não existente.");
+            return false;
+        }
+
+        Trecho trecho = this.getTrechosCadastrados().get(index);
+        System.out.println(trecho);
+        Integer indexNoTrechoDados = trechoDados.getListaDeTrechos().indexOf(trecho);
+
+        if(indexNoTrechoDados != null) {
+            // remove da lista de trechos cadastrados da companhia
+            this.getTrechosCadastrados().remove(index.intValue());
+            // remove do "banco de dados" de trechos
+            trechoDados.remover(indexNoTrechoDados);
+            return true;
+        }
+
+        System.err.println("Trecho já cadastrado!");
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Companhia{" +
+                "cnpj='" + cnpj + '\'' +
+                ", historicoVendas=" + historicoVendas +
+                ", passagensCadastradas=" + passagensCadastradas +
+                ", trechosCadastrados=" + trechosCadastrados +
+                '}';
     }
 }

@@ -43,5 +43,12 @@ public class Trecho {
         );
     }
 
-
+    @Override
+    public String toString() {
+        return "Trecho{" +
+                "origem='" + origem + '\'' +
+                ", destino='" + destino + '\'' +
+                ", companhia=" + companhia.getNome() +
+                '}';
+    }
 }
