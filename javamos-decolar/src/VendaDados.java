@@ -6,7 +6,7 @@ import java.util.List;
 public class VendaDados {
 
     private List<Venda> listaDeVenda;
-    
+
     public VendaDados() {
         this.listaDeVenda = new ArrayList<>();
     }

@@ -72,11 +72,7 @@ public class Venda {
     public void setStatus(Status status) {
         this.status = status;
     }
-
-    public void imprimirPassagemComprada() {
-             System.out.println(passagem);
-    }
-
+    
     public Venda efetuarVenda(Passagem passagem, Comprador comprador,
                                 Companhia companhia, VendaDados vendaDados) {
 
