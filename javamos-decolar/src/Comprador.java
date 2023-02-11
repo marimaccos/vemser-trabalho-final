@@ -44,16 +44,16 @@ public class Comprador extends Usuario implements Historico {
 
     }
 
-    public Passagem comprarPassagem(String codigoPassagem, PassagemDados passagemDados) {
-        Optional<Passagem> passagemEncontrada = passagemDados.getListaDePassagens().stream()
-                .filter(passagem -> passagem.getCodigo() == codigoPassagem)
-                .findFirst();
-
-        if (passagemEncontrada.isPresent()) {
-            passagemEncontrada.get().setDisponivel(false);
+    public void comprarPassagem(String codigoPassagem, PassagemDados passagemDados, VendaDados vendaDados) {
+        Optional<Passagem> passagemOptional = passagemDados.pegarPassagemPorCodigo(codigoPassagem);
+        if(passagemOptional.isEmpty()) {
+            System.err.println("Passagem não pode ser encontrada");
+        } else {
+            Passagem passagem = passagemOptional.get();
+            Venda venda = new Venda();
+            venda.efetuarVenda(passagem, this, passagem.getTrecho().getCompanhia(), vendaDados);
+            System.out.println("Compra efetuada com sucesso!");
         }
-
-        return passagemEncontrada.get();
     }
 
 

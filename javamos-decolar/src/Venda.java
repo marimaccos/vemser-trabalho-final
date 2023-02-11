@@ -72,7 +72,7 @@ public class Venda {
     public void setStatus(Status status) {
         this.status = status;
     }
-    
+
     public Venda efetuarVenda(Passagem passagem, Comprador comprador,
                                 Companhia companhia, VendaDados vendaDados) {
 

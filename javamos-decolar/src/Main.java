@@ -510,14 +510,6 @@ public class Main {
                                      PassagemDados passagemDados, VendaDados vendaDados) {
         System.out.println("Digite o código da passagem: ");
         String codigoPassagem = scanner.nextLine();
-        Optional<Passagem> passagemOptional = passagemDados.pegarPassagemPorCodigo(codigoPassagem);
-        if(passagemOptional.isEmpty()) {
-            System.err.println("Passagem não pode ser encontrada");
-        } else {
-            Passagem passagem = passagemOptional.get();
-            Venda venda = new Venda();
-            venda.efetuarVenda(passagem, comprador, passagem.getTrecho().getCompanhia(), vendaDados);
-            System.out.println("Compra efetuada com sucesso!");
-        }
+        comprador.comprarPassagem(codigoPassagem, passagemDados, vendaDados);
     }
 }
