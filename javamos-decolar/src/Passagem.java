@@ -21,23 +21,9 @@ public class Passagem {
         this.disponivel = disponivel;
         this.valor = valor;
     }
-
-    public Passagem(String codigo, LocalDate dataPartida, LocalDate dataChegada,
-                    Trecho trecho, boolean disponivel, BigDecimal valor) {
-        this.codigo = codigo;
-        this.dataPartida = dataPartida;
-        this.dataChegada = dataChegada;
-        this.trecho = trecho;
-        this.disponivel = disponivel;
-        this.valor = valor;
-    }
-
+    
     public String getCodigo() {
         return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
     }
 
     public LocalDate getDataPartida() {
