@@ -43,7 +43,12 @@ public class Main {
 //        vendaTeste.efetuarVenda(passagemTeste,compradorTeste,companhiaTeste,vendaDados);
 
         // MENU
+        System.out.println("-------------------------------");
+        System.out.println("BEM-VINDO AO SISTEMA JAVAMOS DECOLAR!");
         while (opcao != 3) {
+            System.out.println("-------------------------------");
+            System.out.println("\t\tMENU PRINCIPAL");
+            System.out.println("-------------------------------");
             System.out.println("[1] - Cadastrar Usuário\n" +
                     "[2] - Entrar com Usuário Existente\n" +
                     "[0] - Sair");
@@ -79,7 +84,9 @@ public class Main {
     }
 
     private static void cadastrarUsuario(Scanner scanner, CompanhiaDados companhiaDados, CompradorDados compradorDados) {
+        System.out.println("-------------------------------");
         System.out.println("CADASTRAR USUÁRIO");
+        System.out.println("-------------------------------");
         System.out.print("Digite seu nome: ");
         String nome = scanner.nextLine();
         System.out.print("Digite seu login: ");
