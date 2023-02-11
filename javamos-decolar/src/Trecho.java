@@ -36,13 +36,6 @@ public class Trecho {
         this.companhia = companhia;
     }
 
-    public void imprimirTrecho() {
-        System.out.printf(
-                "Origem: %s%nDestino: %s%nCompanhia: %s",
-                getOrigem(), getDestino(), getCompanhia().getNome()
-        );
-    }
-
     @Override
     public String toString() {
         return "Trecho{" +
