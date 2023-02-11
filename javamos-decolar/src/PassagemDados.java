@@ -1,5 +1,7 @@
 package javamos_decolar;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +26,12 @@ public class PassagemDados implements Crud<Passagem> {
         }
     }
 
+    public void listarDesc() {
+        for (int i = listaDePassagens.size() - 1; i >= 0; i--) {
+            System.out.println("id: " + i + " | " + listaDePassagens.get(i));
+        }
+    }
+
     @Override
     public void editar(Integer index, Passagem passagem) {
         Passagem passagemEditada = listaDePassagens.get(index);
@@ -44,4 +52,20 @@ public class PassagemDados implements Crud<Passagem> {
                 .filter(p -> p.getTrecho().getCompanhia().equals(companhia))
                 .collect(Collectors.toList());
     }
+
+    public List<Passagem> pegarPassagemPorDataChegada (LocalDate dataChegada) {
+        return this.getListaDePassagens().stream().filter(p -> p.getDataChegada().isEqual(dataChegada))
+                .collect(Collectors.toList());
+    }
+
+    public List<Passagem> pegarPassagemPorDataPartida (LocalDate dataPartida) {
+        return this.getListaDePassagens().stream().filter(p -> p.getDataPartida().isEqual(dataPartida))
+                .collect(Collectors.toList());
+    }
+
+    public List<Passagem> pegarPassagemPorValor (BigDecimal maiorValor) {
+        return this.getListaDePassagens().stream().filter(p -> p.getValor().compareTo(maiorValor) <= 0 )
+                .collect(Collectors.toList());
+    }
+
 }

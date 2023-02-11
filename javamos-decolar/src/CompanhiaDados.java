@@ -31,6 +31,15 @@ public class CompanhiaDados implements Crud<Companhia> {
 
         return companhiaEncontrada;
     }
+
+    public Optional<Companhia> buscaCompanhiaPorNome(String nome) {
+        Optional<Companhia> companhiaEncontrada = getListaDeCompanhias().stream()
+                .filter(companhia -> companhia.getNome().equals(nome))
+                .findFirst();
+
+        return companhiaEncontrada;
+    }
+
     @Override
     public void editar(Integer index, Companhia companhia) {
 
