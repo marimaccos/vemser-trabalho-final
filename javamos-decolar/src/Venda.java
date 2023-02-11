@@ -12,6 +12,9 @@ public class Venda {
     private LocalDate data;
     private Status status;
 
+    public Venda() {
+    }
+
     public Venda(String codigo, Passagem passagem, Comprador comprador,
                  Companhia companhia, LocalDate data, Status status) {
         this.codigo = codigo;
@@ -78,7 +81,7 @@ public class Venda {
                                 Companhia companhia, VendaDados vendaDados) {
 
         Venda vendaAtual = new Venda(geraCodigoVenda(), passagem, comprador,
-                companhia, LocalDate.now(), Status.PENDENTE);
+                companhia, LocalDate.now(), Status.CONCLUIDO);
         vendaDados.adicionar(vendaAtual);
         comprador.getHistoricoCompras().add(vendaAtual);
         companhia.getHistoricoVendas().add(vendaAtual);
@@ -95,8 +98,8 @@ public class Venda {
         return "Venda{" +
                 "codigo='" + codigo + '\'' +
                 ", passagem=" + passagem +
-                ", comprador=" + comprador +
-                ", companhia=" + companhia +
+                ", comprador=" + comprador.getNome() +
+                ", companhia=" + companhia.getNome() +
                 ", data=" + data +
                 ", status=" + status +
                 '}';

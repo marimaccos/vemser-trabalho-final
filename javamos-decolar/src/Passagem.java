@@ -95,5 +95,4 @@ public class Passagem {
     public String geraCodigoPassagem() {
         return String.valueOf((int)Math.random() * 2000);
     }
-
 }

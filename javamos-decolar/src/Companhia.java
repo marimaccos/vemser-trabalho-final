@@ -122,7 +122,29 @@ public class Companhia extends Usuario implements Historico {
             return true;
         }
 
-        System.err.println("Trecho já cadastrado!");
+        System.err.println("Trecho não cadastrado!");
+        return false;
+    }
+
+    public boolean deletarPassagem(Integer index, PassagemDados passagemDados) {
+
+        if(index > this.getPassagensCadastradas().size()) {
+            System.err.println("Index não existente.");
+            return false;
+        }
+
+        Passagem passagem = this.getPassagensCadastradas().get(index);
+        System.out.println(passagem);
+        Integer indexNoPassagemDados = passagemDados.getListaDePassagens().indexOf(passagem);
+
+        if(indexNoPassagemDados != null) {
+            // remove da lista de passagens cadastrados da companhia
+            this.getPassagensCadastradas().remove(index.intValue());
+            // remove do "banco de dados" de passagens
+            passagemDados.remover(indexNoPassagemDados);
+            return true;
+        }
+        System.err.println("Passagem não cadastrada!");
         return false;
     }
 
