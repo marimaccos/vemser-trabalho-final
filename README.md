@@ -11,7 +11,7 @@
 - Kelly Castelo
 - Mariana Machado
 
-## 2. Métodologia
+## 2. Metodologia
 
 Como abordagem para codificação desse projeto, resolvemos montar um diagrama de classes, 
 que utilizamos como guia para entendermos as necessidades básicas do sistema. A idéia foi
