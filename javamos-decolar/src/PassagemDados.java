@@ -7,6 +7,10 @@ public class PassagemDados implements Crud<Passagem> {
 
     List<Passagem> listaDePassagens = new ArrayList<Passagem>();
 
+    public List<Passagem> getListaDePassagens() {
+        return listaDePassagens;
+    }
+
     @Override
     public void adicionar(Passagem passagem) {
         listaDePassagens.add(passagem);

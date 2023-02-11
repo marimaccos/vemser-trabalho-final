@@ -70,4 +70,16 @@ public class Passagem {
     }
 
     private BigDecimal valor;
+
+    @Override
+    public String toString() {
+        return "Passagem{" +
+                "codigo='" + codigo + '\'' +
+                ", dataPartida=" + dataPartida +
+                ", dataChegada=" + dataChegada +
+                ", trecho=" + trecho +
+                ", disponivel=" + disponivel +
+                ", valor=" + valor +
+                '}';
+    }
 }

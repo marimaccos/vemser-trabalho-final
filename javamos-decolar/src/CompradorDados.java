@@ -11,6 +11,10 @@ public class CompradorDados implements Crud<Comprador> {
         this.listaDeComprador = new ArrayList<>();
     }
 
+    public List<Comprador> getListaDeComprador() {
+        return listaDeComprador;
+    }
+
     @Override
     public void adicionar(Comprador comprador) {
         this.listaDeComprador.add(comprador);

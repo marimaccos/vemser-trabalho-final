@@ -1,5 +1,7 @@
 package javamos_decolar;
 
+import java.util.Optional;
+
 public abstract class Usuario {
 
     private String login;
@@ -14,13 +16,40 @@ public abstract class Usuario {
         this.tipo = tipo;
     }
 
-    public void entrarNoSistema(){
-        // TODO implementação
+    public boolean entrarNoSistema(String login, String senha,
+                                   CompradorDados compradorDados, CompanhiaDados companhiaDados) {
+
+        Optional<Comprador> compradorOpt = compradorDados.getListaDeComprador().stream()
+                .filter(comprador -> comprador.getLogin() == login)
+                .findAny();
+
+        if (compradorOpt.isPresent()) {
+            if (compradorOpt.get().getSenha() == senha) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    public boolean cadastrarUsuario(String login, String senha, String nome, Tipo tipo){
-        // TODO implementação
-        return false;
+    public boolean cadastrarUsuario(String login, String senha, String nome, Tipo tipo,
+                                    CompradorDados compradorDados, CompanhiaDados companhiaDados) {
+
+        if (login.isBlank() || senha.isBlank() || nome.isBlank()) {
+            return  false;
+        }
+
+        if (tipo == Tipo.COMPRADOR) {
+            Comprador comprador = new Comprador(login, senha, nome, tipo);
+            compradorDados.adicionar(comprador);
+
+            return  true;
+        } else {
+            Companhia companhia = new Companhia(login, senha, nome, tipo);
+            companhiaDados.adicionar(companhia);
+
+            return true;
+        }
     }
 
     public String getLogin() {

@@ -7,18 +7,19 @@ import java.util.List;
 public class Venda {
     private String codigo;
     private BigDecimal valor;
-    private List<Passagem> passagens;
+    private Passagem passagem;
     private Comprador comprador;
     private Companhia companhia;
     private LocalDate data;
     private Status status;
 
-    public Venda(String codigo, BigDecimal valor, List<Passagem> passagens,
+
+    public Venda(String codigo, BigDecimal valor, Passagem passagem,
                  Comprador comprador, Companhia companhia, LocalDate data,
                  Status status) {
         this.codigo = codigo;
         this.valor = valor;
-        this.passagens = passagens;
+        this.passagem = passagem;
         this.comprador = comprador;
         this.companhia = companhia;
         this.data = data;
@@ -41,12 +42,12 @@ public class Venda {
         this.valor = valor;
     }
 
-    public List<Passagem> getPassagens() {
-        return passagens;
+    public Passagem getPassagem() {
+        return passagem;
     }
 
-    public void setPassagens(List<Passagem> passagens) {
-        this.passagens = passagens;
+    public void setPassagens(Passagem passagem) {
+        this.passagem = passagem;
     }
 
     public Comprador getComprador() {
@@ -82,10 +83,7 @@ public class Venda {
     }
 
     public void imprimirPassagem() {
-        for (Passagem passagem :
-                passagens) {
-            System.out.println(passagem);
-        }
+             System.out.println(passagem);
     }
 
     @Override
@@ -93,7 +91,7 @@ public class Venda {
         return "Venda{" +
                 "codigo='" + codigo + '\'' +
                 ", valor=" + valor +
-                ", passagens=" + passagens +
+                ", passagens=" + passagem +
                 ", comprador=" + comprador +
                 ", compranhia=" + companhia +
                 ", data=" + data +

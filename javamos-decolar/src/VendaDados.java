@@ -7,6 +7,10 @@ public class VendaDados {
 
     private List<Venda> listaDeVenda;
 
+    public List<Venda> getListaDeVenda() {
+        return listaDeVenda;
+    }
+
     public VendaDados() {
         this.listaDeVenda = new ArrayList<>();
     }
