@@ -2,6 +2,7 @@ package javamos_decolar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class TrechoDados implements Crud<Trecho>{
 
@@ -38,4 +39,19 @@ public class TrechoDados implements Crud<Trecho>{
     public void remover(Integer index) {
         listaDeTrechos.remove(index.intValue());
     }
+
+    public boolean checaSeOTrechoExiste(String destino, String origem, Companhia companhia) {
+        return this.getListaDeTrechos().stream()
+                .anyMatch(trecho -> trecho.getDestino().equals(destino)
+                        && trecho.getOrigem().equals(origem)
+                        && trecho.getCompanhia().equals(companhia));
+    }
+
+    public Optional<Trecho> buscarTrecho(String destino, String origem, Companhia companhia) {
+        return this.getListaDeTrechos().stream().filter(trecho ->
+                trecho.getDestino().equals(destino)
+                && trecho.getOrigem().equals(origem)
+                && trecho.getCompanhia().equals(companhia)).findFirst();
+    }
+
 }

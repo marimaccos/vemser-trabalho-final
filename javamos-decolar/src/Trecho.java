@@ -42,4 +42,6 @@ public class Trecho {
                 getOrigem(), getDestino(), getCompanhia().getNome()
         );
     }
+
+
 }

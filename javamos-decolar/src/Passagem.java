@@ -10,6 +10,15 @@ public class Passagem {
     private Trecho trecho;
     private boolean disponivel;
 
+    public Passagem(LocalDate dataPartida, LocalDate dataChegada,
+                    Trecho trecho, boolean disponivel, BigDecimal valor) {
+        this.codigo = geraCodigoPassagem();
+        this.dataPartida = dataPartida;
+        this.dataChegada = dataChegada;
+        this.trecho = trecho;
+        this.disponivel = disponivel;
+        this.valor = valor;
+    }
 
     public Passagem(String codigo, LocalDate dataPartida, LocalDate dataChegada,
                     Trecho trecho, boolean disponivel, BigDecimal valor) {
@@ -82,4 +91,9 @@ public class Passagem {
                 ", valor=" + valor +
                 '}';
     }
+
+    public String geraCodigoPassagem() {
+        return String.valueOf((int)Math.random() * 2000);
+    }
+
 }

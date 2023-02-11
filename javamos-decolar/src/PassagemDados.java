@@ -2,6 +2,7 @@ package javamos_decolar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PassagemDados implements Crud<Passagem> {
 
@@ -36,5 +37,11 @@ public class PassagemDados implements Crud<Passagem> {
     @Override
     public void remover(Integer index) {
         listaDePassagens.remove(index.intValue());
+    }
+
+    public List<Passagem> pegarPassagemPorCompanhia (Companhia companhia) {
+        return this.getListaDePassagens().stream()
+                .filter(p -> p.getTrecho().getCompanhia().equals(companhia))
+                .collect(Collectors.toList());
     }
 }
