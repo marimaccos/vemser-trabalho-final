@@ -31,7 +31,7 @@ public class Main {
         Passagem passagemTeste = new Passagem(LocalDate.now(),
                 LocalDate.now(), trechoTeste, true, BigDecimal.valueOf(2.0));
         Passagem passagemTeste2 = new Passagem(LocalDate.now(), LocalDate.now(), trechoTeste, true, BigDecimal.valueOf(2.0));
-        Venda vendaTeste = new Venda();
+//        Venda vendaTeste = new Venda();
 
         passagemDados.adicionar(passagemTeste);
         passagemDados.adicionar(passagemTeste2);
@@ -40,7 +40,7 @@ public class Main {
         companhiaDados.adicionar(companhiaTeste);
         compradorDados.adicionar(compradorTeste);
         companhiaTeste.criarTrecho(trechoTeste, trechoDados);
-        vendaTeste.efetuarVenda(passagemTeste,compradorTeste,companhiaTeste,vendaDados);
+//        vendaTeste.efetuarVenda(passagemTeste,compradorTeste,companhiaTeste,vendaDados);
 
         // MENU
         while (opcao != 3) {
@@ -63,7 +63,7 @@ public class Main {
                         break;
                     } else if (usuarioLogado instanceof Comprador) {
                         exibeMenuDeUsuarioComprador(scanner, (Comprador) usuarioLogado, passagemDados,
-                                trechoDados, FORMATACAO_DATA, companhiaDados);
+                                trechoDados, FORMATACAO_DATA, companhiaDados, vendaDados);
                         break;
                     } else {
                         break;
@@ -352,7 +352,8 @@ public class Main {
 
     private static void exibeMenuDeUsuarioComprador(Scanner scanner, Comprador comprador,
                                                     PassagemDados passagemDados, TrechoDados trechoDados,
-                                                    DateTimeFormatter formatacaoData, CompanhiaDados companhiaDados) {
+                                                    DateTimeFormatter formatacaoData, CompanhiaDados companhiaDados,
+                                                    VendaDados vendaDados) {
         String opcao = "";
 
         while (!opcao.equals("0")) {
@@ -379,7 +380,8 @@ public class Main {
                     System.out.println("-------------------------------");
                     System.out.println("COMPRADOR -- COMPRAR PASSAGEM");
                     System.out.println("-------------------------------");
-                    System.out.print(" ");
+                    System.out.print("");
+                    menuDeCompra(scanner, comprador, passagemDados, vendaDados);
                     break;
 
                 case "3":
@@ -493,6 +495,21 @@ public class Main {
                     System.err.println("Opção inválida!");
                     break;
             }
+        }
+    }
+
+    private static void menuDeCompra(Scanner scanner, Comprador comprador,
+                                     PassagemDados passagemDados, VendaDados vendaDados) {
+        System.out.println("Digite o código da passagem: ");
+        String codigoPassagem = scanner.nextLine();
+        Optional<Passagem> passagemOptional = passagemDados.pegarPassagemPorCodigo(codigoPassagem);
+        if(passagemOptional.isEmpty()) {
+            System.err.println("Passagem não pode ser encontrada");
+        } else {
+            Passagem passagem = passagemOptional.get();
+            Venda venda = new Venda();
+            venda.efetuarVenda(passagem, comprador, passagem.getTrecho().getCompanhia(), vendaDados);
+            System.out.println("Compra efetuada com sucesso!");
         }
     }
 }

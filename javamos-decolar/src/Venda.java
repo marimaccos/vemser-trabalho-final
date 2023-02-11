@@ -15,9 +15,9 @@ public class Venda {
     public Venda() {
     }
 
-    public Venda(String codigo, Passagem passagem, Comprador comprador,
+    public Venda(Passagem passagem, Comprador comprador,
                  Companhia companhia, LocalDate data, Status status) {
-        this.codigo = codigo;
+        this.codigo = this.geraCodigoVenda();
         this.passagem = passagem;
         this.comprador = comprador;
         this.companhia = companhia;
@@ -80,17 +80,18 @@ public class Venda {
     public Venda efetuarVenda(Passagem passagem, Comprador comprador,
                                 Companhia companhia, VendaDados vendaDados) {
 
-        Venda vendaAtual = new Venda(geraCodigoVenda(), passagem, comprador,
+        Venda vendaAtual = new Venda(passagem, comprador,
                 companhia, LocalDate.now(), Status.CONCLUIDO);
         vendaDados.adicionar(vendaAtual);
         comprador.getHistoricoCompras().add(vendaAtual);
         companhia.getHistoricoVendas().add(vendaAtual);
+        passagem.setDisponivel(false);
 
         return vendaAtual;
     }
 
     public String geraCodigoVenda() {
-        return String.valueOf((int)Math.random() * 2000);
+        return String.valueOf(1 + (int) (Math.random() * 2000));
     }
 
     @Override

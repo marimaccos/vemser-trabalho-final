@@ -35,8 +35,13 @@ public class Comprador extends Usuario implements Historico {
 
     @Override
     public void imprimirHistorico() {
-        historicoCompras.stream()
-                .forEach(System.out::println);
+        if(getHistoricoCompras().isEmpty()) {
+            System.out.println("Nenhuma compra encontrada.");
+        } else {
+            historicoCompras.stream()
+                    .forEach(System.out::println);
+        }
+
     }
 
     public Passagem comprarPassagem(String codigoPassagem, PassagemDados passagemDados) {
