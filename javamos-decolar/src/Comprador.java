@@ -56,13 +56,4 @@ public class Comprador extends Usuario implements Historico {
         }
     }
 
-
-    public void pesquisarPassagem(PassagemDados passagemDados, Trecho trecho) {
-        List<Passagem> passagensEncontradas = passagemDados.getListaDePassagens().stream()
-                .filter(passagem -> passagem.getTrecho().equals(trecho) && passagem.isDisponivel())
-                .toList();
-
-        passagensEncontradas.stream()
-                .forEach(System.out::println);
-    }
 }

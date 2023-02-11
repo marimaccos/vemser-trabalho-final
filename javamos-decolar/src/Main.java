@@ -207,21 +207,7 @@ public class Main {
                     String trecho = scanner.nextLine();
                     System.out.print("Insira o valor da passagem: ");
                     BigDecimal valor = BigDecimal.valueOf(Double.valueOf(scanner.nextLine()));
-
-                    String[] origemEDestino = trecho.split("/");
-
-                    Optional<Trecho> trechoOptional = trechoDados.buscarTrecho(origemEDestino[0],
-                            origemEDestino[1], companhia);
-
-                    if (trechoOptional.isPresent()) {
-                        Passagem passagem = new Passagem(dataPartida, dataChegada,
-                                trechoOptional.get(), true, valor);
-                        passagemDados.adicionar(passagem);
-                        companhia.getPassagensCadastradas().add(passagem);
-                        System.out.println("Passagem adicionada com sucesso!");
-                    } else {
-                        System.err.println("Trecho inválido!");
-                    }
+                    companhia.cadastrarPassagem(trecho, passagemDados, trechoDados, dataPartida, dataChegada,  valor);
                     break;
 
                 case "2":

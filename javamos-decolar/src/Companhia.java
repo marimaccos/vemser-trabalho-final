@@ -1,7 +1,10 @@
 package javamos_decolar;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Companhia extends Usuario implements Historico {
 
@@ -63,15 +66,23 @@ public class Companhia extends Usuario implements Historico {
         historicoVendas.stream().forEach(System.out::println);
     }
 
-    public boolean cadastrarPassagem(Passagem passagem, PassagemDados passagemDados) {
-        boolean passagemExiste = passagemDados.getListaDePassagens().stream().anyMatch(p -> p.getCodigo().equals(passagem.getCodigo()));
+    public void cadastrarPassagem(String trecho, PassagemDados passagemDados,
+                                  TrechoDados trechoDados, LocalDate dataPartida,
+                                  LocalDate dataChegada, BigDecimal valor) {
+        String[] origemEDestino = trecho.split("/");
 
-        if(!passagemExiste){
+        Optional<Trecho> trechoOptional = trechoDados.buscarTrecho(origemEDestino[0],
+                origemEDestino[1], this);
+
+        if (trechoOptional.isPresent()) {
+            Passagem passagem = new Passagem(dataPartida, dataChegada,
+                    trechoOptional.get(), true, valor);
             passagemDados.adicionar(passagem);
-            return true;
+            this.getPassagensCadastradas().add(passagem);
+            System.out.println("Passagem adicionada com sucesso!");
+        } else {
+            System.err.println("Trecho inválido!");
         }
-        System.err.println("Passagem já cadastrada!");
-        return false;
     }
 
     public boolean criarTrecho(Trecho trechoDesejado, TrechoDados trechoDados) {
