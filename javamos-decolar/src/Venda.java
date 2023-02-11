@@ -6,19 +6,15 @@ import java.util.List;
 
 public class Venda {
     private String codigo;
-    private BigDecimal valor;
     private Passagem passagem;
     private Comprador comprador;
     private Companhia companhia;
     private LocalDate data;
     private Status status;
 
-
-    public Venda(String codigo, BigDecimal valor, Passagem passagem,
-                 Comprador comprador, Companhia companhia, LocalDate data,
-                 Status status) {
+    public Venda(String codigo, Passagem passagem, Comprador comprador,
+                 Companhia companhia, LocalDate data, Status status) {
         this.codigo = codigo;
-        this.valor = valor;
         this.passagem = passagem;
         this.comprador = comprador;
         this.companhia = companhia;
@@ -34,19 +30,11 @@ public class Venda {
         this.codigo = codigo;
     }
 
-    public BigDecimal getValor() {
-        return valor;
-    }
-
-    public void setValor(BigDecimal valor) {
-        this.valor = valor;
-    }
-
     public Passagem getPassagem() {
         return passagem;
     }
 
-    public void setPassagens(Passagem passagem) {
+    public void setPassagem(Passagem passagem) {
         this.passagem = passagem;
     }
 
@@ -62,8 +50,8 @@ public class Venda {
         return companhia;
     }
 
-    public void setCompanhia(Companhia compranhia) {
-        this.companhia = compranhia;
+    public void setCompanhia(Companhia companhia) {
+        this.companhia = companhia;
     }
 
     public LocalDate getData() {
@@ -82,18 +70,33 @@ public class Venda {
         this.status = status;
     }
 
-    public void imprimirPassagem() {
+    public void imprimirPassagemComprada() {
              System.out.println(passagem);
+    }
+
+    public Venda efetuarVenda(Passagem passagem, Comprador comprador,
+                                Companhia companhia, VendaDados vendaDados) {
+
+        Venda vendaAtual = new Venda(geraCodigoVenda(), passagem, comprador,
+                companhia, LocalDate.now(), Status.PENDENTE);
+        vendaDados.adicionar(vendaAtual);
+        comprador.getHistoricoCompras().add(vendaAtual);
+        companhia.getHistoricoVendas().add(vendaAtual);
+
+        return vendaAtual;
+    }
+
+    public String geraCodigoVenda() {
+        return String.valueOf((int)Math.random() * 2000);
     }
 
     @Override
     public String toString() {
         return "Venda{" +
                 "codigo='" + codigo + '\'' +
-                ", valor=" + valor +
-                ", passagens=" + passagem +
+                ", passagem=" + passagem +
                 ", comprador=" + comprador +
-                ", compranhia=" + companhia +
+                ", companhia=" + companhia +
                 ", data=" + data +
                 ", status=" + status +
                 '}';

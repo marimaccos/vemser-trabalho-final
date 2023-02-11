@@ -12,6 +12,22 @@ public class Comprador extends Usuario implements Historico {
         super(login, senha, nome, tipo);
     }
 
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public List<Venda> getHistoricoCompras() {
+        return historicoCompras;
+    }
+
+    public void setHistoricoCompras(List<Venda> historicoCompras) {
+        this.historicoCompras = historicoCompras;
+    }
+
     @Override
     public void imprimirHistorico() {
         historicoCompras.stream()

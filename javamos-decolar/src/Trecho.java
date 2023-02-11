@@ -4,10 +4,12 @@ public class Trecho {
 
     private String origem;
     private String destino;
+    private Companhia companhia;
 
-    public Trecho(String origem, String destino) {
+    public Trecho(String origem, String destino, Companhia companhia) {
         this.origem = origem;
         this.destino = destino;
+        this.companhia = companhia;
     }
 
     public String getOrigem() {
@@ -26,11 +28,18 @@ public class Trecho {
         this.destino = destino;
     }
 
+    public Companhia getCompanhia() {
+        return companhia;
+    }
+
+    public void setCompanhia(Companhia companhia) {
+        this.companhia = companhia;
+    }
+
     public void imprimirTrecho() {
         System.out.printf(
-                "\nOrigem: %s" +
-                        "\nDestino: %s",
-                getOrigem(), getDestino()
+                "Origem: %s%nDestino: %s%nCompanhia: %s",
+                getOrigem(), getDestino(), getCompanhia().getNome()
         );
     }
 }

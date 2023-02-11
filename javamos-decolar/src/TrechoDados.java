@@ -7,6 +7,10 @@ public class TrechoDados implements Crud<Trecho>{
 
     List<Trecho> listaDeTrechos = new ArrayList<Trecho>();
 
+    public List<Trecho> getListaDeTrechos() {
+        return listaDeTrechos;
+    }
+
     @Override
     public void adicionar(Trecho trecho) {
         listaDeTrechos.add(trecho);
