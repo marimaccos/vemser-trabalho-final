@@ -74,12 +74,10 @@ public class Companhia extends Usuario implements Historico {
         return false;
     }
 
-    public boolean criarTrecho(Trecho trechoDesejado, TrechoDados trechoDados, Companhia companhia) {
+    public boolean criarTrecho(Trecho trechoDesejado, TrechoDados trechoDados) {
 
-        boolean oTrechoExiste = trechoDados.getListaDeTrechos().stream()
-                .anyMatch(trecho -> trecho.getDestino().equals(trechoDesejado.getDestino())
-                        && trecho.getOrigem().equals(trechoDesejado.getOrigem())
-                        && trecho.getCompanhia().equals(companhia));
+        boolean oTrechoExiste = trechoDados.checaSeOTrechoExiste(trechoDesejado.getDestino(),
+                trechoDesejado.getOrigem(), this);
 
         if(!oTrechoExiste) {
             trechoDados.adicionar(trechoDesejado);

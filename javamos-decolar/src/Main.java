@@ -36,7 +36,7 @@ public class Main {
                 case 2:
                     usuarioLogado = entrarComUsuarioExistente(scanner, companhiaDados, compradorDados);
                     if(usuarioLogado instanceof Companhia) {
-                        exibeMenuDeUsuarioCompanhia(scanner, (Companhia) usuarioLogado, passagemDados);
+                        exibeMenuDeUsuarioCompanhia(scanner, (Companhia) usuarioLogado, passagemDados, trechoDados);
                         break;
                     } else if(usuarioLogado instanceof Comprador) {
                         exibeMenuDeUsuarioComprador();
@@ -150,7 +150,7 @@ public class Main {
             System.out.println("[5] - Cadastrar Trecho");
             System.out.println("[6] - Editar Trecho");
             System.out.println("[7] - Remover Trecho");
-            System.out.println("[8] - Imprimir Trechos Cadastrados");
+            System.out.println("[8] - Trechos Cadastrados");
             System.out.println("[9] - Historico de Vendas");
             System.out.println("[0] - Sair");
 
@@ -175,9 +175,8 @@ public class Main {
 
                     String[] origemEDestino = trecho.split("/");
 
-                    boolean trechoExiste = trechoDados.checaSeOTrechoExiste(origemEDestino[0], origemEDestino[2], companhia);
-
-                    Optional<Trecho> trechoOptional = trechoDados.buscarTrecho(origemEDestino[0], origemEDestino[2], companhia);
+                    Optional<Trecho> trechoOptional = trechoDados.buscarTrecho(origemEDestino[0],
+                            origemEDestino[2], companhia);
                     if(trechoOptional.isPresent()) {
                         Passagem passagem = new Passagem(dataPartida, dataChegada,
                                 trechoOptional.get(), true, valor);
@@ -189,6 +188,53 @@ public class Main {
                     break;
                 case "2":
                     System.out.println("-------------------------------");
+                    System.out.println("COMPANHIA -- EDITAR PASSAGEM");
+                    System.out.println("-------------------------------");
+                    List<Passagem> listaDePassagens = passagemDados.pegarPassagemPorCompanhia(companhia);
+                    for (int i = 0; i < listaDePassagens.size(); i++) {
+                        System.out.println(i + " - " + listaDePassagens.get(i));
+                    }
+                    System.out.println("Digite a passagem a ser editada:");
+                    Integer index = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.print("Insira a data de partida");
+                    LocalDate novaDataPartida = LocalDate.parse(scanner.nextLine(), FORMATACAO_DATA);
+                    System.out.print("Insira a data de partida");
+                    LocalDate novaDataChegada = LocalDate.parse(scanner.nextLine(), FORMATACAO_DATA);
+                    System.out.print("Insira o trecho correspondente. Ex: BEL/CWB");
+                    String novoTrecho = scanner.nextLine();
+                    System.out.print("Insira o valor da passagem");
+                    BigDecimal novoValor = BigDecimal.valueOf(Double.valueOf(scanner.nextLine()));
+                    System.out.println("Disponibilidade: 1 - true/2 - false");
+                    String disponivel = scanner.nextLine();
+                    boolean novoDisponivel = false;
+                    if (disponivel.equals("1")) {
+                        novoDisponivel = true;
+                    }
+
+                    String[] novoOrigemEDestino = novoTrecho.split("/");
+
+                    Optional<Trecho> novoTrechoOptional = trechoDados.buscarTrecho(novoOrigemEDestino[0],
+                            novoOrigemEDestino[2], companhia);
+                    if(novoTrechoOptional.isPresent()) {
+                        Passagem passagem = new Passagem(novaDataPartida, novaDataChegada,
+                                novoTrechoOptional.get(), novoDisponivel, novoValor);
+                        passagemDados.adicionar(passagem);
+                        System.out.println("Passagem adicionada com sucesso!");
+                    } else {
+                        System.err.println("Trecho inválido!");
+                    }
+
+                    passagemDados.editar(index, new Passagem(novaDataPartida, novaDataChegada, novoTrechoOptional.get(),
+                            novoDisponivel, novoValor));
+                    break;
+                case "3":
+                    System.out.println("-------------------------------");
+                    System.out.println("COMPANHIA -- REMOVER PASSAGEM");
+                    System.out.println("-------------------------------");
+                    break;
+                case "4":
+                    System.out.println("-------------------------------");
                     System.out.println("COMPANHIA -- PASSAGENS CADASTRADAS");
                     System.out.println("-------------------------------");
                     List<Passagem> passagems = passagemDados.pegarPassagemPorCompanhia(companhia);
@@ -198,31 +244,40 @@ public class Main {
                         passagems.stream().forEach(System.out::println);
                     }
                     break;
-                case "3":
-                    System.out.println("COMPANHIA -- IMPRIMIR HISTORICO");
-                    companhia.imprimirHistorico();
-                    break;
-                case "4":
-                    System.out.println("COMPANHIA -- CADASTRAR PASSAGEM");
-                    break;
                 case "5":
-                    System.out.println("COMPANHIA -- IMPRIMIR HISTORICO");
-                    companhia.imprimirHistorico();
+                    System.out.println("-------------------------------");
+                    System.out.println("COMPANHIA -- CADASTRAR TRECHO");
+                    System.out.println("-------------------------------");
+                    System.out.println("Digite a origem: Ex: BEL");
+                    String origem = scanner.nextLine();
+                    System.out.println("Digite o destino: Ex: CWB");
+                    String destino = scanner.nextLine();
+
+                    if (companhia.criarTrecho(new Trecho(origem, destino, companhia), trechoDados)) {
+                        System.out.println("Trecho criado");
+                    } else {
+                        System.err.println("Trecho já cadastrado");
+                    }
                     break;
                 case "6":
-                    System.out.println("COMPANHIA -- IMPRIMIR HISTORICO");
-                    companhia.imprimirHistorico();
+                    System.out.println("-------------------------------");
+                    System.out.println("COMPANHIA -- EDITAR TRECHO");
+                    System.out.println("-------------------------------");
                     break;
                 case "7":
-                    System.out.println("COMPANHIA -- IMPRIMIR HISTORICO");
-                    companhia.imprimirHistorico();
+                    System.out.println("-------------------------------");
+                    System.out.println("COMPANHIA -- REMOVER TRECHO");
+                    System.out.println("-------------------------------");
                     break;
                 case "8":
-                    System.out.println("COMPANHIA -- IMPRIMIR HISTORICO");
-                    companhia.imprimirHistorico();
+                    System.out.println("-------------------------------");
+                    System.out.println("COMPANHIA -- TRECHOS CADASTRADOS");
+                    System.out.println("-------------------------------");
                     break;
                 case "9":
+                    System.out.println("-------------------------------");
                     System.out.println("COMPANHIA -- IMPRIMIR HISTORICO");
+                    System.out.println("-------------------------------");
                     companhia.imprimirHistorico();
                     break;
                 case "0":
