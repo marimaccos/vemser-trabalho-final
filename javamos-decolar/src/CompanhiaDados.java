@@ -2,10 +2,16 @@ package javamos_decolar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CompanhiaDados implements Crud<Companhia> {
 
     List<Companhia> listaDeCompanhias = new ArrayList<>();
+
+
+    public List<Companhia> getListaDeCompanhias() {
+        return listaDeCompanhias;
+    }
 
     @Override
     public void adicionar(Companhia companhia) {
@@ -18,7 +24,13 @@ public class CompanhiaDados implements Crud<Companhia> {
             System.out.println("id: " + i + " | " + listaDeCompanhias.get(i));
         }
     }
+    public Optional<Companhia> buscaCompanhiaPorLogin(String login) {
+        Optional<Companhia> companhiaEncontrada = getListaDeCompanhias().stream()
+                .filter(companhia -> companhia.getLogin().equals(login))
+                .findFirst();
 
+        return companhiaEncontrada;
+    }
     @Override
     public void editar(Integer index, Companhia companhia) {
 

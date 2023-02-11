@@ -8,6 +8,10 @@ public class Comprador extends Usuario implements Historico {
     private String cpf;
     private List<Venda> historicoCompras = new ArrayList<>();
 
+    public Comprador(String login, String senha, String nome, Tipo tipo) {
+        super(login, senha, nome, tipo);
+    }
+
     public Comprador(String login, String senha, String nome, Tipo tipo, String cpf) {
         super(login, senha, nome, tipo);
         this.cpf = cpf;

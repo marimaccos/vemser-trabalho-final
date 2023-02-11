@@ -2,6 +2,7 @@ package javamos_decolar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CompradorDados implements Crud<Comprador> {
 
@@ -25,6 +26,14 @@ public class CompradorDados implements Crud<Comprador> {
         for (int i = 0; i < listaDeComprador.size(); i++) {
             System.out.println("id=" + i + " | " + listaDeComprador.get(i));
         }
+    }
+
+    public Optional<Comprador> buscaCompradorPorLogin(String login) {
+        Optional<Comprador> compradorEncontrado = getListaDeComprador().stream()
+                .filter(comprador -> comprador.getLogin().equals(login))
+                .findFirst();
+
+      return compradorEncontrado;
     }
 
     @Override

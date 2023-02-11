@@ -10,6 +10,14 @@ public class Companhia extends Usuario implements Historico {
     private List<Passagem> passagensCadastradas;
     private List<Trecho> trechosCadastrados;
 
+
+    public Companhia(String login, String senha, String nome, Tipo tipo) {
+        super(login, senha, nome, tipo);
+        this.historicoVendas = new ArrayList<>();
+        this.passagensCadastradas = new ArrayList<>();
+        this.trechosCadastrados = new ArrayList<>();
+    }
+
     public Companhia(String login, String senha, String nome, Tipo tipo, String cnpj) {
         super(login, senha, nome, tipo);
         this.cnpj = cnpj;
