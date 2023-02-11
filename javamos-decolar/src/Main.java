@@ -30,7 +30,8 @@ public class Main {
         Trecho trechoTeste = new Trecho("FOR", "SP", companhiaTeste);
         Passagem passagemTeste = new Passagem(LocalDate.now(),
                 LocalDate.now(), trechoTeste, true, BigDecimal.valueOf(2.0));
-        Passagem passagemTeste2 = new Passagem(LocalDate.now(), LocalDate.now(), trechoTeste, true, BigDecimal.valueOf(2.0));
+        Passagem passagemTeste2 = new Passagem(LocalDate.now(), LocalDate.now(), trechoTeste,
+                true, BigDecimal.valueOf(2.0));
 //        Venda vendaTeste = new Venda();
 
         passagemDados.adicionar(passagemTeste);
