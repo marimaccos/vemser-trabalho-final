@@ -1,5 +1,6 @@
 package javamos_decolar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Companhia extends Usuario implements Historico {
@@ -9,13 +10,12 @@ public class Companhia extends Usuario implements Historico {
     private List<Passagem> passagensCadastradas;
     private List<Trecho> trechosCadastrados;
 
-    public Companhia(String login, String senha, String nome, Tipo tipo, String cnpj, List<Venda> historicoVendas,
-                     List<Passagem> passagensCadastradas, List<Trecho> trechosCadastrados) {
+    public Companhia(String login, String senha, String nome, Tipo tipo, String cnpj) {
         super(login, senha, nome, tipo);
         this.cnpj = cnpj;
-        this.historicoVendas = historicoVendas;
-        this.passagensCadastradas = passagensCadastradas;
-        this.trechosCadastrados = trechosCadastrados;
+        this.historicoVendas = new ArrayList<>();
+        this.passagensCadastradas = new ArrayList<>();
+        this.trechosCadastrados = new ArrayList<>();
     }
 
     public String getCnpj() {
