@@ -14,14 +14,14 @@
 ## 2. Metodologia
 
 Como abordagem para codificação desse projeto, resolvemos montar um diagrama de classes, 
-que utilizamos como guia para entendermos as necessidades básicas do sistema. A idéia foi
+que utilizamos como guia para entendermos as necessidades básicas do sistema. A ideia foi
 desenvolver um MVP que suprisse todos os requisitos listados pela TechLead Mayra. Também elaboramos uma espécie 
 de fluxograma de telas para entendermos melhor como implementar
 a classe Main. Este processo de desenvolvimento do diagrama de classes e do fluxograma foi
 realizado em dailies de 30 minutos, uma hora após a conclusão do estágio.
 
 Ao todo foram necessarias três dailies para ajustarmos todas as expectativas e entermos melhor
-as necessidades do negócio. Após isso, decidimos que a codificação seria feita através de pair programming,
+as necessidades do negócio. Após isso, decidimos que a codificação seria feita através de mob e pair programming,
 desta forma o grupo todo poderia pensar na aplicação da lógica do sistema, assim como facilitaria o debate de ideias e adição de
 métodos antes não pensados para o projeto.
 
