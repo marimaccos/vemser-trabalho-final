@@ -7,9 +7,9 @@
 
 ## 1. Equipe
 
-- Henrique Miranda
-- Kelly Castelo
-- Mariana Machado
+- Henrique Miranda - QA
+- Kelly Castelo - BackEnd
+- Mariana Machado - BackEnd
 
 ## 2. Metodologia
 
