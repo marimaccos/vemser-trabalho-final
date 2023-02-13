@@ -25,13 +25,13 @@ public class Main {
 
         // CLASSES PARA TESTARMOS
 
-        Companhia companhiaTeste = new Companhia("cp", "cp", "cp", Tipo.COMPANHIA, "123");
-        Comprador compradorTeste = new Comprador("te", "te", "te", Tipo.COMPRADOR, "123");
-        Trecho trechoTeste = new Trecho("FOR", "SP", companhiaTeste);
-        Passagem passagemTeste = new Passagem(LocalDate.now(),
-                LocalDate.now(), trechoTeste, true, BigDecimal.valueOf(2.0));
+        Companhia companhiaTeste = new Companhia("companhia1", "123", "companhia1", Tipo.COMPANHIA, "123");
+        Comprador compradorTeste = new Comprador("comprador1", "123", "comprador1", Tipo.COMPRADOR, "123");
+        Trecho trechoTeste = new Trecho("FOR", "GRU", companhiaTeste);
+        Passagem passagemTeste = new Passagem(LocalDate.parse("23-03-2023", FORMATACAO_DATA),
+                LocalDate.parse("24-03-2023", FORMATACAO_DATA), trechoTeste, true, BigDecimal.valueOf(159.0));
         Passagem passagemTeste2 = new Passagem(LocalDate.now(), LocalDate.now(), trechoTeste,
-                true, BigDecimal.valueOf(2.0));
+                true, BigDecimal.valueOf(249.0));
 //        Venda vendaTeste = new Venda();
 
         passagemDados.adicionar(passagemTeste);
