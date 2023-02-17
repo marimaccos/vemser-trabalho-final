@@ -60,9 +60,9 @@ CREATE TABLE "Passagem" (
   "data_partida" DATE NOT NULL,
   "data_chegada" DATE NOT NULL,
   "disponivel" CHAR(1) NOT NULL,
-  "valor" NUMBER NOT NULL,
+  "valor" NUMBER(19,4) NOT NULL,
   "id_trecho" NUMBER NOT NULL,
-  "id_venda" NUMBER NOT NULL,
+  "id_venda" NUMBER,
   PRIMARY KEY ("id_passagem"),
   CONSTRAINT "FK_Passagem.id_venda"
     FOREIGN KEY ("id_venda")
