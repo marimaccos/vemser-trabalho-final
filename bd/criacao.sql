@@ -31,7 +31,7 @@ CREATE TABLE "Companhia" (
 CREATE TABLE "Venda" (
   "id_venda" NUMBER,
   "status" VARCHAR2(20) NOT NULL,
-  "data" DATE NOT NULL,
+  "data_venda" DATE NOT NULL,
   "id_companhia" NUMBER NOT NULL,
   "id_comprador" NUMBER NOT NULL,
   PRIMARY KEY ("id_venda"),
