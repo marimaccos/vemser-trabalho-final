@@ -10,7 +10,7 @@ CREATE TABLE "Usuario" (
 CREATE TABLE "Comprador" (
   "id_comprador" NUMBER,
   "cpf" CHAR(11) UNIQUE NOT NULL,
-  "id_usuario" NUMBER NOT NULL,
+  "id_usuario" NUMBER UNIQUE NOT NULL,
   PRIMARY KEY ("id_comprador"),
   CONSTRAINT "FK_Comprador.id_usuario"
     FOREIGN KEY ("id_usuario")
@@ -21,7 +21,7 @@ CREATE TABLE "Companhia" (
   "id_companhia" NUMBER,
   "cnpj" CHAR(14) UNIQUE NOT NULL,
   "nome_fantasia" VARCHAR(100) NOT NULL,
-  "id_usuario" NUMBER NOT NULL,
+  "id_usuario" NUMBER UNIQUE NOT NULL,
   PRIMARY KEY ("id_companhia"),
   CONSTRAINT "FK_Companhia.id_usuario"
     FOREIGN KEY ("id_usuario")
