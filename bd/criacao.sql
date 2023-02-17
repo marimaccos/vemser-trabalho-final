@@ -3,7 +3,7 @@ CREATE TABLE "Usuario" (
   "login" VARCHAR(20) UNIQUE NOT NULL,
   "senha" VARCHAR(20) NOT NULL,
   "nome" VARCHAR(100) NOT NULL,
-  "tipo" CHAR(1) NOT NULL,
+  "tipo" NUMBER(1) NOT NULL,
   PRIMARY KEY ("id_usuario")
 );
 
