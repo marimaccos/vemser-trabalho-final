@@ -1,4 +1,4 @@
-CREATE TABLE "Usuario" (
+CREATE TABLE "Usuario (
   "id_usuario" NUMBER,
   "login" VARCHAR(20) UNIQUE NOT NULL,
   "senha" VARCHAR(20) NOT NULL,
