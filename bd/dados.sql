@@ -56,15 +56,15 @@ INSERT INTO JAVAMOS_DECOLAR.COMPRADOR (id_comprador, cpf, id_usuario)
 -- trechos --
 
 INSERT INTO JAVAMOS_DECOLAR.TRECHO (id_trecho, origem, destino, id_companhia) 
-	VALUES (seq_comprador.nextval, 'BEL', 'CWB', 1);
+	VALUES (seq_trecho.nextval, 'BEL', 'CWB', 1);
 INSERT INTO JAVAMOS_DECOLAR.TRECHO (id_trecho, origem, destino, id_companhia) 
-	VALUES (seq_comprador.nextval, 'POA', 'RJ', 2);
+	VALUES (seq_trecho.nextval, 'POA', 'RJ', 2);
 INSERT INTO JAVAMOS_DECOLAR.TRECHO (id_trecho, origem, destino, id_companhia) 
-	VALUES (seq_comprador.nextval, 'SP', 'POA', 3);
+	VALUES (seq_trecho.nextval, 'SP', 'POA', 3);
 INSERT INTO JAVAMOS_DECOLAR.TRECHO (id_trecho, origem, destino, id_companhia) 
-	VALUES (seq_comprador.nextval, 'POA', 'FLO', 4);
+	VALUES (seq_trecho.nextval, 'POA', 'FLO', 4);
 INSERT INTO JAVAMOS_DECOLAR.TRECHO (id_trecho, origem, destino, id_companhia) 
-	VALUES (seq_comprador.nextval, 'SP', 'RJ', 5);
+	VALUES (seq_trecho.nextval, 'SP', 'RJ', 5);
 
 -- vendas --
 
@@ -90,27 +90,27 @@ INSERT INTO JAVAMOS_DECOLAR.VENDA  (id_venda, status, data_venda, id_companhia, 
 INSERT INTO JAVAMOS_DECOLAR.PASSAGEM (id_passagem, codigo, data_partida, data_chegada, disponivel, valor, id_trecho, id_venda) 
 	VALUES (seq_passagem.nextval, '123456', 
 		TO_DATE('17-02-2023', 'dd-mm-yyyy'), 
-		TO_DATE('18-02-2023', 'dd-mm-yyyy'), 0, 200.9, 6, 1);
+		TO_DATE('18-02-2023', 'dd-mm-yyyy'), 0, 200.9, 1, 1);
 	
 INSERT INTO JAVAMOS_DECOLAR.PASSAGEM (id_passagem, codigo, data_partida, data_chegada, disponivel, valor, id_trecho, id_venda) 
 	VALUES (seq_passagem.nextval, '987654', 
 		TO_DATE('17-02-2023', 'dd-mm-yyyy'), 
-		TO_DATE('18-02-2023', 'dd-mm-yyyy'), 0, 650, 7, 2);
+		TO_DATE('18-02-2023', 'dd-mm-yyyy'), 0, 650, 2, 2);
 	
 INSERT INTO JAVAMOS_DECOLAR.PASSAGEM (id_passagem, codigo, data_partida, data_chegada, disponivel, valor, id_trecho, id_venda) 
 	VALUES (seq_passagem.nextval, '234567', 
 		TO_DATE('17-02-2023', 'dd-mm-yyyy'), 
-		TO_DATE('18-02-2023', 'dd-mm-yyyy'), 0, 790.5, 8, 3);
+		TO_DATE('18-02-2023', 'dd-mm-yyyy'), 0, 790.5, 3, 3);
 	
 INSERT INTO JAVAMOS_DECOLAR.PASSAGEM (id_passagem, codigo, data_partida, data_chegada, disponivel, valor, id_trecho, id_venda) 
 	VALUES (seq_passagem.nextval, '765432', 
 		TO_DATE('17-02-2023', 'dd-mm-yyyy'), 
-		TO_DATE('18-02-2023', 'dd-mm-yyyy'), 0, 364.2, 9, 4);
+		TO_DATE('18-02-2023', 'dd-mm-yyyy'), 0, 364.2, 4, 4);
 	
 INSERT INTO JAVAMOS_DECOLAR.PASSAGEM (id_passagem, codigo, data_partida, data_chegada, disponivel, valor, id_trecho, id_venda) 
 	VALUES (seq_passagem.nextval, '456789', 
 		TO_DATE('17-02-2023', 'dd-mm-yyyy'), 
-		TO_DATE('18-02-2023', 'dd-mm-yyyy'), 0, 861.8, 10, 5);
+		TO_DATE('18-02-2023', 'dd-mm-yyyy'), 0, 861.8, 5, 5);
 	
 SELECT * FROM JAVAMOS_DECOLAR.USUARIO;
 SELECT * FROM JAVAMOS_DECOLAR.TRECHO t;
@@ -118,3 +118,4 @@ SELECT * FROM JAVAMOS_DECOLAR.COMPANHIA c;
 SELECT *FROM JAVAMOS_DECOLAR.COMPRADOR c2;
 SELECT * FROM JAVAMOS_DECOLAR.VENDA;
 SELECT * FROM JAVAMOS_DECOLAR.PASSAGEM p;
+
