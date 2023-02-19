@@ -2,7 +2,6 @@
 
 -- usuarios --
 -- [1] - Companhia
--- [2] - Comprador
 
 INSERT INTO JAVAMOS_DECOLAR.USUARIO (id_usuario, login, senha, nome, tipo) 
 	VALUES (seq_usuario.nextval, 'TAM123', 'senhasecreta', 'Companhia Tam', '1');
@@ -15,6 +14,7 @@ INSERT INTO JAVAMOS_DECOLAR.USUARIO (id_usuario, login, senha, nome, tipo)
 INSERT INTO JAVAMOS_DECOLAR.USUARIO (id_usuario, login, senha, nome, tipo) 
 	VALUES (seq_usuario.nextval, 'AMERICAN123', 'senhaamerican', 'Companhia American Airlines', '1');
 
+-- [2] - Comprador
 
 INSERT INTO JAVAMOS_DECOLAR.USUARIO (id_usuario, login, senha, nome, tipo) 
 	VALUES (seq_usuario.nextval, 'Castelovski', 'umasenha', 'Kelly Castelo', '2');
