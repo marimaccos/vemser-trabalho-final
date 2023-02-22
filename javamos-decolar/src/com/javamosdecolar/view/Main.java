@@ -1,4 +1,9 @@
-package javamos_decolar;
+package javamos_decolar.com.javamosdecolar.view;
+
+import javamos_decolar.com.javamosdecolar.model.*;
+import javamos_decolar.com.javamosdecolar.repository.*;
+import javamos_decolar.com.javamosdecolar.service.CompanhiaService;
+import javamos_decolar.com.javamosdecolar.service.UsuarioService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,11 +15,14 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-        CompanhiaDados companhiaDados = new CompanhiaDados();
-        CompradorDados compradorDados = new CompradorDados();
-        VendaDados vendaDados = new VendaDados();
-        TrechoDados trechoDados = new TrechoDados();
-        PassagemDados passagemDados = new PassagemDados();
+        UsuarioService usuarioService = new UsuarioService();
+        CompanhiaService companhiaService = new CompanhiaService();
+
+//        CompanhiaRepository companhiaRepository = new CompanhiaRepository();
+        CompradorRepository compradorDados = new CompradorRepository();
+        VendaRepository vendaDados = new VendaRepository();
+        TrechoRepository trechoDados = new TrechoRepository();
+        PassagemRepository passagemDados = new PassagemRepository();
         Usuario usuarioLogado = null;
 
         Scanner scanner = new Scanner(System.in);
@@ -23,25 +31,25 @@ public class Main {
         final DateTimeFormatter FORMATACAO_DATA = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 
-        // CLASSES PARA TESTARMOS
-
-        Companhia companhiaTeste = new Companhia("companhia1", "123", "companhia1", Tipo.COMPANHIA, "123");
-        Comprador compradorTeste = new Comprador("comprador1", "123", "comprador1", Tipo.COMPRADOR, "123");
-        Trecho trechoTeste = new Trecho("FOR", "GRU", companhiaTeste);
-        Passagem passagemTeste = new Passagem(LocalDate.parse("23-03-2023", FORMATACAO_DATA),
-                LocalDate.parse("24-03-2023", FORMATACAO_DATA), trechoTeste, true, BigDecimal.valueOf(159.0));
-        Passagem passagemTeste2 = new Passagem(LocalDate.now(), LocalDate.now(), trechoTeste,
-                true, BigDecimal.valueOf(249.0));
-//        Venda vendaTeste = new Venda();
-
-        passagemDados.adicionar(passagemTeste);
-        passagemDados.adicionar(passagemTeste2);
-        companhiaTeste.getPassagensCadastradas().add(passagemTeste);
-        companhiaTeste.getPassagensCadastradas().add(passagemTeste2);
-        companhiaDados.adicionar(companhiaTeste);
-        compradorDados.adicionar(compradorTeste);
-        companhiaTeste.criarTrecho(trechoTeste, trechoDados);
-//        vendaTeste.efetuarVenda(passagemTeste,compradorTeste,companhiaTeste,vendaDados);
+//        // CLASSES PARA TESTARMOS
+//
+//        Companhia companhiaTeste = new Companhia("companhia1", "123", "companhia1", TipoUsuario.COMPANHIA, "123");
+//        Comprador compradorTeste = new Comprador("comprador1", "123", "comprador1", TipoUsuario.COMPRADOR, "123");
+//        Trecho trechoTeste = new Trecho("FOR", "GRU", companhiaTeste);
+//        Passagem passagemTeste = new Passagem(LocalDate.parse("23-03-2023", FORMATACAO_DATA),
+//                LocalDate.parse("24-03-2023", FORMATACAO_DATA), trechoTeste, true, BigDecimal.valueOf(159.0));
+//        Passagem passagemTeste2 = new Passagem(LocalDate.now(), LocalDate.now(), trechoTeste,
+//                true, BigDecimal.valueOf(249.0));
+////        Venda vendaTeste = new Venda();
+//
+//        passagemDados.adicionar(passagemTeste);
+//        passagemDados.adicionar(passagemTeste2);
+//        companhiaTeste.getPassagensCadastradas().add(passagemTeste);
+//        companhiaTeste.getPassagensCadastradas().add(passagemTeste2);
+//        companhiaRepository.adicionar(companhiaTeste);
+//        compradorDados.adicionar(compradorTeste);
+//        companhiaTeste.criarTrecho(trechoTeste, trechoDados);
+////        vendaTeste.efetuarVenda(passagemTeste,compradorTeste,companhiaTeste,vendaDados);
 
         // MENU
         System.out.println("-------------------------------");
@@ -59,17 +67,17 @@ public class Main {
 
             switch (opcao) {
                 case 1:
-                    cadastrarUsuario(scanner, companhiaDados, compradorDados);
+                    cadastrarUsuario(scanner, companhiaRepository, compradorDados);
                     break;
                 case 2:
-                    usuarioLogado = entrarComUsuarioExistente(scanner, companhiaDados, compradorDados);
+                    usuarioLogado = entrarComUsuarioExistente(scanner, companhiaRepository, compradorDados);
                     if (usuarioLogado instanceof Companhia) {
                         exibeMenuDeUsuarioCompanhia(scanner, (Companhia) usuarioLogado, passagemDados,
                                 trechoDados, FORMATACAO_DATA);
                         break;
                     } else if (usuarioLogado instanceof Comprador) {
                         exibeMenuDeUsuarioComprador(scanner, (Comprador) usuarioLogado, passagemDados,
-                                trechoDados, FORMATACAO_DATA, companhiaDados, vendaDados);
+                                trechoDados, FORMATACAO_DATA, companhiaRepository, vendaDados);
                         break;
                     } else {
                         break;
@@ -84,7 +92,8 @@ public class Main {
 
     }
 
-    private static void cadastrarUsuario(Scanner scanner, CompanhiaDados companhiaDados, CompradorDados compradorDados) {
+    private static void cadastrarUsuario(Scanner scanner, CompanhiaService companhiaService,
+                                         CompradorRepository compradorDados) {
         System.out.println("-------------------------------");
         System.out.println("CADASTRAR USUÁRIO");
         System.out.println("-------------------------------");
@@ -103,30 +112,34 @@ public class Main {
             System.out.print("Digite cnpj: ");
             String cnpj = scanner.nextLine();
 
-            Companhia companhia = new Companhia(login, senha, nome, Tipo.COMPANHIA, cnpj);
-            companhiaDados.adicionar(companhia);
+            Companhia companhia = new Companhia(login, senha, nome, TipoUsuario.COMPANHIA, cnpj);
+            companhiaService.adicionar(companhia);
 
         } else if (tipo.equals("2")) {
             System.out.print("Digite cpf: ");
             String cpf = scanner.nextLine();
 
-            Comprador comprador = new Comprador(login, senha, nome, Tipo.COMPRADOR, cpf);
+            Comprador comprador = new Comprador(login, senha, nome, TipoUsuario.COMPRADOR, cpf);
             compradorDados.adicionar(comprador);
 
         } else {
-            System.err.println("Tipo inválido!");
+            System.err.println("TipoUsuario inválido!");
         }
     }
 
-    private static Usuario entrarComUsuarioExistente(Scanner scanner, CompanhiaDados companhiaDados,
-                                                     CompradorDados compradorDados) {
+    private static Usuario entrarComUsuarioExistente(Scanner scanner, UsuarioService usuarioService) {
         System.out.println("LOGIN");
-        System.out.println("Insira o tipo de usuário: \n[1] - Companhia\n[2] - Comprador");
-        String tipo = scanner.nextLine();
+//        System.out.println("Insira o tipo de usuário: \n[1] - Companhia\n[2] - Comprador");
+//        String tipo = scanner.nextLine();
         System.out.print("Digite seu login: ");
         String login = scanner.nextLine();
         System.out.print("Digite sua senha: ");
         String senha = scanner.nextLine();
+
+        /*
+            isso aqui tem que ser refatorado de uma forma que a gente não precise pedir ao usuario o tipo dele, o próprio
+            banco tem que retornar isso para nós
+         */
 
         if (tipo.equals("2")) {
             Optional<Comprador> compradorEncontrado = compradorDados.buscaCompradorPorLogin(login);
@@ -147,7 +160,7 @@ public class Main {
                 }
             }
         } else if(tipo.equals("1")) {
-            Optional<Companhia> companhiaEncontrada = companhiaDados.buscaCompanhiaPorLogin(login);
+            Optional<Companhia> companhiaEncontrada = companhiaRepository.buscaCompanhiaPorLogin(login);
 
             if (companhiaEncontrada.isEmpty()) {
                 System.err.println("Login inválido.");
@@ -173,7 +186,7 @@ public class Main {
     }
 
     private static void exibeMenuDeUsuarioCompanhia(Scanner scanner, Companhia companhia,
-                                                    PassagemDados passagemDados, TrechoDados trechoDados,
+                                                    PassagemRepository passagemDados, TrechoRepository trechoDados,
                                                     DateTimeFormatter formatacaoData) {
         String opcao = "";
         while (!opcao.equals("0")) {
@@ -207,7 +220,7 @@ public class Main {
                     String trecho = scanner.nextLine();
                     System.out.print("Insira o valor da passagem: ");
                     BigDecimal valor = BigDecimal.valueOf(Double.valueOf(scanner.nextLine()));
-                    companhia.cadastrarPassagem(trecho, passagemDados, trechoDados, dataPartida, dataChegada,  valor);
+                    passagemService.cadastrarPassagem(trecho, passagemDados, trechoDados, dataPartida, dataChegada, valor);
                     break;
 
                 case "2":
@@ -345,9 +358,9 @@ public class Main {
     }
 
     private static void exibeMenuDeUsuarioComprador(Scanner scanner, Comprador comprador,
-                                                    PassagemDados passagemDados, TrechoDados trechoDados,
-                                                    DateTimeFormatter formatacaoData, CompanhiaDados companhiaDados,
-                                                    VendaDados vendaDados) {
+                                                    PassagemRepository passagemDados, TrechoRepository trechoDados,
+                                                    DateTimeFormatter formatacaoData, CompanhiaRepository companhiaRepository,
+                                                    VendaRepository vendaDados) {
         String opcao = "";
 
         while (!opcao.equals("0")) {
@@ -367,7 +380,7 @@ public class Main {
             switch (opcao) {
                 case "1":
                     System.out.print(" ");
-                    buscarTrecho(scanner, formatacaoData, passagemDados, companhiaDados);
+                    buscarTrecho(scanner, formatacaoData, passagemDados, companhiaRepository);
                     break;
 
                 case "2":
@@ -417,7 +430,7 @@ public class Main {
     }
 
     private static void buscarTrecho(Scanner scanner, DateTimeFormatter formatacaoData,
-                                     PassagemDados passagemDados, CompanhiaDados companhiaDados) {
+                                     PassagemRepository passagemDados, CompanhiaRepository companhiaRepository) {
         String opcao = "";
 
         while (!opcao.equals("0")) {
@@ -474,7 +487,7 @@ public class Main {
                     System.out.println("-------------------------------");
                     System.out.println("Digite o nome da companhia aerea: ");
                     String nomeCompanhia = scanner.nextLine();
-                    Optional<Companhia> companhia = companhiaDados.buscaCompanhiaPorNome(nomeCompanhia);
+                    Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorNome(nomeCompanhia);
                     if(companhia.isEmpty()) {
                         System.err.println("Companhia não encontrada!");
                         break;
@@ -493,7 +506,7 @@ public class Main {
     }
 
     private static void menuDeCompra(Scanner scanner, Comprador comprador,
-                                     PassagemDados passagemDados, VendaDados vendaDados) {
+                                     PassagemRepository passagemDados, VendaRepository vendaDados) {
         System.out.println("Digite o código da passagem: ");
         String codigoPassagem = scanner.nextLine();
         comprador.comprarPassagem(codigoPassagem, passagemDados, vendaDados);

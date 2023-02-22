@@ -1,9 +1,9 @@
-package javamos_decolar;
+package javamos_decolar.com.javamosdecolar.model;
+
+import javamos_decolar.com.javamosdecolar.utils.Codigo;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Passagem {
     private String codigo;
@@ -12,9 +12,9 @@ public class Passagem {
     private Trecho trecho;
     private boolean disponivel;
 
-    public Passagem(LocalDate dataPartida, LocalDate dataChegada,
+    public Passagem(String codigo, LocalDate dataPartida, LocalDate dataChegada,
                     Trecho trecho, boolean disponivel, BigDecimal valor) {
-        this.codigo = this.geraCodigoPassagem();
+        this.codigo = codigo;
         this.dataPartida = dataPartida;
         this.dataChegada = dataChegada;
         this.trecho = trecho;
@@ -80,7 +80,4 @@ public class Passagem {
                 '}';
     }
 
-    public String geraCodigoPassagem() {
-        return String.valueOf(1 + (int) (Math.random() * 2000));
-    }
 }

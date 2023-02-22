@@ -1,4 +1,6 @@
-package javamos_decolar;
+package javamos_decolar.com.javamosdecolar.model;
+
+import javamos_decolar.com.javamosdecolar.model.Companhia;
 
 public class Trecho {
 
