@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Passagem {
+    private int idPassagem;
     private String codigo;
     private LocalDate dataPartida;
     private LocalDate dataChegada;
@@ -21,7 +22,15 @@ public class Passagem {
         this.disponivel = disponivel;
         this.valor = valor;
     }
-    
+
+    public int getIdPassagem() {
+        return idPassagem;
+    }
+
+    public void setIdPassagem(int idPassagem) {
+        this.idPassagem = idPassagem;
+    }
+
     public String getCodigo() {
         return codigo;
     }
@@ -71,6 +80,7 @@ public class Passagem {
     @Override
     public String toString() {
         return "Passagem{" +
+                "ID='" + idPassagem + '\'' +
                 "codigo='" + codigo + '\'' +
                 ", dataPartida=" + dataPartida +
                 ", dataChegada=" + dataChegada +

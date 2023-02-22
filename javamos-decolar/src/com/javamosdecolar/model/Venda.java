@@ -5,6 +5,7 @@ import javamos_decolar.com.javamosdecolar.utils.Codigo;
 import java.time.LocalDate;
 
 public class Venda {
+    private int idVenda;
     private String codigo;
     private Passagem passagem;
     private Comprador comprador;
@@ -20,6 +21,14 @@ public class Venda {
         this.companhia = companhia;
         this.data = data;
         this.status = status;
+    }
+
+    public int getIdVenda() {
+        return idVenda;
+    }
+
+    public void setIdVenda(int idVenda) {
+        this.idVenda = idVenda;
     }
 
     public String getCodigo() {
@@ -73,6 +82,7 @@ public class Venda {
     @Override
     public String toString() {
         return "Venda{" +
+                "ID='" + idVenda + '\'' +
                 "codigo='" + codigo + '\'' +
                 ", passagem=" + passagem +
                 ", comprador=" + comprador.getNome() +

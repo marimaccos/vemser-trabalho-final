@@ -3,7 +3,7 @@ package javamos_decolar.com.javamosdecolar.model;
 import javamos_decolar.com.javamosdecolar.model.Companhia;
 
 public class Trecho {
-
+    private int idTrecho;
     private String origem;
     private String destino;
     private Companhia companhia;
@@ -12,6 +12,14 @@ public class Trecho {
         this.origem = origem;
         this.destino = destino;
         this.companhia = companhia;
+    }
+
+    public int getIdTrecho() {
+        return idTrecho;
+    }
+
+    public void setIdTrecho(int idTrecho) {
+        this.idTrecho = idTrecho;
     }
 
     public String getOrigem() {
@@ -41,6 +49,7 @@ public class Trecho {
     @Override
     public String toString() {
         return "Trecho{" +
+                "ID='" + idTrecho + '\'' +
                 "origem='" + origem + '\'' +
                 ", destino='" + destino + '\'' +
                 ", companhia=" + companhia.getNome() +
