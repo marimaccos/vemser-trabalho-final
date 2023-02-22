@@ -1,17 +1,27 @@
 package javamos_decolar.com.javamosdecolar.model;
 
-public abstract class Usuario {
+public class Usuario {
 
+    private Integer idUsuario;
     private String login;
     private String senha;
     private String nome;
     private TipoUsuario tipoUsuario;
 
-    public Usuario(String login, String senha, String nome, TipoUsuario tipoUsuario) {
+    public Usuario(Integer idUsuario, String login, String senha, String nome, TipoUsuario tipoUsuario) {
+        this.idUsuario = idUsuario;
         this.login = login;
         this.senha = senha;
         this.nome = nome;
         this.tipoUsuario = tipoUsuario;
+    }
+
+    public Integer getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(Integer idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getLogin() {
@@ -38,11 +48,11 @@ public abstract class Usuario {
         this.nome = nome;
     }
 
-    public TipoUsuario getTipo() {
+    public TipoUsuario getTipoUsuario() {
         return tipoUsuario;
     }
 
-    public void setTipo(TipoUsuario tipoUsuario) {
+    public void setTipoUsuario(TipoUsuario tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
     }
 }

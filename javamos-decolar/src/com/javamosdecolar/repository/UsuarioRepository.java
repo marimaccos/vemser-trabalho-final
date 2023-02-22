@@ -6,6 +6,7 @@ import javamos_decolar.com.javamosdecolar.model.Usuario;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class UsuarioRepository implements Repository<Usuario, Integer>{
 
@@ -37,5 +38,10 @@ public class UsuarioRepository implements Repository<Usuario, Integer>{
     public boolean remover(Integer id) throws DatabaseException {
         //TO-DO
         return false;
+    }
+
+    public Optional<Usuario> buscaUsuarioPeloLogin(String login) throws DatabaseException {
+        //TO-DO
+        return null;
     }
 }
