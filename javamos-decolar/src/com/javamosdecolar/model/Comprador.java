@@ -3,13 +3,23 @@ package javamos_decolar.com.javamosdecolar.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Comprador extends Usuario{
+public final class Comprador extends Usuario{
+    private Integer idComprador;
     private String cpf;
-    private List<Venda> historicoCompras = new ArrayList<>();
 
-    public Comprador(String login, String senha, String nome, TipoUsuario tipoUsuario, String cpf) {
-        super(login, senha, nome, tipoUsuario);
+    public Comprador(Integer idUsuario, String login, String senha, String nome,
+                     TipoUsuario tipoUsuario, String cpf, Integer idComprador) {
+        super(idUsuario, login, senha, nome, tipoUsuario);
         this.cpf = cpf;
+        this.idComprador = idComprador;
+    }
+
+    public Integer getIdComprador() {
+        return idComprador;
+    }
+
+    public void setIdComprador(Integer idComprador) {
+        this.idComprador = idComprador;
     }
 
     public String getCpf() {
@@ -20,19 +30,11 @@ public class Comprador extends Usuario{
         this.cpf = cpf;
     }
 
-    public List<Venda> getHistoricoCompras() {
-        return historicoCompras;
-    }
-
-    public void setHistoricoCompras(List<Venda> historicoCompras) {
-        this.historicoCompras = historicoCompras;
-    }
-
     @Override
     public String toString() {
         return "Comprador{" +
-                "cpf='" + cpf + '\'' +
-                ", historicoCompras=" + historicoCompras +
+                "idComprador=" + idComprador +
+                ", cpf='" + cpf + '\'' +
                 '}';
     }
 }

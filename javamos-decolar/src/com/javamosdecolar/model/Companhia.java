@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Companhia extends Usuario{
+public final class Companhia extends Usuario{
 
+    private Integer idComprador;
     private String cnpj;
     private String nomeFantasia;
     private List<Venda> historicoVendas;
@@ -13,19 +14,29 @@ public class Companhia extends Usuario{
     private List<Trecho> trechosCadastrados;
 
 
-    public Companhia(String login, String senha, String nome, TipoUsuario tipoUsuario) {
-        super(login, senha, nome, tipoUsuario);
-        this.historicoVendas = new ArrayList<>();
-        this.passagensCadastradas = new ArrayList<>();
-        this.trechosCadastrados = new ArrayList<>();
+//    public Companhia(Integer idUsuario, String login, String senha, String nome, TipoUsuario tipoUsuario,
+//                     Integer idComprador) {
+//        super(idUsuario, login, senha, nome, tipoUsuario);
+//        this.idComprador = idComprador;
+//        this.historicoVendas = new ArrayList<>();
+//        this.passagensCadastradas = new ArrayList<>();
+//        this.trechosCadastrados = new ArrayList<>();
+//    }
+
+    public Companhia(Integer idUsuario, String login, String senha, String nome,
+                     TipoUsuario tipoUsuario, String cnpj, Integer idComprador, String nomeFantasia) {
+        super(idUsuario, login, senha, nome, tipoUsuario);
+        this.idComprador = idComprador;
+        this.cnpj = cnpj;
+        this.nomeFantasia = nomeFantasia;
     }
 
-    public Companhia(String login, String senha, String nome, TipoUsuario tipoUsuario, String cnpj) {
-        super(login, senha, nome, tipoUsuario);
-        this.cnpj = cnpj;
-        this.historicoVendas = new ArrayList<>();
-        this.passagensCadastradas = new ArrayList<>();
-        this.trechosCadastrados = new ArrayList<>();
+    public Integer getIdComprador() {
+        return idComprador;
+    }
+
+    public void setIdComprador(Integer idComprador) {
+        this.idComprador = idComprador;
     }
 
     public String getCnpj() {
@@ -71,7 +82,8 @@ public class Companhia extends Usuario{
     @Override
     public String toString() {
         return "Companhia{" +
-                "cnpj='" + cnpj + '\'' +
+                "idComprador=" + idComprador +
+                ", cnpj='" + cnpj + '\'' +
                 ", nomeFantasia='" + nomeFantasia + '\'' +
                 ", historicoVendas=" + historicoVendas +
                 ", passagensCadastradas=" + passagensCadastradas +

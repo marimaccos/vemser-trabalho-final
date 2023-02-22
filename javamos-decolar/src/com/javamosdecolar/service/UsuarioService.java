@@ -1,8 +1,10 @@
 package javamos_decolar.com.javamosdecolar.service;
 
+import javamos_decolar.com.javamosdecolar.exceptions.DatabaseException;
 import javamos_decolar.com.javamosdecolar.model.Companhia;
 import javamos_decolar.com.javamosdecolar.model.Comprador;
 import javamos_decolar.com.javamosdecolar.model.TipoUsuario;
+import javamos_decolar.com.javamosdecolar.model.Usuario;
 import javamos_decolar.com.javamosdecolar.repository.CompanhiaRepository;
 import javamos_decolar.com.javamosdecolar.repository.CompradorRepository;
 import javamos_decolar.com.javamosdecolar.repository.UsuarioRepository;
@@ -12,44 +14,96 @@ import java.util.Optional;
 public class UsuarioService {
 
     private UsuarioRepository usuarioRepository;
+    private CompanhiaRepository companhiaRepository;
+    private CompradorRepository compradorRepository;
 
     public UsuarioService() {
         usuarioRepository = new UsuarioRepository();
+        companhiaRepository = new CompanhiaRepository();
+        compradorRepository = new CompradorRepository();
     }
 
-    public boolean entrarNoSistema(String login, String senha,
-                                   CompradorRepository compradorDados, CompanhiaRepository companhiaRepository) {
+    public void criarUsuarioComprador(Usuario usuario, String cpf) {
+        try {
 
-        Optional<Comprador> compradorOpt = compradorDados.getListaDeComprador().stream()
-                .filter(comprador -> comprador.getLogin() == login)
-                .findAny();
-
-        if (compradorOpt.isPresent()) {
-            if (compradorOpt.get().getSenha() == senha) {
-                return true;
+            if(usuario.getNome().isBlank() || usuario.getLogin().isBlank() ||
+                    usuario.getNome().isBlank() || usuario.getSenha().isBlank()) {
+                throw new Exception("Os campos não podem ser nulos!");
             }
-        }
 
-        return false;
+            if(cpf.length() != 11) {
+                throw new Exception("CPF no formato incorreto!");
+            }
+
+            // verifica se login já foi utilizado
+            Optional<Usuario> usuarioEncontrado = usuarioRepository.buscaUsuarioPeloLogin(usuario.getLogin());
+
+            if(usuarioEncontrado.isPresent()) {
+                throw new Exception("Login já existe!");
+            }
+
+            Usuario usuarioCriado = usuarioRepository.adicionar(usuario);
+            Comprador comprador = new Comprador(usuarioCriado.getIdUsuario(), usuarioCriado.getLogin(),
+                    usuarioCriado.getNome(), usuarioCriado.getSenha(), usuarioCriado.getTipoUsuario(),
+                    cpf, 0);
+            compradorRepository.adicionar(comprador);
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("ERRO: " + e.getMessage());
+        }
     }
 
-    public boolean cadastrarUsuario(String login, String senha, String nome, TipoUsuario tipoUsuario,
-                                    CompradorRepository compradorDados, CompanhiaRepository companhiaRepository) {
+    public void criarUsuarioCompanhia(Usuario usuario, String cnpj, String nomeFantasia) {
+        try {
 
-        if (login.isBlank() || senha.isBlank() || nome.isBlank()) {
-            return  false;
-        }
+            if(usuario.getNome().isBlank() || usuario.getLogin().isBlank() ||
+                    usuario.getNome().isBlank() || usuario.getSenha().isBlank() || nomeFantasia.isBlank()) {
+                throw new Exception("Os campos não podem ser nulos!");
+            }
 
-        if (tipoUsuario == TipoUsuario.COMPRADOR) {
-            Comprador comprador = new Comprador(login, senha, nome, tipoUsuario);
-            compradorDados.adicionar(comprador);
+            if(cnpj.length() != 11) {
+                throw new Exception("CPF no formato incorreto!");
+            }
 
-            return  true;
-        } else {
-            Companhia companhia = new Companhia(login, senha, nome, tipoUsuario);
+            // verifica se login já foi utilizado
+            Optional<Usuario> usuarioEncontrado = usuarioRepository.buscaUsuarioPeloLogin(usuario.getLogin());
+
+            if(usuarioEncontrado.isPresent()) {
+                throw new Exception("Login já existe!");
+            }
+
+            Usuario usuarioCriado = usuarioRepository.adicionar(usuario);
+            Companhia companhia = new Companhia(usuarioCriado.getIdUsuario(), usuarioCriado.getLogin(),
+                    usuarioCriado.getNome(), usuarioCriado.getSenha(), usuarioCriado.getTipoUsuario(),
+                    cnpj, 0, nomeFantasia);
             companhiaRepository.adicionar(companhia);
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("ERRO: " + e.getMessage());
+        }
+    }
 
-            return true;
+    public Optional<Usuario> entrarComUsuarioExistente(String login, String senha) {
+        try {
+            Optional<Usuario> usuario = usuarioRepository.buscaUsuarioPeloLogin(login);
+            if (usuario.isEmpty()) {
+                throw new Exception("Usuário não encontrado!");
+            } else {
+                if (!usuario.get().getSenha().equals(senha)) {
+                    throw new Exception("Senha inválida!");
+                } else {
+                    System.out.println("Login realizado.");
+                    return usuario;
+                }
+            }
+
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            System.err.println("ERRO: " + e.getMessage());
+            return null;
         }
     }
 }
