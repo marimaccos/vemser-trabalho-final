@@ -100,7 +100,8 @@ public class UsuarioService {
             }
 
         } catch (DatabaseException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return null;
         } catch (Exception e) {
             System.err.println("ERRO: " + e.getMessage());
             return null;

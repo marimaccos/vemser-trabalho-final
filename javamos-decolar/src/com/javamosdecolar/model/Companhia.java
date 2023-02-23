@@ -6,7 +6,7 @@ import java.util.List;
 
 public final class Companhia extends Usuario{
 
-    private Integer idComprador;
+    private Integer idCompanhia;
     private String cnpj;
     private String nomeFantasia;
     private List<Venda> historicoVendas;
@@ -26,17 +26,17 @@ public final class Companhia extends Usuario{
     public Companhia(Integer idUsuario, String login, String senha, String nome,
                      TipoUsuario tipoUsuario, String cnpj, Integer idComprador, String nomeFantasia) {
         super(idUsuario, login, senha, nome, tipoUsuario);
-        this.idComprador = idComprador;
+        this.idCompanhia = idComprador;
         this.cnpj = cnpj;
         this.nomeFantasia = nomeFantasia;
     }
 
-    public Integer getIdComprador() {
-        return idComprador;
+    public Integer getIdCompanhia() {
+        return idCompanhia;
     }
 
-    public void setIdComprador(Integer idComprador) {
-        this.idComprador = idComprador;
+    public void setIdCompanhia(Integer idCompanhia) {
+        this.idCompanhia = idCompanhia;
     }
 
     public String getCnpj() {
@@ -82,7 +82,7 @@ public final class Companhia extends Usuario{
     @Override
     public String toString() {
         return "Companhia{" +
-                "idComprador=" + idComprador +
+                "idCompanhia=" + idCompanhia +
                 ", cnpj='" + cnpj + '\'' +
                 ", nomeFantasia='" + nomeFantasia + '\'' +
                 ", historicoVendas=" + historicoVendas +

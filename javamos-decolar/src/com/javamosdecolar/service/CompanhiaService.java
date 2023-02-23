@@ -1,5 +1,6 @@
 package javamos_decolar.com.javamosdecolar.service;
 
+import javamos_decolar.com.javamosdecolar.model.Companhia;
 import javamos_decolar.com.javamosdecolar.model.Passagem;
 import javamos_decolar.com.javamosdecolar.model.Trecho;
 import javamos_decolar.com.javamosdecolar.repository.CompanhiaRepository;
