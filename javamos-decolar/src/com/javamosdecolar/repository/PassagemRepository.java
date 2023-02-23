@@ -69,4 +69,9 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
         //TO-DO
         return null;
     }
+
+    public Optional<Passagem> pegarPassagemPorCodigo(String codigo) throws DatabaseException {
+        //TO-DO
+        return null;
+    }
 }

@@ -17,8 +17,7 @@ public class VendaService {
         passagemRepository = new PassagemRepository();
     }
 
-    public Venda efetuarVenda(Passagem passagem, Comprador comprador,
-                              Companhia companhia, VendaRepository vendaDados) throws DatabaseException {
+    public Venda efetuarVenda(Passagem passagem, Comprador comprador) throws DatabaseException {
 
         /*
             gera codigo de venda, mas consulta no banco pra ver se ja existe uma venda com esse codigo
@@ -35,7 +34,7 @@ public class VendaService {
         }
 
         Venda vendaAtual = new Venda(codigo, passagem, comprador,
-                companhia, LocalDate.now(), Status.CONCLUIDO);
+                passagem.getTrecho().getCompanhia(), LocalDate.now(), Status.CONCLUIDO);
 
         vendaRepository.adicionar(vendaAtual);
         passagemRepository.mudarStatusDaPassagem(2, passagem);

@@ -385,9 +385,9 @@ public class Main {
                     int tipoDeData = Integer.parseInt(scanner.nextLine());
                     System.out.println("Digite a data: dd-MM-yyyy ");
                     LocalDate data = LocalDate.parse(scanner.nextLine(), formatacaoData);
+
                     passagemService.listarPassagemPorData(data, tipoDeData);
                     break;
-
                 case "2":
                     System.out.println("-------------------------------");
                     System.out.println("COMPRADOR - PESQUISAR PASSAGEM\n\t\t\tPOR VALOR");
@@ -397,14 +397,14 @@ public class Main {
                     BigDecimal valorMaximo = BigDecimal.valueOf(Double.parseDouble(scanner.nextLine()));
 
                     passagemService.listarPassagemPorValorMaximo(valorMaximo);
-
+                    break;
                 case "3":
                     System.out.println("-------------------------------");
                     System.out.println("COMPRADOR - PESQUISAR PASSAGEM\n\t\t\tPOR COMPANHIA AEREA");
                     System.out.println("-------------------------------");
                     System.out.println("Digite o nome da companhia aerea: ");
                     String nomeCompanhia = scanner.nextLine();
-                    
+
                     passagemService.listarPassagemPorCompanhia(nomeCompanhia);
                     break;
 
@@ -418,10 +418,9 @@ public class Main {
         }
     }
 
-    private static void menuDeCompra(Scanner scanner, Comprador comprador,
-                                     PassagemRepository passagemDados, VendaRepository vendaDados) {
+    private static void menuDeCompra(Scanner scanner, CompradorService compradorService, Usuario usuario) {
         System.out.println("Digite o código da passagem: ");
         String codigoPassagem = scanner.nextLine();
-        comprador.comprarPassagem(codigoPassagem, passagemDados, vendaDados);
+        compradorService.comprarPassagem(codigoPassagem, usuario);
     }
 }
