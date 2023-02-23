@@ -41,4 +41,14 @@ public class CompanhiaRepository implements Repository<Companhia, Integer> {
         //TO-DO
         return false;
     }
+
+    public Optional<Companhia> buscaCompanhiaPorNome (String nome) throws DatabaseException {
+        //TO-DO
+        return null;
+    }
+
+    public Optional<Companhia> buscaCompanhiaPorIdUsuario(Integer idUsuario) throws DatabaseException {
+        //TO-DO
+        return null;
+    }
 }

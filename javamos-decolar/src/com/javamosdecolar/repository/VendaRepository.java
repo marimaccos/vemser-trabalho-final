@@ -46,4 +46,18 @@ public class VendaRepository implements Repository<Venda, Integer> {
         return null;
     }
 
+    public boolean cancelarVenda(Integer idVenda, Venda venda) throws DatabaseException  {
+        //TO-DO - não é pra remover a venda, é só pra mudar o status de concluido pra cancelado
+        return false;
+    }
+
+    public List<Venda> buscarVendasPorCompanhia(Integer idCompanhia) throws DatabaseException {
+        //TO-DO
+        return null;
+    }
+
+    public Optional<Object> buscarTrechosPorCompanhia(Integer idCompanhia) throws DatabaseException {
+        //TO-DO
+        return null;
+    }
 }

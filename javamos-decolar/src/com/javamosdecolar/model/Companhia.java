@@ -1,31 +1,32 @@
 package javamos_decolar.com.javamosdecolar.model;
 
-import java.util.ArrayList;
-import java.util.List;
+public final class Companhia extends Usuario{
 
-
-public class Companhia extends Usuario{
-
+    private Integer idCompanhia;
     private String cnpj;
     private String nomeFantasia;
-    private List<Venda> historicoVendas;
-    private List<Passagem> passagensCadastradas;
-    private List<Trecho> trechosCadastrados;
 
-
-    public Companhia(String login, String senha, String nome, TipoUsuario tipoUsuario) {
-        super(login, senha, nome, tipoUsuario);
-        this.historicoVendas = new ArrayList<>();
-        this.passagensCadastradas = new ArrayList<>();
-        this.trechosCadastrados = new ArrayList<>();
+    public Companhia(Integer idUsuario, String login, String senha, String nome,
+                     TipoUsuario tipoUsuario, String cnpj, Integer idComprador, String nomeFantasia) {
+        super(idUsuario, login, senha, nome, tipoUsuario);
+        this.idCompanhia = idComprador;
+        this.cnpj = cnpj;
+        this.nomeFantasia = nomeFantasia;
     }
 
-    public Companhia(String login, String senha, String nome, TipoUsuario tipoUsuario, String cnpj) {
-        super(login, senha, nome, tipoUsuario);
+    public Companhia(Integer idUsuario, String login, String senha, String nome, TipoUsuario tipoUsuario, String cnpj,
+                     String nomeFantasia) {
+        super(idUsuario, login, senha, nome, tipoUsuario);
         this.cnpj = cnpj;
-        this.historicoVendas = new ArrayList<>();
-        this.passagensCadastradas = new ArrayList<>();
-        this.trechosCadastrados = new ArrayList<>();
+        this.nomeFantasia = nomeFantasia;
+    }
+
+    public Integer getIdCompanhia() {
+        return idCompanhia;
+    }
+
+    public void setIdCompanhia(Integer idCompanhia) {
+        this.idCompanhia = idCompanhia;
     }
 
     public String getCnpj() {
@@ -44,38 +45,15 @@ public class Companhia extends Usuario{
         this.nomeFantasia = nomeFantasia;
     }
 
-    public List<Venda> getHistoricoVendas() {
-        return historicoVendas;
-    }
-
-    public void setHistoricoVendas(List<Venda> historicoVendas) {
-        this.historicoVendas = historicoVendas;
-    }
-
-    public List<Passagem> getPassagensCadastradas() {
-        return passagensCadastradas;
-    }
-
-    public void setPassagensCadastradas(List<Passagem> passagensCadastradas) {
-        this.passagensCadastradas = passagensCadastradas;
-    }
-
-    public List<Trecho> getTrechosCadastrados() {
-        return trechosCadastrados;
-    }
-
-    public void setTrechosCadastrados(List<Trecho> trechosCadastrados) {
-        this.trechosCadastrados = trechosCadastrados;
-    }
-
     @Override
     public String toString() {
         return "Companhia{" +
-                "cnpj='" + cnpj + '\'' +
+                "idCompanhia=" + idCompanhia +
+                ", idUsuario='" + this.getIdUsuario() + '\'' +
+                ", login='" + this.getLogin() + '\'' +
+                ", nome='" + this.getNome() + '\'' +
+                ", cnpj='" + cnpj + '\'' +
                 ", nomeFantasia='" + nomeFantasia + '\'' +
-                ", historicoVendas=" + historicoVendas +
-                ", passagensCadastradas=" + passagensCadastradas +
-                ", trechosCadastrados=" + trechosCadastrados +
                 '}';
     }
 }
