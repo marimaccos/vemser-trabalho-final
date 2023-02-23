@@ -30,6 +30,14 @@ public class Passagem {
         this.disponivel = true;
     }
 
+    public Passagem(String codigo, LocalDate dataPartida, LocalDate dataChegada, boolean disponivel, BigDecimal valor) {
+        this.codigo = codigo;
+        this.dataPartida = dataPartida;
+        this.dataChegada = dataChegada;
+        this.disponivel = disponivel;
+        this.valor = valor;
+    }
+
     public void setCodigo(String codigo) {
         this.codigo = codigo;
     }

@@ -149,7 +149,7 @@ public class Main {
                     BigDecimal valor = BigDecimal.valueOf(Double.valueOf(scanner.nextLine()));
 
                     Passagem novaPassagem = new Passagem(dataPartida, dataChegada, valor);
-                    passagemService.cadastrarPassagem(novaPassagem, trecho);
+                    passagemService.cadastrarPassagem(novaPassagem, trecho, usuario);
 
                     break;
 
@@ -157,9 +157,8 @@ public class Main {
                     System.out.println("-------------------------------");
                     System.out.println("COMPANHIA -- EDITAR PASSAGEM");
                     System.out.println("-------------------------------");
-                    System.out.println("Digite a passagem a ser editada:");
-                    Integer indexEdicaoPassagem = scanner.nextInt();
-                    scanner.nextLine();
+                    System.out.println("Digite o codigo da passagem:");
+                    String codigoPassagem = scanner.nextLine();
                     System.out.print("Insira a data de partida: Ex: dd-MM-yyyy ");
                     LocalDate novaDataPartida = LocalDate.parse(scanner.nextLine(), formatacaoData);
                     System.out.print("Insira a data de chegada:  Ex: dd-MM-yyyy ");
@@ -175,21 +174,8 @@ public class Main {
                         novoDisponivel = true;
                     }
 
-                    String[] novoOrigemEDestino = novoTrecho.split("/");
-
-                    Optional<Trecho> novoTrechoOptional = trechoDados.buscarTrecho(novoOrigemEDestino[0],
-                            novoOrigemEDestino[1], companhia);
-
-                    if (novoTrechoOptional.isPresent()) {
-                        Passagem passagem = new Passagem(novaDataPartida, novaDataChegada,
-                                novoTrechoOptional.get(), novoDisponivel, novoValor);
-                        System.out.println("Passagem adicionada com sucesso!");
-                    } else {
-                        System.err.println("Trecho inválido!");
-                    }
-
-                    passagemDados.editar(indexEdicaoPassagem, new Passagem(novaDataPartida, novaDataChegada, novoTrechoOptional.get(),
-                            novoDisponivel, novoValor));
+                    Passagem passagemEditada = new Passagem(codigoPassagem, novaDataPartida, novaDataChegada, novoDisponivel, novoValor);
+                    passagemService.editarPassagem(passagemEditada, novoTrecho);
 
                     break;
                 case "3":

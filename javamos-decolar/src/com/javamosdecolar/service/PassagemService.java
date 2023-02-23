@@ -27,7 +27,6 @@ public class PassagemService {
     public void cadastrarPassagem(Passagem novaPassagem, String trecho, Usuario usuario) {
 
         try {
-
             boolean codigoJaExiste = true;
             String codigo = "";
             while(codigoJaExiste) {
@@ -62,7 +61,7 @@ public class PassagemService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        
+
     }
 
     public void listarPassagemPorData(LocalDate data, int tipoDeData) {
@@ -130,6 +129,43 @@ public class PassagemService {
             passagemRepository.pegarPassagensPorComprador(comprador.get().getIdComprador())
                     .stream().forEach(System.out::println);
 
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("ERRO: " + e.getMessage());
+        }
+    }
+
+    public void editarPassagem(Passagem passagemEditada, String trecho, Usuario usuario) {
+        try {
+            Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
+
+            if(companhia.isEmpty()) {
+                throw new Exception("Companhia inválida!");
+            }
+
+            Optional<Passagem> passagem = passagemRepository.pegarPassagemPorCodigo(passagemEditada.getCodigo());
+
+            if(passagem.isEmpty()) {
+                throw new Exception("Companhia inválida!");
+            }
+
+            String[] origemEDestino = trecho.split("/");
+
+            Optional<Trecho> trechoEncontrado = trechoRepository
+                    .buscarTrecho(origemEDestino[0], origemEDestino[1], companhia.get());
+
+            if(trechoEncontrado.isEmpty()) {
+                throw new Exception("Trecho inválido!");
+            }
+
+            passagemEditada.setTrecho(trechoEncontrado.get());
+
+            final Integer ID_PASSAGEM = passagem.get().getIdPassagem();
+
+            boolean conseguiuEditar = passagemRepository.editar(ID_PASSAGEM, passagemEditada);
+            System.out.println("editado? " + conseguiuEditar + "| com id=" + ID_PASSAGEM);
+            
         } catch (DatabaseException e) {
             e.printStackTrace();
         } catch (Exception e) {
