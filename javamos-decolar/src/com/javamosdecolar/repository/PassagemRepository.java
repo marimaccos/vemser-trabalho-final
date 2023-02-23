@@ -84,4 +84,9 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
         //TO-DO
         return null;
     }
+
+    public Optional<Passagem> pegarPassagemPeloId(Integer indexRemocaoPassagem) throws DatabaseException {
+        //TO-DO
+        return null;
+    }
 }

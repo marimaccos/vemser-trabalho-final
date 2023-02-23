@@ -112,9 +112,8 @@ public class Main {
         return usuarioService.entrarComUsuarioExistente(login, senha).get();
     }
 
-    private static void exibeMenuDeUsuarioCompanhia(Scanner scanner, Companhia companhia,
-                                                    PassagemRepository passagemDados, TrechoRepository trechoDados,
-                                                    DateTimeFormatter formatacaoData) {
+    private static void exibeMenuDeUsuarioCompanhia(Scanner scanner, DateTimeFormatter formatacaoData,
+                                                    CompanhiaService companhiaService, Usuario usuario) {
         String opcao = "";
         while (!opcao.equals("0")) {
             System.out.println("-------------------------------");
@@ -162,7 +161,7 @@ public class Main {
                     System.out.print("Insira a data de chegada:  Ex: dd-MM-yyyy ");
                     LocalDate novaDataChegada = LocalDate.parse(scanner.nextLine(), formatacaoData);
                     System.out.print("Insira o trecho correspondente. Ex: BEL/CWB ");
-                    String novoTrecho = scanner.nextLine();
+                    String novoTrecho = scanner.nextLine().toUpperCase();
                     System.out.print("Insira o valor da passagem: ");
                     BigDecimal novoValor = BigDecimal.valueOf(Double.valueOf(scanner.nextLine()));
                     System.out.println("Disponibilidade:\n[1] - disponivel\n[2] - indisponivel");
@@ -194,21 +193,15 @@ public class Main {
                     System.out.println("COMPANHIA -- REMOVER PASSAGEM");
                     System.out.println("-------------------------------");
                     System.out.println("Digite a passagem a ser removida:");
-                    Integer indexRemocaoPassagem = scanner.nextInt();
-                    scanner.nextLine();
-                    companhia.deletarPassagem(indexRemocaoPassagem, passagemDados);
+                    Integer indexRemocaoPassagem = Integer.parseInt(scanner.nextLine());
+                    companhiaService.deletarPassagem(indexRemocaoPassagem, usuario);
                     break;
 
                 case "4":
                     System.out.println("-------------------------------");
                     System.out.println("COMPANHIA -- PASSAGENS CADASTRADAS");
                     System.out.println("-------------------------------");
-                    List<Passagem> passagems = passagemDados.pegarPassagemPorCompanhia(companhia);
-                    if (passagems.isEmpty()) {
-                        System.out.println("Não há passagens para exibir.");
-                    } else {
-                        passagems.stream().forEach(System.out::println);
-                    }
+                    companhiaService.listarPassagensCadastradas(usuario);
                     break;
 
                 case "5":
@@ -220,12 +213,8 @@ public class Main {
                     System.out.println("Digite o destino: Ex: CWB");
                     String cadastrarDestino = scanner.nextLine();
 
-                    if (companhia.criarTrecho(new Trecho(cadastrarOrigem, cadastrarDestino,
-                            companhia), trechoDados)) {
-                        System.out.println("Trecho criado!");
-                    } else {
-                        System.err.println("Trecho já cadastrado!");
-                    }
+                    Trecho trechoACadastrar = new Trecho(cadastrarOrigem, cadastrarDestino);
+                    companhiaService.criarTrecho(trechoACadastrar, usuario);
                     break;
 
                 case "6":
@@ -233,46 +222,37 @@ public class Main {
                     System.out.println("COMPANHIA -- EDITAR TRECHO");
                     System.out.println("-------------------------------");
                     System.out.println("Digite o index do trecho: Ex: 1");
-                    Integer indexEditarTrecho = Integer.parseInt(scanner.nextLine());
+                    Integer idEditarTrecho = Integer.parseInt(scanner.nextLine());
                     System.out.println("Digite a origem: Ex: BEL");
                     String editarOrigem = scanner.nextLine();
                     System.out.println("Digite o destino: Ex: CWB");
                     String editarDestino = scanner.nextLine();
+                    Trecho editarTrecho = new Trecho(idEditarTrecho, editarOrigem, editarDestino);
 
-                    if (companhia.editarTrecho(indexEditarTrecho, new Trecho(editarOrigem, editarDestino,
-                            companhia), trechoDados)) {
-                        System.out.println("Trecho editado!");
-                    } else {
-                        System.err.println("Trecho já cadastrado!");
-                    }
+                    companhiaService.editarTrecho(idEditarTrecho, editarTrecho, usuario);
                     break;
 
                 case "7":
                     System.out.println("-------------------------------");
                     System.out.println("COMPANHIA -- REMOVER TRECHO");
                     System.out.println("-------------------------------");
-                    System.out.println("Digite o index do trecho: Ex: 1");
-                    Integer indexDeletarTrecho = Integer.parseInt(scanner.nextLine());
-                    companhia.deletarTrecho(indexDeletarTrecho, trechoDados);
+                    System.out.println("Digite o id do trecho: Ex: 1");
+                    Integer idTrecho = Integer.parseInt(scanner.nextLine());
+                    companhiaService.deletarTrecho(idTrecho, usuario);
                     break;
 
                 case "8":
                     System.out.println("-------------------------------");
                     System.out.println("COMPANHIA -- TRECHOS CADASTRADOS");
                     System.out.println("-------------------------------");
-                    for (int i = 0; i < companhia.getTrechosCadastrados().size(); i++) {
-                        if (companhia.getTrechosCadastrados().get(i) != null) {
-                            System.out.println("id= " + i + " | "
-                                    + companhia.getTrechosCadastrados().get(i));
-                        }
-                    }
+                    companhiaService.imprimirTrechosDaCompanhia(usuario);
                     break;
 
                 case "9":
                     System.out.println("-------------------------------");
                     System.out.println("COMPANHIA -- IMPRIMIR HISTORICO");
                     System.out.println("-------------------------------");
-                    companhia.imprimirHistorico();
+                    companhiaService.imprimirHistoricoDeVendas(usuario);
                     break;
 
                 case "0":

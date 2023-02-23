@@ -22,20 +22,20 @@ public class PassagemService {
 
     public void cadastrarPassagem(String trecho, PassagemRepository passagemDados, LocalDate dataPartida,
                                   LocalDate dataChegada, BigDecimal valor, Companhia companhia) {
-        String[] origemEDestino = trecho.split("/");
-
-        Optional<Trecho> trechoOptional = trechoRepository.buscarTrecho(origemEDestino[0],
-                origemEDestino[1]);
-
-        if (trechoOptional.isPresent()) {
-            Passagem passagem = new Passagem(dataPartida, dataChegada,
-                    trechoOptional.get(), true, valor);
-            passagemDados.adicionar(passagem);
-            this.getPassagensCadastradas().add(passagem);
-            System.out.println("Passagem adicionada com sucesso!");
-        } else {
-            System.err.println("Trecho inválido!");
-        }
+//        String[] origemEDestino = trecho.split("/");
+//
+//        Optional<Trecho> trechoOptional = trechoRepository.buscarTrecho(origemEDestino[0],
+//                origemEDestino[1]);
+//
+//        if (trechoOptional.isPresent()) {
+//            Passagem passagem = new Passagem(dataPartida, dataChegada,
+//                    trechoOptional.get(), true, valor);
+//            passagemDados.adicionar(passagem);
+//            this.getPassagensCadastradas().add(passagem);
+//            System.out.println("Passagem adicionada com sucesso!");
+//        } else {
+//            System.err.println("Trecho inválido!");
+//        }
     }
 
     public void listarPassagemPorData(LocalDate data, int tipoDeData) {
