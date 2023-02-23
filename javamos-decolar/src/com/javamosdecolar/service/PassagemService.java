@@ -1,6 +1,7 @@
 package javamos_decolar.com.javamosdecolar.service;
 
 import javamos_decolar.com.javamosdecolar.exceptions.DatabaseException;
+import javamos_decolar.com.javamosdecolar.exceptions.RegraDeNegocioException;
 import javamos_decolar.com.javamosdecolar.model.*;
 import javamos_decolar.com.javamosdecolar.repository.*;
 import javamos_decolar.com.javamosdecolar.utils.Codigo;
@@ -24,7 +25,7 @@ public class PassagemService {
         compradorRepository = new CompradorRepository();
     }
 
-    public void cadastrarPassagem(Passagem novaPassagem, String trecho, Usuario usuario) {
+    public void cadastrarPassagem(Passagem novaPassagem, String trecho, Usuario usuario) throws RegraDeNegocioException {
         /*
             gera codigo de passagem, mas consulta no banco pra ver se ja existe uma venda com esse codigo
             -> sugestão: ver se tem uma forma do oracle fazer isso automaticamente pra gente
@@ -68,13 +69,14 @@ public class PassagemService {
             System.out.println("Passagem criada com sucesso! " + passagemCriada);
         } catch (DatabaseException e) {
             e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante o cadastro.");
         } catch (Exception e) {
             System.err.println("ERRO: " + e.getMessage());
         }
 
     }
 
-    public void listarPassagemPorData(LocalDate data, int tipoDeData) {
+    public void listarPassagemPorData(LocalDate data, int tipoDeData) throws RegraDeNegocioException {
         try {
             if(tipoDeData == 1) {
                 passagemRepository.pegarPassagemPorDataPartida(data).stream()
@@ -87,20 +89,22 @@ public class PassagemService {
             }
         } catch (DatabaseException e) {
             e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         } catch (Exception e) {
             System.err.println("ERRO: " + e.getMessage());
         }
     }
 
-    public void listarPassagemPorValorMaximo(BigDecimal valorMaximo) {
+    public void listarPassagemPorValorMaximo(BigDecimal valorMaximo) throws RegraDeNegocioException {
         try {
             passagemRepository.pegarPassagemPorValor(valorMaximo).stream().forEach(System.out::println);
         } catch (DatabaseException e) {
             e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
     }
 
-    public void listarPassagemPorCompanhia(String nomeCompanhia) {
+    public void listarPassagemPorCompanhia(String nomeCompanhia) throws RegraDeNegocioException {
         try {
             Optional<Companhia> companhiaEncontrada = companhiaRepository.buscaCompanhiaPorNome(nomeCompanhia);
 
@@ -115,20 +119,22 @@ public class PassagemService {
 
         } catch (DatabaseException e) {
             e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }  catch (Exception e) {
             System.err.println("ERRO: " + e.getMessage());
         }
     }
 
-    public void listarUltimasPassagens() {
+    public void listarUltimasPassagens() throws RegraDeNegocioException {
         try {
             passagemRepository.pegarUltimasPassagens().stream().forEach(System.out::println);
         } catch (DatabaseException e) {
             e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
     }
 
-    public void listarHistoricoDePassagensComprador(Usuario usuario) {
+    public void listarHistoricoDePassagensComprador(Usuario usuario) throws RegraDeNegocioException {
         try {
             Optional<Comprador> comprador = compradorRepository.acharCompradorPorIdUsuario(usuario.getIdUsuario());
 
@@ -141,12 +147,13 @@ public class PassagemService {
 
         } catch (DatabaseException e) {
             e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         } catch (Exception e) {
             System.err.println("ERRO: " + e.getMessage());
         }
     }
 
-    public void editarPassagem(Passagem passagemEditada, String trecho, Usuario usuario) {
+    public void editarPassagem(Passagem passagemEditada, String trecho, Usuario usuario) throws RegraDeNegocioException {
         try {
             final boolean DIA_ANTERIOR = passagemEditada.getDataChegada().isAfter(passagemEditada.getDataPartida());
 
@@ -184,6 +191,7 @@ public class PassagemService {
 
         } catch (DatabaseException e) {
             e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         } catch (Exception e) {
             System.err.println("ERRO: " + e.getMessage());
         }

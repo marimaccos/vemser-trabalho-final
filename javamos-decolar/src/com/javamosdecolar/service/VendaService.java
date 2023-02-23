@@ -1,6 +1,7 @@
 package javamos_decolar.com.javamosdecolar.service;
 
 import javamos_decolar.com.javamosdecolar.exceptions.DatabaseException;
+import javamos_decolar.com.javamosdecolar.exceptions.RegraDeNegocioException;
 import javamos_decolar.com.javamosdecolar.model.*;
 import javamos_decolar.com.javamosdecolar.repository.*;
 import javamos_decolar.com.javamosdecolar.utils.Codigo;
@@ -18,7 +19,7 @@ public class VendaService {
         passagemRepository = new PassagemRepository();
     }
 
-    public Venda efetuarVenda(Passagem passagem, Comprador comprador) {
+    public Venda efetuarVenda(Passagem passagem, Comprador comprador) throws RegraDeNegocioException {
 
         /*
             gera codigo de venda, mas consulta no banco pra ver se ja existe uma venda com esse codigo
@@ -44,11 +45,11 @@ public class VendaService {
             return vendaAtual;
         } catch (DatabaseException e) {
             e.printStackTrace();
-            return null;
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a compra.");
         }
     }
 
-    public void cancelarVenda(String codigo) {
+    public void cancelarVenda(String codigo) throws RegraDeNegocioException {
 
         try {
             Optional<Venda> venda = vendaRepository.buscaVendaPorCodigo(codigo);
@@ -67,6 +68,7 @@ public class VendaService {
             System.out.println("Venda foi cancelada? " + vendaFoiCancelada + " | id = " + ID_VENDA);
         } catch (DatabaseException e) {
             e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante o cancelamento.");
         } catch (Exception e) {
             System.err.println("ERRO: " + e.getMessage());
         }

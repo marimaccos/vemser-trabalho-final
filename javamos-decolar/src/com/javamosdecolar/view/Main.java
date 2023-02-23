@@ -1,5 +1,6 @@
 package javamos_decolar.com.javamosdecolar.view;
 
+import javamos_decolar.com.javamosdecolar.exceptions.RegraDeNegocioException;
 import javamos_decolar.com.javamosdecolar.model.*;
 import javamos_decolar.com.javamosdecolar.repository.*;
 import javamos_decolar.com.javamosdecolar.service.*;
@@ -68,12 +69,13 @@ public class Main {
                 }
             }
         } catch (Exception e) {
+            System.err.println("ERRO: " + e.getMessage());
             e.printStackTrace();
         }
 
     }
 
-    private static void cadastrarUsuario(Scanner scanner, UsuarioService usuarioService) {
+    private static void cadastrarUsuario(Scanner scanner, UsuarioService usuarioService) throws RegraDeNegocioException {
         System.out.println("-------------------------------");
         System.out.println("CADASTRAR USUÁRIO");
         System.out.println("-------------------------------");
@@ -107,7 +109,7 @@ public class Main {
         }
     }
 
-    private static Usuario entrarComUsuarioExistente(Scanner scanner, UsuarioService usuarioService) {
+    private static Usuario entrarComUsuarioExistente(Scanner scanner, UsuarioService usuarioService) throws RegraDeNegocioException {
         System.out.println("-------------------------------");
         System.out.println("\t\tLOGIN");
         System.out.println("-------------------------------");
@@ -121,7 +123,7 @@ public class Main {
 
     private static void exibeMenuDeUsuarioCompanhia(Scanner scanner, DateTimeFormatter formatacaoData,
                                                     CompanhiaService companhiaService, Usuario usuario,
-                                                    PassagemService passagemService, TrechoService trechoService) {
+                                                    PassagemService passagemService, TrechoService trechoService) throws RegraDeNegocioException {
         String opcao = "";
         while (!opcao.equals("0")) {
             System.out.println("-------------------------------");
@@ -264,7 +266,7 @@ public class Main {
 
     private static void exibeMenuDeUsuarioComprador(Scanner scanner, PassagemService passagemService, Usuario usuario,
                                                     VendaService vendaService, CompradorService compradorService,
-                                                    DateTimeFormatter formatacaoData) {
+                                                    DateTimeFormatter formatacaoData) throws RegraDeNegocioException {
         String opcao = "";
 
         while (!opcao.equals("0")) {
@@ -328,7 +330,7 @@ public class Main {
     }
 
     private static void buscarTrecho(Scanner scanner, DateTimeFormatter formatacaoData,
-                                     PassagemService passagemService) {
+                                     PassagemService passagemService) throws RegraDeNegocioException {
         String opcao = "";
 
         while (!opcao.equals("0")) {
@@ -386,7 +388,7 @@ public class Main {
         }
     }
 
-    private static void menuDeCompra(Scanner scanner, CompradorService compradorService, Usuario usuario) {
+    private static void menuDeCompra(Scanner scanner, CompradorService compradorService, Usuario usuario) throws RegraDeNegocioException {
         System.out.println("Digite o código da passagem: ");
         String codigoPassagem = scanner.nextLine();
         compradorService.comprarPassagem(codigoPassagem, usuario);

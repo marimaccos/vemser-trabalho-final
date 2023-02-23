@@ -1,6 +1,7 @@
 package javamos_decolar.com.javamosdecolar.service;
 
 import javamos_decolar.com.javamosdecolar.exceptions.DatabaseException;
+import javamos_decolar.com.javamosdecolar.exceptions.RegraDeNegocioException;
 import javamos_decolar.com.javamosdecolar.model.Companhia;
 import javamos_decolar.com.javamosdecolar.model.Comprador;
 import javamos_decolar.com.javamosdecolar.model.Usuario;
@@ -22,7 +23,7 @@ public class UsuarioService {
         compradorRepository = new CompradorRepository();
     }
 
-    public void criarUsuarioComprador(Usuario usuario, String cpf) {
+    public void criarUsuarioComprador(Usuario usuario, String cpf) throws RegraDeNegocioException {
         try {
 
             if(usuario.getNome().isBlank() || usuario.getLogin().isBlank() ||
@@ -61,12 +62,13 @@ public class UsuarioService {
             System.out.println("Comprador adicinado com sucesso! " + compradorAdicionado);
         } catch (DatabaseException e) {
             e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a criação de usuario.");
         } catch (Exception e) {
             System.err.println("ERRO: " + e.getMessage());
         }
     }
 
-    public void criarUsuarioCompanhia(Usuario usuario, String cnpj, String nomeFantasia) {
+    public void criarUsuarioCompanhia(Usuario usuario, String cnpj, String nomeFantasia) throws RegraDeNegocioException {
         try {
 
             if(usuario.getNome().isBlank() || usuario.getLogin().isBlank() ||
@@ -109,12 +111,13 @@ public class UsuarioService {
             System.out.println("Companhia adicinada com sucesso! " + companhiaAdicionada);
         } catch (DatabaseException e) {
             e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a criação do usuario");
         } catch (Exception e) {
             System.err.println("ERRO: " + e.getMessage());
         }
     }
 
-    public Optional<Usuario> entrarComUsuarioExistente(String login, String senha) {
+    public Optional<Usuario> entrarComUsuarioExistente(String login, String senha) throws RegraDeNegocioException {
         try {
             Optional<Usuario> usuario = usuarioRepository.buscaUsuarioPeloLogin(login);
             if (usuario.isEmpty()) {
@@ -130,7 +133,7 @@ public class UsuarioService {
 
         } catch (DatabaseException e) {
             e.printStackTrace();
-            return null;
+            throw new RegraDeNegocioException("Aconteceu algum problema durante o login.");
         } catch (Exception e) {
             System.err.println("ERRO: " + e.getMessage());
             return null;

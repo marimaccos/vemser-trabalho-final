@@ -1,6 +1,7 @@
 package javamos_decolar.com.javamosdecolar.service;
 
 import javamos_decolar.com.javamosdecolar.exceptions.DatabaseException;
+import javamos_decolar.com.javamosdecolar.exceptions.RegraDeNegocioException;
 import javamos_decolar.com.javamosdecolar.model.*;
 import javamos_decolar.com.javamosdecolar.repository.CompradorRepository;
 import javamos_decolar.com.javamosdecolar.repository.PassagemRepository;
@@ -19,7 +20,7 @@ public class CompradorService {
         vendaService = new VendaService();
     }
 
-    public void comprarPassagem(String codigoPassagem, Usuario usuario) {
+    public void comprarPassagem(String codigoPassagem, Usuario usuario) throws RegraDeNegocioException {
         try {
             Optional<Comprador> comprador = compradorRepository
                     .acharCompradorPorIdUsuario(usuario.getIdUsuario());
@@ -43,6 +44,7 @@ public class CompradorService {
             System.out.println("Venda criada com sucesso! " + venda);
         } catch (DatabaseException e) {
             e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a compra.");
         } catch (Exception e) {
             System.err.println("ERRO: " + e.getMessage());
         }
