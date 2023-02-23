@@ -1,7 +1,5 @@
 package javamos_decolar.com.javamosdecolar.model;
 
-import javamos_decolar.com.javamosdecolar.utils.Codigo;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -23,6 +21,24 @@ public class Passagem {
         this.valor = valor;
     }
 
+    public Passagem(LocalDate dataPartida, LocalDate dataChegada, BigDecimal valor) {
+        this.dataPartida = dataPartida;
+        this.dataChegada = dataChegada;
+        this.valor = valor;
+        this.disponivel = true;
+    }
+
+    public Passagem(String codigo, LocalDate dataPartida, LocalDate dataChegada, boolean disponivel, BigDecimal valor) {
+        this.codigo = codigo;
+        this.dataPartida = dataPartida;
+        this.dataChegada = dataChegada;
+        this.disponivel = disponivel;
+        this.valor = valor;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
     public int getIdPassagem() {
         return idPassagem;
     }

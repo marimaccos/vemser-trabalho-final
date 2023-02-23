@@ -42,8 +42,13 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
         return false;
     }
 
-    public Optional<Trecho> buscarTrecho(String origem, String destino) {
+    public Optional<Trecho> buscarTrecho(String origem, String destino, Companhia companhia) throws DatabaseException {
         // TO-DO
+        return null;
+    }
+
+    public Optional<Trecho> buscarTrechoPorId(Integer idTrecho) throws DatabaseException {
+        //TO-DO
         return null;
     }
 }

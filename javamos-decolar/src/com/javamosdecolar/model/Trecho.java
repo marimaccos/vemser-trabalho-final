@@ -1,17 +1,20 @@
 package javamos_decolar.com.javamosdecolar.model;
 
-import javamos_decolar.com.javamosdecolar.model.Companhia;
-
 public class Trecho {
     private int idTrecho;
     private String origem;
     private String destino;
     private Companhia companhia;
 
-    public Trecho(String origem, String destino, Companhia companhia) {
+    public Trecho(int idTrecho, String origem, String destino) {
+        this.idTrecho = idTrecho;
         this.origem = origem;
         this.destino = destino;
-        this.companhia = companhia;
+    }
+
+    public Trecho(String origem, String destino) {
+        this.origem = origem;
+        this.destino = destino;
     }
 
     public int getIdTrecho() {

@@ -1,10 +1,9 @@
 package javamos_decolar.com.javamosdecolar.service;
 
 import javamos_decolar.com.javamosdecolar.exceptions.DatabaseException;
-import javamos_decolar.com.javamosdecolar.model.Companhia;
-import javamos_decolar.com.javamosdecolar.model.Passagem;
-import javamos_decolar.com.javamosdecolar.model.Trecho;
+import javamos_decolar.com.javamosdecolar.model.*;
 import javamos_decolar.com.javamosdecolar.repository.*;
+import javamos_decolar.com.javamosdecolar.utils.Codigo;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,27 +15,57 @@ public class PassagemService {
     private PassagemRepository passagemRepository;
     private TrechoRepository trechoRepository;
     private CompanhiaRepository companhiaRepository;
+    private CompradorRepository compradorRepository;
 
     public PassagemService() {
         passagemRepository = new PassagemRepository();
+        trechoRepository = new TrechoRepository();
+        companhiaRepository = new CompanhiaRepository();
+        compradorRepository = new CompradorRepository();
     }
 
-    public void cadastrarPassagem(String trecho, PassagemRepository passagemDados, LocalDate dataPartida,
-                                  LocalDate dataChegada, BigDecimal valor, Companhia companhia) {
-        String[] origemEDestino = trecho.split("/");
+    public void cadastrarPassagem(Passagem novaPassagem, String trecho, Usuario usuario) {
+        /*
+            gera codigo de passagem, mas consulta no banco pra ver se ja existe uma venda com esse codigo
+            -> sugestão: ver se tem uma forma do oracle fazer isso automaticamente pra gente
+         */
 
-        Optional<Trecho> trechoOptional = trechoRepository.buscarTrecho(origemEDestino[0],
-                origemEDestino[1]);
+        try {
+            boolean codigoJaExiste = true;
+            String codigo = "";
+            while(codigoJaExiste) {
+                codigo = Codigo.gerarCodigo();
+                if(passagemRepository.pegarPassagemPorCodigo(codigo).isEmpty()) {
+                    codigoJaExiste = false;
+                }
+            }
 
-        if (trechoOptional.isPresent()) {
-            Passagem passagem = new Passagem(dataPartida, dataChegada,
-                    trechoOptional.get(), true, valor);
-            passagemDados.adicionar(passagem);
-            this.getPassagensCadastradas().add(passagem);
-            System.out.println("Passagem adicionada com sucesso!");
-        } else {
-            System.err.println("Trecho inválido!");
+            Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
+
+            if(companhia.isEmpty()) {
+                throw new Exception("Companhia inválida!");
+            }
+
+            String[] origemEDestino = trecho.split("/");
+
+            Optional<Trecho> trechoEncontrado = trechoRepository
+                    .buscarTrecho(origemEDestino[0], origemEDestino[1], companhia.get());
+
+            if(trechoEncontrado.isEmpty()) {
+                throw new Exception("Trecho inválido!");
+            }
+
+            novaPassagem.setTrecho(trechoEncontrado.get());
+            novaPassagem.setCodigo(codigo);
+
+            Passagem passagemCriada = passagemRepository.adicionar(novaPassagem);
+            System.out.println("Passagem criada com sucesso! " + passagemCriada);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+
     }
 
     public void listarPassagemPorData(LocalDate data, int tipoDeData) {
@@ -85,4 +114,66 @@ public class PassagemService {
         }
     }
 
+    public void listarUltimasPassagens() {
+        try {
+            passagemRepository.pegarUltimasPassagens().stream().forEach(System.out::println);
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void listarHistoricoDePassagensComprador(Usuario usuario) {
+        try {
+            Optional<Comprador> comprador = compradorRepository.acharCompradorPorIdUsuario(usuario.getIdUsuario());
+
+            if(comprador.isEmpty()) {
+                throw new Exception("Comprador inexistente");
+            }
+
+            passagemRepository.pegarPassagensPorComprador(comprador.get().getIdComprador())
+                    .stream().forEach(System.out::println);
+
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("ERRO: " + e.getMessage());
+        }
+    }
+
+    public void editarPassagem(Passagem passagemEditada, String trecho, Usuario usuario) {
+        try {
+            Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
+
+            if(companhia.isEmpty()) {
+                throw new Exception("Companhia inválida!");
+            }
+
+            Optional<Passagem> passagem = passagemRepository.pegarPassagemPorCodigo(passagemEditada.getCodigo());
+
+            if(passagem.isEmpty()) {
+                throw new Exception("Companhia inválida!");
+            }
+
+            String[] origemEDestino = trecho.split("/");
+
+            Optional<Trecho> trechoEncontrado = trechoRepository
+                    .buscarTrecho(origemEDestino[0], origemEDestino[1], companhia.get());
+
+            if(trechoEncontrado.isEmpty()) {
+                throw new Exception("Trecho inválido!");
+            }
+
+            passagemEditada.setTrecho(trechoEncontrado.get());
+
+            final Integer ID_PASSAGEM = passagem.get().getIdPassagem();
+
+            boolean conseguiuEditar = passagemRepository.editar(ID_PASSAGEM, passagemEditada);
+            System.out.println("editado? " + conseguiuEditar + "| com id=" + ID_PASSAGEM);
+
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("ERRO: " + e.getMessage());
+        }
+    }
 }

@@ -1,66 +1,115 @@
 package javamos_decolar.com.javamosdecolar.service;
 
+import javamos_decolar.com.javamosdecolar.exceptions.DatabaseException;
+import javamos_decolar.com.javamosdecolar.model.Companhia;
 import javamos_decolar.com.javamosdecolar.model.Trecho;
+import javamos_decolar.com.javamosdecolar.model.Usuario;
+import javamos_decolar.com.javamosdecolar.repository.CompanhiaRepository;
 import javamos_decolar.com.javamosdecolar.repository.TrechoRepository;
+
+import java.util.Optional;
 
 public class TrechoService {
 
-    private TrechoService trechoService;
+    private TrechoRepository trechoRepository;
+    private CompanhiaRepository companhiaRepository;
 
     public TrechoService() {
-        trechoService = new TrechoService();
+        trechoRepository = new TrechoRepository();
+        companhiaRepository = new CompanhiaRepository();
     }
 
-    public boolean criarTrecho(Trecho trechoDesejado, TrechoRepository trechoDados) {
+    public void deletarTrecho(Integer idTrecho, Usuario usuario) {
+        try {
+            Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
-        boolean oTrechoExiste = trechoDados.checaSeOTrechoExiste(trechoDesejado.getDestino(),
-                trechoDesejado.getOrigem(), this);
+            if(companhia.isEmpty()) {
+                throw new Exception("Companhia não pode ser encontrada!");
+            }
 
-        if(!oTrechoExiste) {
-            trechoDados.adicionar(trechoDesejado);
-            this.getTrechosCadastrados().add(trechoDesejado);
-            return true;
+            Optional<Trecho> trecho = trechoRepository.buscarTrechoPorId(idTrecho);
+
+            if(trecho.isEmpty()) {
+                throw new Exception("Trecho não pode ser encontrado!");
+            }
+
+            boolean trechoEhDaMesmaCompanhia =
+                    trecho.get().getCompanhia().getIdCompanhia() == companhia.get().getIdCompanhia();
+
+            if(!trechoEhDaMesmaCompanhia) {
+                throw new Exception("Permissão negada! Trecho não pode ser deletado!");
+            }
+
+            boolean conseguiuRemover = trechoRepository.remover(idTrecho);
+            System.out.println("removido? " + conseguiuRemover + "| com id=" + idTrecho);
+
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("ERRO: " + e.getMessage());
         }
-
-        System.err.println("Trecho já cadastrado!");
-        return false;
     }
 
-    public boolean editarTrecho(Integer index, Trecho trechoDesejado, TrechoRepository trechoDados) {
+    public void editarTrecho(Integer idTrecho, Trecho novoTrecho, Usuario usuario) {
+        try {
+            Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
-        boolean oTrechoExiste = trechoDados.checaSeOTrechoExiste(trechoDesejado.getDestino(),
-                trechoDesejado.getOrigem(), this);
+            if(companhia.isEmpty()) {
+                throw new Exception("Companhia não pode ser encontrada!");
+            }
 
-        if(!oTrechoExiste) {
-            trechoDados.editar(index, trechoDesejado);
-            return true;
+            Optional<Trecho> trecho = trechoRepository.buscarTrechoPorId(idTrecho);
+
+            if(trecho.isEmpty()) {
+                throw new Exception("Trecho não pode ser encontrado!");
+            }
+
+            boolean trechoEhDaMesmaCompanhia =
+                    trecho.get().getCompanhia().getIdCompanhia() == companhia.get().getIdCompanhia();
+
+            if(!trechoEhDaMesmaCompanhia) {
+                throw new Exception("Permissão negada! Trecho não pode ser editado!");
+            }
+
+            novoTrecho.setCompanhia(companhia.get());
+
+            boolean conseguiuEditar = trechoRepository.editar(idTrecho, novoTrecho);
+            System.out.println("Conseguiu Editar? " + conseguiuEditar + "| com id=" + idTrecho);
+
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("ERRO: " + e.getMessage());
         }
 
-        System.err.println("Trecho já cadastrado!");
-        return false;
     }
 
-    public boolean deletarTrecho(Integer index, TrechoRepository trechoDados) {
 
-        if(index > this.getTrechosCadastrados().size()) {
-            System.err.println("Index não existente.");
-            return false;
+    public void criarTrecho(Trecho novoTrecho, Usuario usuario) {
+        try {
+            Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
+
+            if(companhia.isEmpty()) {
+                throw new Exception("Companhia não pode ser encontrada!");
+            }
+
+            Optional<Trecho> trechoJaCadastrado = trechoRepository.buscarTrecho(novoTrecho.getOrigem(),
+                    novoTrecho.getDestino(), companhia.get());
+
+            if(trechoJaCadastrado.isPresent()) {
+                throw new Exception("Trecho já existente!");
+            }
+
+            novoTrecho.setCompanhia(companhia.get());
+            Trecho trechoAdicionado = trechoRepository.adicionar(novoTrecho);
+            System.out.println("Trecho adicinado com sucesso! " + trechoAdicionado);
+
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("ERRO: " + e.getMessage());
         }
 
-        Trecho trecho = this.getTrechosCadastrados().get(index);
-        System.out.println(trecho);
-        Integer indexNoTrechoDados = trechoDados.getListaDeTrechos().indexOf(trecho);
-
-        if(indexNoTrechoDados != null) {
-            // remove da lista de trechos cadastrados da companhia
-            this.getTrechosCadastrados().remove(index.intValue());
-            // remove do "banco de dados" de trechos
-            trechoDados.remover(indexNoTrechoDados);
-            return true;
-        }
-
-        System.err.println("Trecho não cadastrado!");
-        return false;
     }
 
 

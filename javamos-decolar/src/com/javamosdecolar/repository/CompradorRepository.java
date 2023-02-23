@@ -2,6 +2,7 @@ package javamos_decolar.com.javamosdecolar.repository;
 
 import javamos_decolar.com.javamosdecolar.exceptions.DatabaseException;
 import javamos_decolar.com.javamosdecolar.model.Comprador;
+import javamos_decolar.com.javamosdecolar.model.Passagem;
 import javamos_decolar.com.javamosdecolar.model.Venda;
 
 import java.sql.Connection;
@@ -47,4 +48,5 @@ public class CompradorRepository implements Repository<Comprador, Integer> {
         //TO-DO
         return null;
     }
+
 }

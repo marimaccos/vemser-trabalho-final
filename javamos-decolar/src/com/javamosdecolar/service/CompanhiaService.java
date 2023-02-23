@@ -1,46 +1,112 @@
 package javamos_decolar.com.javamosdecolar.service;
 
+import javamos_decolar.com.javamosdecolar.exceptions.DatabaseException;
 import javamos_decolar.com.javamosdecolar.model.Companhia;
 import javamos_decolar.com.javamosdecolar.model.Passagem;
 import javamos_decolar.com.javamosdecolar.model.Trecho;
+import javamos_decolar.com.javamosdecolar.model.Usuario;
 import javamos_decolar.com.javamosdecolar.repository.CompanhiaRepository;
 import javamos_decolar.com.javamosdecolar.repository.PassagemRepository;
 import javamos_decolar.com.javamosdecolar.repository.TrechoRepository;
+import javamos_decolar.com.javamosdecolar.repository.VendaRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
-public class CompanhiaService implements Historico{
+public class CompanhiaService {
 
     private CompanhiaRepository companhiaRepository;
+    private VendaRepository vendaRepository;
+    private TrechoRepository trechoRepository;
+    private PassagemRepository passagemRepository;
 
     public CompanhiaService() {
         companhiaRepository = new CompanhiaRepository();
+        vendaRepository = new VendaRepository();
+        trechoRepository = new TrechoRepository();
+        passagemRepository = new PassagemRepository();
     }
 
-    @Override
-    public void imprimirHistorico() {
-        historicoVendas.stream().forEach(System.out::println);
-    }
+    public void imprimirTrechosDaCompanhia(Usuario usuario) {
+        try {
+            Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
-    public void cadastrarPassagem(String trecho, PassagemRepository passagemDados,
-                                  TrechoRepository trechoDados, LocalDate dataPartida,
-                                  LocalDate dataChegada, BigDecimal valor) {
-        String[] origemEDestino = trecho.split("/");
+            if(companhia.isEmpty()) {
+                throw new Exception("Companhia não pode ser encontrada!");
+            }
 
-        Optional<Trecho> trechoOptional = trechoDados.buscarTrecho(origemEDestino[0],
-                origemEDestino[1], this);
+            vendaRepository.buscarTrechosPorCompanhia(companhia.get().getIdCompanhia())
+                    .stream().forEach(System.out::println);
 
-        if (trechoOptional.isPresent()) {
-            Passagem passagem = new Passagem(dataPartida, dataChegada,
-                    trechoOptional.get(), true, valor);
-            passagemDados.adicionar(passagem);
-            this.getPassagensCadastradas().add(passagem);
-            System.out.println("Passagem adicionada com sucesso!");
-        } else {
-            System.err.println("Trecho inválido!");
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("ERRO: " + e.getMessage());
         }
     }
 
+    public void imprimirHistoricoDeVendas(Usuario usuario) {
+        try {
+            Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
+
+            if(companhia.isEmpty()) {
+                throw new Exception("Companhia não pode ser encontrada!");
+            }
+
+            vendaRepository.buscarVendasPorCompanhia(companhia.get().getIdCompanhia())
+                    .stream().forEach(System.out::println);
+
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("ERRO: " + e.getMessage());
+        }
+    }
+
+
+    public void listarPassagensCadastradas(Usuario usuario) {
+        try{
+            Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
+
+            if(companhia.isEmpty()) {
+                throw new Exception("Companhia não pode ser encontrada!");
+            }
+
+            passagemRepository.pegarPassagemPorCompanhia(companhia.get().getIdCompanhia())
+                    .stream().forEach(System.out::println);
+
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean deletarPassagem(Integer indexRemocaoPassagem, Usuario usuario) {
+        try{
+            Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
+
+            if(companhia.isEmpty()) {
+                throw new Exception("Companhia não pode ser encontrada!");
+            }
+
+            Optional<Passagem> passagem = passagemRepository.pegarPassagemPeloId(indexRemocaoPassagem);
+
+            boolean companhiaEhDonaDaPassagem = passagem.get().getTrecho().getCompanhia().equals(companhia.get());
+
+            if(!companhiaEhDonaDaPassagem) {
+                throw new Exception("Permissão negada! Passagem não pode ser deletada!");
+            }
+
+            passagemRepository.remover(indexRemocaoPassagem);
+            return true;
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+            return false;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

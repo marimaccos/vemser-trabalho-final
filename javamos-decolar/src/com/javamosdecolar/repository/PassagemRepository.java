@@ -3,6 +3,7 @@ package javamos_decolar.com.javamosdecolar.repository;
 import javamos_decolar.com.javamosdecolar.exceptions.DatabaseException;
 import javamos_decolar.com.javamosdecolar.model.Passagem;
 import javamos_decolar.com.javamosdecolar.model.Companhia;
+import javamos_decolar.com.javamosdecolar.model.Status;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -45,7 +46,7 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
         return false;
     }
 
-    public void mudarStatusDaPassagem(Integer status, Passagem passagem) throws DatabaseException {
+    public void mudarDisponibilidadeDaPassagem(boolean disponivel, Passagem passagem) throws DatabaseException {
         // fazer uma edição na passagem pra trocar o status pelo do código passado
         // consultar o enum?
     }
@@ -71,6 +72,21 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
     }
 
     public Optional<Passagem> pegarPassagemPorCodigo(String codigo) throws DatabaseException {
+        //TO-DO
+        return null;
+    }
+
+    public List<Passagem> pegarUltimasPassagens() throws DatabaseException {
+        //TO-DO
+        return null;
+    }
+
+    public List<Passagem> pegarPassagensPorComprador(Integer idComprador) throws DatabaseException {
+        //TO-DO
+        return null;
+    }
+
+    public Optional<Passagem> pegarPassagemPeloId(Integer indexRemocaoPassagem) throws DatabaseException {
         //TO-DO
         return null;
     }
