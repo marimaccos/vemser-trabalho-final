@@ -6,6 +6,7 @@ import javamos_decolar.com.javamosdecolar.service.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Integer opcao = 0;
 
-        final DateTimeFormatter FORMATACAO_DATA = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        final DateTimeFormatter FORMATACAO_DATA = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
         // MENU
         System.out.println("-------------------------------");
@@ -141,10 +142,10 @@ public class Main {
                     System.out.println("-------------------------------");
                     System.out.println("COMPANHIA -- CADASTRAR PASSAGEM");
                     System.out.println("-------------------------------");
-                    System.out.print("Insira a data de partida: Ex: dd-MM-yyyy ");
-                    LocalDate dataPartida = LocalDate.parse(scanner.nextLine(), formatacaoData);
-                    System.out.print("Insira a data de chegada: Ex: dd-MM-yyyy");
-                    LocalDate dataChegada = LocalDate.parse(scanner.nextLine(), formatacaoData);
+                    System.out.print("Insira a data de partida: Ex: dd-MM-yyyy HH:mm");
+                    LocalDateTime dataPartida = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
+                    System.out.print("Insira a data de chegada: Ex: dd-MM-yyyy HH:mm");
+                    LocalDateTime dataChegada = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
                     System.out.print("Insira o trecho correspondente: Ex: BEL/CWB ");
                     String trecho = scanner.nextLine();
                     System.out.print("Insira o valor da passagem: ");
@@ -162,9 +163,9 @@ public class Main {
                     System.out.println("Digite o codigo da passagem:");
                     String codigoPassagem = scanner.nextLine();
                     System.out.print("Insira a data de partida: Ex: dd-MM-yyyy ");
-                    LocalDate novaDataPartida = LocalDate.parse(scanner.nextLine(), formatacaoData);
+                    LocalDateTime novaDataPartida = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
                     System.out.print("Insira a data de chegada:  Ex: dd-MM-yyyy ");
-                    LocalDate novaDataChegada = LocalDate.parse(scanner.nextLine(), formatacaoData);
+                    LocalDateTime novaDataChegada = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
                     System.out.print("Insira o trecho correspondente. Ex: BEL/CWB ");
                     String novoTrecho = scanner.nextLine().toUpperCase();
                     System.out.print("Insira o valor da passagem: ");

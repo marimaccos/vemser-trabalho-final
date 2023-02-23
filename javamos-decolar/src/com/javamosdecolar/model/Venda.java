@@ -1,6 +1,5 @@
 package javamos_decolar.com.javamosdecolar.model;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Venda {
     private int idVenda;
@@ -8,11 +7,11 @@ public class Venda {
     private Passagem passagem;
     private Comprador comprador;
     private Companhia companhia;
-    private LocalDate data;
+    private LocalDateTime data;
     private Status status;
 
     public Venda(String codigo, Passagem passagem, Comprador comprador,
-                 Companhia companhia, LocalDate data, Status status) {
+                 Companhia companhia, LocalDateTime data, Status status) {
         this.codigo = codigo;
         this.passagem = passagem;
         this.comprador = comprador;
@@ -61,11 +60,11 @@ public class Venda {
         this.companhia = companhia;
     }
 
-    public LocalDate getData() {
+    public LocalDateTime getData() {
         return data;
     }
 
-    public void setData(LocalDate data) {
+    public void setData(LocalDateTime data) {
         this.data = data;
     }
 
