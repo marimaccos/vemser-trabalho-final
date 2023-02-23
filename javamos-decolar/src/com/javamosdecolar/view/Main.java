@@ -4,6 +4,7 @@ import javamos_decolar.com.javamosdecolar.model.*;
 import javamos_decolar.com.javamosdecolar.repository.*;
 import javamos_decolar.com.javamosdecolar.service.CompanhiaService;
 import javamos_decolar.com.javamosdecolar.service.CompradorService;
+import javamos_decolar.com.javamosdecolar.service.PassagemService;
 import javamos_decolar.com.javamosdecolar.service.UsuarioService;
 
 import java.math.BigDecimal;
@@ -359,7 +360,7 @@ public class Main {
     }
 
     private static void buscarTrecho(Scanner scanner, DateTimeFormatter formatacaoData,
-                                     PassagemRepository passagemDados, CompanhiaRepository companhiaRepository) {
+                                     PassagemService passagemService) {
         String opcao = "";
 
         while (!opcao.equals("0")) {
@@ -384,44 +385,27 @@ public class Main {
                     int tipoDeData = Integer.parseInt(scanner.nextLine());
                     System.out.println("Digite a data: dd-MM-yyyy ");
                     LocalDate data = LocalDate.parse(scanner.nextLine(), formatacaoData);
-                    if(tipoDeData == 1) {
-                        passagemDados.pegarPassagemPorDataPartida(data).stream()
-                                .forEach(System.out::println);
-                    } else if (tipoDeData == 2) {
-                        passagemDados.pegarPassagemPorDataChegada(data).stream()
-                                .forEach(System.out::println);
-                    } else {
-                        System.err.println("Opção inválida!");
-                    }
-                    break;
 
+                    passagemService.listarPassagemPorData(data, tipoDeData);
+                    break;
                 case "2":
                     System.out.println("-------------------------------");
                     System.out.println("COMPRADOR - PESQUISAR PASSAGEM\n\t\t\tPOR VALOR");
                     System.out.println("-------------------------------");
                     System.out.print(" ");
                     System.out.print("Digite o limite maximo de valor: ");
+                    BigDecimal valorMaximo = BigDecimal.valueOf(Double.parseDouble(scanner.nextLine()));
 
-                    try {
-                        BigDecimal valorMaximo = BigDecimal.valueOf(Double.parseDouble(scanner.nextLine()));
-                        passagemDados.pegarPassagemPorValor(valorMaximo).stream().forEach(System.out::println);
-                        break;
-                    } catch (Exception e) {
-                        System.err.println("Digite um valor válido!");
-                        break;
-                    }
+                    passagemService.listarPassagemPorValorMaximo(valorMaximo);
+                    break;
                 case "3":
                     System.out.println("-------------------------------");
                     System.out.println("COMPRADOR - PESQUISAR PASSAGEM\n\t\t\tPOR COMPANHIA AEREA");
                     System.out.println("-------------------------------");
                     System.out.println("Digite o nome da companhia aerea: ");
                     String nomeCompanhia = scanner.nextLine();
-                    Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorNome(nomeCompanhia);
-                    if(companhia.isEmpty()) {
-                        System.err.println("Companhia não encontrada!");
-                        break;
-                    }
-                    passagemDados.pegarPassagemPorCompanhia(companhia.get()).stream().forEach(System.out::println);
+
+                    passagemService.listarPassagemPorCompanhia(nomeCompanhia);
                     break;
 
                 case "0":
@@ -434,10 +418,9 @@ public class Main {
         }
     }
 
-    private static void menuDeCompra(Scanner scanner, Comprador comprador,
-                                     PassagemRepository passagemDados, VendaRepository vendaDados) {
+    private static void menuDeCompra(Scanner scanner, CompradorService compradorService, Usuario usuario) {
         System.out.println("Digite o código da passagem: ");
         String codigoPassagem = scanner.nextLine();
-        comprador.comprarPassagem(codigoPassagem, passagemDados, vendaDados);
+        compradorService.comprarPassagem(codigoPassagem, usuario);
     }
 }

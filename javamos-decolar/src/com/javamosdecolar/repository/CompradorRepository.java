@@ -43,4 +43,8 @@ public class CompradorRepository implements Repository<Comprador, Integer> {
         return false;
     }
 
+    public Optional<Comprador> acharCompradorPorIdUsuario(Integer idUsuario) throws DatabaseException {
+        //TO-DO
+        return null;
+    }
 }
