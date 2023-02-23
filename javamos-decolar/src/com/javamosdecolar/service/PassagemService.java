@@ -3,6 +3,7 @@ package javamos_decolar.com.javamosdecolar.service;
 import javamos_decolar.com.javamosdecolar.exceptions.DatabaseException;
 import javamos_decolar.com.javamosdecolar.model.*;
 import javamos_decolar.com.javamosdecolar.repository.*;
+import javamos_decolar.com.javamosdecolar.utils.Codigo;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,24 +19,50 @@ public class PassagemService {
 
     public PassagemService() {
         passagemRepository = new PassagemRepository();
+        trechoRepository = new TrechoRepository();
+        companhiaRepository = new CompanhiaRepository();
+        compradorRepository = new CompradorRepository();
     }
 
-    public void cadastrarPassagem(String trecho, PassagemRepository passagemDados, LocalDate dataPartida,
-                                  LocalDate dataChegada, BigDecimal valor, Companhia companhia) {
-//        String[] origemEDestino = trecho.split("/");
-//
-//        Optional<Trecho> trechoOptional = trechoRepository.buscarTrecho(origemEDestino[0],
-//                origemEDestino[1]);
-//
-//        if (trechoOptional.isPresent()) {
-//            Passagem passagem = new Passagem(dataPartida, dataChegada,
-//                    trechoOptional.get(), true, valor);
-//            passagemDados.adicionar(passagem);
-//            this.getPassagensCadastradas().add(passagem);
-//            System.out.println("Passagem adicionada com sucesso!");
-//        } else {
-//            System.err.println("Trecho inválido!");
-//        }
+    public void cadastrarPassagem(Passagem novaPassagem, String trecho, Usuario usuario) {
+
+        try {
+
+            boolean codigoJaExiste = true;
+            String codigo = "";
+            while(codigoJaExiste) {
+                codigo = Codigo.gerarCodigo();
+                if(passagemRepository.pegarPassagemPorCodigo(codigo).isEmpty()) {
+                    codigoJaExiste = false;
+                }
+            }
+
+            Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
+
+            if(companhia.isEmpty()) {
+                throw new Exception("Companhia inválida!");
+            }
+
+            String[] origemEDestino = trecho.split("/");
+
+            Optional<Trecho> trechoEncontrado = trechoRepository
+                    .buscarTrecho(origemEDestino[0], origemEDestino[1], companhia.get());
+
+            if(trechoEncontrado.isEmpty()) {
+                throw new Exception("Trecho inválido!");
+            }
+
+            novaPassagem.setTrecho(trechoEncontrado.get());
+            novaPassagem.setCodigo(codigo);
+
+            Passagem passagemCriada = passagemRepository.adicionar(novaPassagem);
+            System.out.println("Passagem criada com sucesso! " + passagemCriada);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        
     }
 
     public void listarPassagemPorData(LocalDate data, int tipoDeData) {

@@ -113,7 +113,8 @@ public class Main {
     }
 
     private static void exibeMenuDeUsuarioCompanhia(Scanner scanner, DateTimeFormatter formatacaoData,
-                                                    CompanhiaService companhiaService, Usuario usuario) {
+                                                    CompanhiaService companhiaService, Usuario usuario,
+                                                    PassagemService passagemService) {
         String opcao = "";
         while (!opcao.equals("0")) {
             System.out.println("-------------------------------");
@@ -146,7 +147,10 @@ public class Main {
                     String trecho = scanner.nextLine();
                     System.out.print("Insira o valor da passagem: ");
                     BigDecimal valor = BigDecimal.valueOf(Double.valueOf(scanner.nextLine()));
-                    passagemService.cadastrarPassagem(trecho, passagemDados, trechoDados, dataPartida, dataChegada, valor);
+
+                    Passagem novaPassagem = new Passagem(dataPartida, dataChegada, valor);
+                    passagemService.cadastrarPassagem(novaPassagem, trecho);
+
                     break;
 
                 case "2":
