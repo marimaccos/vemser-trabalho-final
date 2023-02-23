@@ -2,16 +2,17 @@ package javamos_decolar.com.javamosdecolar.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Passagem {
     private int idPassagem;
     private String codigo;
-    private LocalDate dataPartida;
-    private LocalDate dataChegada;
+    private LocalDateTime dataPartida;
+    private LocalDateTime dataChegada;
     private Trecho trecho;
     private boolean disponivel;
 
-    public Passagem(String codigo, LocalDate dataPartida, LocalDate dataChegada,
+    public Passagem(String codigo, LocalDateTime dataPartida, LocalDateTime dataChegada,
                     Trecho trecho, boolean disponivel, BigDecimal valor) {
         this.codigo = codigo;
         this.dataPartida = dataPartida;
@@ -21,14 +22,15 @@ public class Passagem {
         this.valor = valor;
     }
 
-    public Passagem(LocalDate dataPartida, LocalDate dataChegada, BigDecimal valor) {
+    public Passagem(LocalDateTime dataPartida, LocalDateTime dataChegada, BigDecimal valor) {
         this.dataPartida = dataPartida;
         this.dataChegada = dataChegada;
         this.valor = valor;
         this.disponivel = true;
     }
 
-    public Passagem(String codigo, LocalDate dataPartida, LocalDate dataChegada, boolean disponivel, BigDecimal valor) {
+    public Passagem(String codigo, LocalDateTime dataPartida, LocalDateTime dataChegada,
+                    boolean disponivel, BigDecimal valor) {
         this.codigo = codigo;
         this.dataPartida = dataPartida;
         this.dataChegada = dataChegada;
@@ -51,19 +53,19 @@ public class Passagem {
         return codigo;
     }
 
-    public LocalDate getDataPartida() {
+    public LocalDateTime getDataPartida() {
         return dataPartida;
     }
 
-    public void setDataPartida(LocalDate dataPartida) {
+    public void setDataPartida(LocalDateTime dataPartida) {
         this.dataPartida = dataPartida;
     }
 
-    public LocalDate getDataChegada() {
+    public LocalDateTime getDataChegada() {
         return dataChegada;
     }
 
-    public void setDataChegada(LocalDate dataChegada) {
+    public void setDataChegada(LocalDateTime dataChegada) {
         this.dataChegada = dataChegada;
     }
 

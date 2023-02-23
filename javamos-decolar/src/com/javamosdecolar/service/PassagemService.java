@@ -31,10 +31,9 @@ public class PassagemService {
          */
 
         try {
-            int compareValue = novaPassagem.getDataPartida().compareTo(novaPassagem.getDataChegada());
-            final boolean diaAnterior = compareValue < 0;
+            final boolean DIA_ANTERIOR = novaPassagem.getDataChegada().isAfter(novaPassagem.getDataPartida());
 
-            if(diaAnterior) {
+            if(DIA_ANTERIOR) {
                 throw new Exception("Data inválida!");
             }
 
@@ -149,10 +148,9 @@ public class PassagemService {
 
     public void editarPassagem(Passagem passagemEditada, String trecho, Usuario usuario) {
         try {
-            int compareValue = passagemEditada.getDataPartida().compareTo(passagemEditada.getDataChegada());
-            final boolean diaAnterior = compareValue < 0;
+            final boolean DIA_ANTERIOR = passagemEditada.getDataChegada().isAfter(passagemEditada.getDataPartida());
 
-            if(diaAnterior) {
+            if(DIA_ANTERIOR) {
                 throw new Exception("Data inválida!");
             }
 

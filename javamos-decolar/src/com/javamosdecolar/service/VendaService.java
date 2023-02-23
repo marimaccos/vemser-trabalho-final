@@ -5,7 +5,7 @@ import javamos_decolar.com.javamosdecolar.model.*;
 import javamos_decolar.com.javamosdecolar.repository.*;
 import javamos_decolar.com.javamosdecolar.utils.Codigo;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class VendaService {
@@ -36,7 +36,7 @@ public class VendaService {
             }
 
             Venda vendaAtual = new Venda(codigo, passagem, comprador,
-                    passagem.getTrecho().getCompanhia(), LocalDate.now(), Status.CONCLUIDO);
+                    passagem.getTrecho().getCompanhia(), LocalDateTime.now(), Status.CONCLUIDO);
 
             vendaRepository.adicionar(vendaAtual);
             passagemRepository.mudarDisponibilidadeDaPassagem(false, passagem);
