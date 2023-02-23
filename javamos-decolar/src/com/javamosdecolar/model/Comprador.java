@@ -1,8 +1,5 @@
 package javamos_decolar.com.javamosdecolar.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public final class Comprador extends Usuario{
     private Integer idComprador;
     private String cpf;

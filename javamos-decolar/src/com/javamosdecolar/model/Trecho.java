@@ -1,7 +1,5 @@
 package javamos_decolar.com.javamosdecolar.model;
 
-import javamos_decolar.com.javamosdecolar.model.Companhia;
-
 public class Trecho {
     private int idTrecho;
     private String origem;

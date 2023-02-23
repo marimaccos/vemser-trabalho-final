@@ -47,7 +47,7 @@ public class VendaRepository implements Repository<Venda, Integer> {
     }
 
     public boolean cancelarVenda(Integer idVenda, Venda venda) throws DatabaseException  {
-        //TO-DO
+        //TO-DO - não é pra remover a venda, é só pra mudar o status de concluido pra cancelado
         return false;
     }
 

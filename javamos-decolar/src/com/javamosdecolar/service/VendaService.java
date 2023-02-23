@@ -39,7 +39,7 @@ public class VendaService {
                     passagem.getTrecho().getCompanhia(), LocalDate.now(), Status.CONCLUIDO);
 
             vendaRepository.adicionar(vendaAtual);
-            passagemRepository.mudarStatusDaPassagem(2, passagem);
+            passagemRepository.mudarDisponibilidadeDaPassagem(false, passagem);
 
             return vendaAtual;
         } catch (DatabaseException e) {
@@ -61,13 +61,10 @@ public class VendaService {
                 throw new Exception("Venda já cancelada!");
             }
 
-            boolean vendaFoiCancelada = vendaRepository.cancelarVenda(venda.get().getIdVenda(), venda.get());
+            final int ID_VENDA = venda.get().getIdVenda();
+            boolean vendaFoiCancelada = vendaRepository.cancelarVenda(ID_VENDA, venda.get());
 
-            if(vendaFoiCancelada) {
-                System.out.println("Venda cancelada com sucesso!");
-            } else {
-                System.err.println("Não foi possivel cancelar a venda!");
-            }
+            System.out.println("Venda foi cancelada? " + vendaFoiCancelada + " | id = " + ID_VENDA);
         } catch (DatabaseException e) {
             e.printStackTrace();
         } catch (Exception e) {

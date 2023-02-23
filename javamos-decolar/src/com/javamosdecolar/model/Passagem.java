@@ -1,7 +1,5 @@
 package javamos_decolar.com.javamosdecolar.model;
 
-import javamos_decolar.com.javamosdecolar.utils.Codigo;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 

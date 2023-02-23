@@ -1,9 +1,5 @@
 package javamos_decolar.com.javamosdecolar.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 public final class Companhia extends Usuario{
 
     private Integer idCompanhia;

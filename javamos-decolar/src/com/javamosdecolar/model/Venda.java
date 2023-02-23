@@ -1,7 +1,5 @@
 package javamos_decolar.com.javamosdecolar.model;
 
-import javamos_decolar.com.javamosdecolar.utils.Codigo;
-
 import java.time.LocalDate;
 
 public class Venda {
@@ -84,7 +82,7 @@ public class Venda {
         return "Venda{" +
                 "ID='" + idVenda + '\'' +
                 "codigo='" + codigo + '\'' +
-                ", passagem=" + passagem +
+                ", passagemId=" + passagem.getIdPassagem() +
                 ", comprador=" + comprador.getNome() +
                 ", companhia=" + companhia.getNome() +
                 ", data=" + data +

@@ -22,7 +22,7 @@ public class CompradorService {
         //historico de compras do comprador
     }
 
-    public boolean comprarPassagem(String codigoPassagem, Usuario usuario) {
+    public void comprarPassagem(String codigoPassagem, Usuario usuario) {
         try {
             Optional<Comprador> comprador = compradorRepository
                     .acharCompradorPorIdUsuario(usuario.getIdUsuario());
@@ -41,14 +41,13 @@ public class CompradorService {
                 throw new Exception("Passagem indisponível!");
             }
 
-            vendaService.efetuarVenda(passagem.get(), comprador.get());
-            return true;
+            Venda venda = vendaService.efetuarVenda(passagem.get(), comprador.get());
+
+            System.out.println("Venda criada com sucesso! " + venda);
         } catch (DatabaseException e) {
             e.printStackTrace();
-            return false;
         } catch (Exception e) {
             System.err.println("ERRO: " + e.getMessage());
-            return false;
         }
     }
 }
