@@ -3,29 +3,23 @@ package javamos_decolar.com.javamosdecolar.service;
 import javamos_decolar.com.javamosdecolar.exceptions.DatabaseException;
 import javamos_decolar.com.javamosdecolar.model.Companhia;
 import javamos_decolar.com.javamosdecolar.model.Passagem;
-import javamos_decolar.com.javamosdecolar.model.Trecho;
 import javamos_decolar.com.javamosdecolar.model.Usuario;
 import javamos_decolar.com.javamosdecolar.repository.CompanhiaRepository;
 import javamos_decolar.com.javamosdecolar.repository.PassagemRepository;
 import javamos_decolar.com.javamosdecolar.repository.TrechoRepository;
 import javamos_decolar.com.javamosdecolar.repository.VendaRepository;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 public class CompanhiaService {
 
     private CompanhiaRepository companhiaRepository;
     private VendaRepository vendaRepository;
-    private TrechoRepository trechoRepository;
     private PassagemRepository passagemRepository;
 
     public CompanhiaService() {
         companhiaRepository = new CompanhiaRepository();
         vendaRepository = new VendaRepository();
-        trechoRepository = new TrechoRepository();
         passagemRepository = new PassagemRepository();
     }
 
