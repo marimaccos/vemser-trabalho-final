@@ -52,6 +52,7 @@ public class TrechoService {
 
     public void editarTrecho(Integer idTrecho, Trecho novoTrecho, Usuario usuario) {
         try {
+
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
             if(companhia.isEmpty()) {

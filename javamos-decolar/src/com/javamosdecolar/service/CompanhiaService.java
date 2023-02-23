@@ -6,7 +6,6 @@ import javamos_decolar.com.javamosdecolar.model.Passagem;
 import javamos_decolar.com.javamosdecolar.model.Usuario;
 import javamos_decolar.com.javamosdecolar.repository.CompanhiaRepository;
 import javamos_decolar.com.javamosdecolar.repository.PassagemRepository;
-import javamos_decolar.com.javamosdecolar.repository.TrechoRepository;
 import javamos_decolar.com.javamosdecolar.repository.VendaRepository;
 
 import java.util.Optional;
