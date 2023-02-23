@@ -14,6 +14,8 @@ public abstract class Usuario {
         this.tipoUsuario = tipoUsuario;
     }
 
+    public Usuario() {}
+
     public String getLogin() {
         return login;
     }

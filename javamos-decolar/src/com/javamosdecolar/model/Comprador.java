@@ -12,6 +12,8 @@ public class Comprador extends Usuario{
         this.cpf = cpf;
     }
 
+    public Comprador() {}
+
     public String getCpf() {
         return cpf;
     }
