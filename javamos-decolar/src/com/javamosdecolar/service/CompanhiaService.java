@@ -1,6 +1,7 @@
 package javamos_decolar.com.javamosdecolar.service;
 
 import javamos_decolar.com.javamosdecolar.exceptions.DatabaseException;
+import javamos_decolar.com.javamosdecolar.exceptions.RegraDeNegocioException;
 import javamos_decolar.com.javamosdecolar.model.Companhia;
 import javamos_decolar.com.javamosdecolar.model.Passagem;
 import javamos_decolar.com.javamosdecolar.model.Usuario;
@@ -22,7 +23,7 @@ public class CompanhiaService {
         passagemRepository = new PassagemRepository();
     }
 
-    public void imprimirTrechosDaCompanhia(Usuario usuario) {
+    public void imprimirTrechosDaCompanhia(Usuario usuario) throws RegraDeNegocioException {
         try {
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
@@ -35,12 +36,13 @@ public class CompanhiaService {
 
         } catch (DatabaseException e) {
             e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         } catch (Exception e) {
             System.err.println("ERRO: " + e.getMessage());
         }
     }
 
-    public void imprimirHistoricoDeVendas(Usuario usuario) {
+    public void imprimirHistoricoDeVendas(Usuario usuario) throws RegraDeNegocioException {
         try {
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
@@ -53,13 +55,14 @@ public class CompanhiaService {
 
         } catch (DatabaseException e) {
             e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         } catch (Exception e) {
             System.err.println("ERRO: " + e.getMessage());
         }
     }
 
 
-    public void listarPassagensCadastradas(Usuario usuario) {
+    public void listarPassagensCadastradas(Usuario usuario) throws RegraDeNegocioException {
         try{
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
@@ -72,12 +75,13 @@ public class CompanhiaService {
 
         } catch (DatabaseException e) {
             e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.err.println("ERRO: " + e.getMessage());
         }
     }
 
-    public boolean deletarPassagem(Integer indexRemocaoPassagem, Usuario usuario) {
+    public boolean deletarPassagem(Integer indexRemocaoPassagem, Usuario usuario) throws RegraDeNegocioException {
         try{
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
@@ -97,9 +101,10 @@ public class CompanhiaService {
             return true;
         } catch (DatabaseException e) {
             e.printStackTrace();
-            return false;
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.err.println("ERRO: " + e.getMessage());
+            return false;
         }
     }
 }

@@ -1,6 +1,7 @@
 package javamos_decolar.com.javamosdecolar.service;
 
 import javamos_decolar.com.javamosdecolar.exceptions.DatabaseException;
+import javamos_decolar.com.javamosdecolar.exceptions.RegraDeNegocioException;
 import javamos_decolar.com.javamosdecolar.model.Companhia;
 import javamos_decolar.com.javamosdecolar.model.Trecho;
 import javamos_decolar.com.javamosdecolar.model.Usuario;
@@ -19,7 +20,7 @@ public class TrechoService {
         companhiaRepository = new CompanhiaRepository();
     }
 
-    public void deletarTrecho(Integer idTrecho, Usuario usuario) {
+    public void deletarTrecho(Integer idTrecho, Usuario usuario) throws RegraDeNegocioException {
         try {
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
@@ -45,12 +46,13 @@ public class TrechoService {
 
         } catch (DatabaseException e) {
             e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a deleção.");
         } catch (Exception e) {
             System.err.println("ERRO: " + e.getMessage());
         }
     }
 
-    public void editarTrecho(Integer idTrecho, Trecho novoTrecho, Usuario usuario) {
+    public void editarTrecho(Integer idTrecho, Trecho novoTrecho, Usuario usuario) throws RegraDeNegocioException {
         try {
             if(novoTrecho.getOrigem().length() > 3 || novoTrecho.getDestino().length() > 3) {
                 throw new Exception("Origem e Destino só podem ter três caracteres!");
@@ -82,6 +84,7 @@ public class TrechoService {
 
         } catch (DatabaseException e) {
             e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a edição.");
         } catch (Exception e) {
             System.err.println("ERRO: " + e.getMessage());
         }
@@ -89,7 +92,7 @@ public class TrechoService {
     }
 
 
-    public void criarTrecho(Trecho novoTrecho, Usuario usuario) {
+    public void criarTrecho(Trecho novoTrecho, Usuario usuario) throws RegraDeNegocioException {
         try {
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
@@ -114,6 +117,7 @@ public class TrechoService {
 
         } catch (DatabaseException e) {
             e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a criação.");
         } catch (Exception e) {
             System.err.println("ERRO: " + e.getMessage());
         }
