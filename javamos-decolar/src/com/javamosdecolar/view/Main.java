@@ -2,10 +2,7 @@ package javamos_decolar.com.javamosdecolar.view;
 
 import javamos_decolar.com.javamosdecolar.model.*;
 import javamos_decolar.com.javamosdecolar.repository.*;
-import javamos_decolar.com.javamosdecolar.service.CompanhiaService;
-import javamos_decolar.com.javamosdecolar.service.CompradorService;
-import javamos_decolar.com.javamosdecolar.service.PassagemService;
-import javamos_decolar.com.javamosdecolar.service.UsuarioService;
+import javamos_decolar.com.javamosdecolar.service.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -287,10 +284,9 @@ public class Main {
         }
     }
 
-    private static void exibeMenuDeUsuarioComprador(Scanner scanner, Comprador comprador,
-                                                    PassagemRepository passagemDados, TrechoRepository trechoDados,
-                                                    DateTimeFormatter formatacaoData, CompanhiaRepository companhiaRepository,
-                                                    VendaRepository vendaDados) {
+    private static void exibeMenuDeUsuarioComprador(Scanner scanner, PassagemService passagemService, Usuario usuario,
+                                                    VendaService vendaService, CompradorService compradorService,
+                                                    DateTimeFormatter formatacaoData) {
         String opcao = "";
 
         while (!opcao.equals("0")) {
@@ -310,7 +306,7 @@ public class Main {
             switch (opcao) {
                 case "1":
                     System.out.print(" ");
-                    buscarTrecho(scanner, formatacaoData, passagemDados, companhiaRepository);
+                    buscarTrecho(scanner, formatacaoData, passagemService);
                     break;
 
                 case "2":
@@ -318,36 +314,30 @@ public class Main {
                     System.out.println("COMPRADOR -- COMPRAR PASSAGEM");
                     System.out.println("-------------------------------");
                     System.out.print("");
-                    menuDeCompra(scanner, comprador, passagemDados, vendaDados);
+                    menuDeCompra(scanner, compradorService, usuario);
                     break;
 
                 case "3":
                     System.out.println("-------------------------------");
                     System.out.println("COMPRADOR -- CANCELAR COMPRA");
                     System.out.println("-------------------------------");
-                    System.out.println("Digite o index da compra: Ex: 1");
-                    Integer indexCancelarCompra = Integer.parseInt(scanner.nextLine());
-                    if (indexCancelarCompra <= comprador.getHistoricoCompras().size()) {
-                        comprador.getHistoricoCompras().get(indexCancelarCompra).setStatus(Status.CANCELADO);
-                        System.out.println("Compra cancelada com sucesso!");
-                    } else {
-                        System.err.println("Index inválido!");
-                    }
+                    System.out.println("Digite o codigo da compra: Ex: '01235'");
+                    String codigo = scanner.nextLine();
+                    vendaService.cancelarVenda(codigo);
                     break;
-
                 case "4":
                     System.out.println("-------------------------------");
                     System.out.println("COMPRADOR -- HISTÓRICO DE PASSAGENS");
                     System.out.println("-------------------------------");
                     System.out.print(" ");
-                    comprador.imprimirHistorico();
+                    passagemService.listarHistoricoDePassagensComprador(usuario);
                     break;
                 case "5":
                     System.out.println("-------------------------------");
                     System.out.println("COMPRADOR -- ULTIMAS PASSAGENS\n\t\t\tCADASTRADAS");
                     System.out.println("-------------------------------");
                     System.out.print(" ");
-                    passagemDados.listarDesc();
+                    passagemService.listarUltimasPassagens();
                     break;
                 case "0":
                     break;

@@ -46,4 +46,8 @@ public class VendaRepository implements Repository<Venda, Integer> {
         return null;
     }
 
+    public boolean cancelarVenda(Integer idVenda, Venda venda) {
+        //TO-DO
+        return false;
+    }
 }

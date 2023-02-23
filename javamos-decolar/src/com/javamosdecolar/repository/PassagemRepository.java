@@ -74,4 +74,14 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
         //TO-DO
         return null;
     }
+
+    public List<Passagem> pegarUltimasPassagens() throws DatabaseException {
+        //TO-DO
+        return null;
+    }
+
+    public List<Passagem> pegarPassagensPorComprador(Integer idComprador) throws DatabaseException {
+        //TO-DO
+        return null;
+    }
 }

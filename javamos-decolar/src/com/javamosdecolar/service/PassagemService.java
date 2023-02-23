@@ -1,9 +1,7 @@
 package javamos_decolar.com.javamosdecolar.service;
 
 import javamos_decolar.com.javamosdecolar.exceptions.DatabaseException;
-import javamos_decolar.com.javamosdecolar.model.Companhia;
-import javamos_decolar.com.javamosdecolar.model.Passagem;
-import javamos_decolar.com.javamosdecolar.model.Trecho;
+import javamos_decolar.com.javamosdecolar.model.*;
 import javamos_decolar.com.javamosdecolar.repository.*;
 
 import java.math.BigDecimal;
@@ -16,6 +14,7 @@ public class PassagemService {
     private PassagemRepository passagemRepository;
     private TrechoRepository trechoRepository;
     private CompanhiaRepository companhiaRepository;
+    private CompradorRepository compradorRepository;
 
     public PassagemService() {
         passagemRepository = new PassagemRepository();
@@ -85,4 +84,29 @@ public class PassagemService {
         }
     }
 
+    public void listarUltimasPassagens() {
+        try {
+            passagemRepository.pegarUltimasPassagens().stream().forEach(System.out::println);
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void listarHistoricoDePassagensComprador(Usuario usuario) {
+        try {
+            Optional<Comprador> comprador = compradorRepository.acharCompradorPorIdUsuario(usuario.getIdUsuario());
+
+            if(comprador.isEmpty()) {
+                throw new Exception("Comprador inexistente");
+            }
+
+            passagemRepository.pegarPassagensPorComprador(comprador.get().getIdComprador())
+                    .stream().forEach(System.out::println);
+
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("ERRO: " + e.getMessage());
+        }
+    }
 }
