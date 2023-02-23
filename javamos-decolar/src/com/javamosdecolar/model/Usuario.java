@@ -23,6 +23,8 @@ public class Usuario {
         this.tipoUsuario = tipoUsuario;
     }
 
+    public Usuario() {}
+
     public Integer getIdUsuario() {
         return idUsuario;
     }

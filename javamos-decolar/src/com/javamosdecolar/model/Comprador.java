@@ -25,6 +25,8 @@ public final class Comprador extends Usuario{
         this.idComprador = idComprador;
     }
 
+    public Comprador() {}
+
     public String getCpf() {
         return cpf;
     }

@@ -10,19 +10,20 @@ public class ConexaoBancoDeDados {
     private static final String DATABASE = "xe";
 
     // Configuração dos parâmetros de autenticação
-    private static final String USER = "system";
+    private static final String USER = "AVIACAO";
     private static final String PASS = "YKvrXrIlwWsz";
     private static final String SCHEMA = "AVIACAO";
 
     public static Connection getConnection() throws SQLException {
+        // Formatação do Oracle
         String url = "jdbc:oracle:thin:@" + SERVER + ":" + PORT + ":" + DATABASE;
 
         // Abre-se a conexão com o Banco de Dados
-        Connection con = DriverManager.getConnection(url, USER, PASS);
+        Connection connection = DriverManager.getConnection(url, USER, PASS);
 
-        // sempre usar o schema vem_ser
-        con.createStatement().execute("alter session set current_schema=" + SCHEMA);
+        // Seleciona o schema
+        connection.createStatement().execute("alter session set current_schema=" + SCHEMA);
 
-        return con;
+        return connection;
     }
 }
