@@ -31,6 +31,13 @@ public class PassagemService {
          */
 
         try {
+            int compareValue = novaPassagem.getDataPartida().compareTo(novaPassagem.getDataChegada());
+            final boolean diaAnterior = compareValue < 0;
+
+            if(diaAnterior) {
+                throw new Exception("Data inválida!");
+            }
+
             boolean codigoJaExiste = true;
             String codigo = "";
             while(codigoJaExiste) {
@@ -61,9 +68,9 @@ public class PassagemService {
             Passagem passagemCriada = passagemRepository.adicionar(novaPassagem);
             System.out.println("Passagem criada com sucesso! " + passagemCriada);
         } catch (DatabaseException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.err.println("ERRO: " + e.getMessage());
         }
 
     }
@@ -142,6 +149,13 @@ public class PassagemService {
 
     public void editarPassagem(Passagem passagemEditada, String trecho, Usuario usuario) {
         try {
+            int compareValue = passagemEditada.getDataPartida().compareTo(passagemEditada.getDataChegada());
+            final boolean diaAnterior = compareValue < 0;
+
+            if(diaAnterior) {
+                throw new Exception("Data inválida!");
+            }
+
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
             if(companhia.isEmpty()) {
@@ -151,7 +165,7 @@ public class PassagemService {
             Optional<Passagem> passagem = passagemRepository.pegarPassagemPorCodigo(passagemEditada.getCodigo());
 
             if(passagem.isEmpty()) {
-                throw new Exception("Companhia inválida!");
+                throw new Exception("Passagem inválida!");
             }
 
             String[] origemEDestino = trecho.split("/");

@@ -4,7 +4,6 @@ import javamos_decolar.com.javamosdecolar.exceptions.DatabaseException;
 import javamos_decolar.com.javamosdecolar.model.*;
 import javamos_decolar.com.javamosdecolar.repository.CompradorRepository;
 import javamos_decolar.com.javamosdecolar.repository.PassagemRepository;
-import javamos_decolar.com.javamosdecolar.repository.VendaRepository;
 
 import java.util.Optional;
 
@@ -16,10 +15,8 @@ public class CompradorService {
 
     public CompradorService() {
         compradorRepository = new CompradorRepository();
-    }
-
-    public void imprimirHistorico() {
-        //historico de compras do comprador
+        passagemRepository = new PassagemRepository();
+        vendaService = new VendaService();
     }
 
     public void comprarPassagem(String codigoPassagem, Usuario usuario) {
