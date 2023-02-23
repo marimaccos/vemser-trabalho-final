@@ -29,42 +29,46 @@ public class Main {
 
         final DateTimeFormatter FORMATACAO_DATA = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
-        // MENU
-        System.out.println("-------------------------------");
-        System.out.println("BEM-VINDO AO SISTEMA JAVAMOS DECOLAR!");
-        while (opcao != 3) {
+        try {
+            // MENU
             System.out.println("-------------------------------");
-            System.out.println("\t\tMENU PRINCIPAL");
-            System.out.println("-------------------------------");
-            System.out.println("[1] - Cadastrar Usuário\n" +
-                    "[2] - Entrar com Usuário Existente\n" +
-                    "[0] - Sair");
+            System.out.println("BEM-VINDO AO SISTEMA JAVAMOS DECOLAR!");
+            while (opcao != 3) {
+                System.out.println("-------------------------------");
+                System.out.println("\t\tMENU PRINCIPAL");
+                System.out.println("-------------------------------");
+                System.out.println("[1] - Cadastrar Usuário\n" +
+                        "[2] - Entrar com Usuário Existente\n" +
+                        "[0] - Sair");
 
-            opcao = scanner.nextInt();
-            scanner.nextLine();
+                opcao = scanner.nextInt();
+                scanner.nextLine();
 
-            switch (opcao) {
-                case 1:
-                    cadastrarUsuario(scanner, usuarioService);
-                    break;
-                case 2:
-                    usuarioLogado = entrarComUsuarioExistente(scanner, usuarioService);
-                    if (usuarioLogado.getTipoUsuario().getTipo() == 1) { // talvez essa comparação esteja errada
-                        exibeMenuDeUsuarioCompanhia(scanner, FORMATACAO_DATA, companhiaService, usuarioLogado,
-                                passagemService, trechoService);
-                    } else if (usuarioLogado.getTipoUsuario().getTipo() == 2) {
-                        exibeMenuDeUsuarioComprador(scanner, passagemService, usuarioLogado, vendaService,
-                                compradorService, FORMATACAO_DATA);
+                switch (opcao) {
+                    case 1:
+                        cadastrarUsuario(scanner, usuarioService);
                         break;
-                    } else {
+                    case 2:
+                        usuarioLogado = entrarComUsuarioExistente(scanner, usuarioService);
+                        if (usuarioLogado.getTipoUsuario().getTipo() == 1) { // talvez essa comparação esteja errada
+                            exibeMenuDeUsuarioCompanhia(scanner, FORMATACAO_DATA, companhiaService, usuarioLogado,
+                                    passagemService, trechoService);
+                        } else if (usuarioLogado.getTipoUsuario().getTipo() == 2) {
+                            exibeMenuDeUsuarioComprador(scanner, passagemService, usuarioLogado, vendaService,
+                                    compradorService, FORMATACAO_DATA);
+                            break;
+                        } else {
+                            break;
+                        }
+                    case 0:
                         break;
-                    }
-                case 0:
-                    break;
-                default:
-                    System.err.println("Opção inválida.");
-                    break;
+                    default:
+                        System.err.println("Opção inválida.");
+                        break;
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
