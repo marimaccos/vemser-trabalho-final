@@ -3,7 +3,6 @@ package javamos_decolar.com.javamosdecolar.service;
 import javamos_decolar.com.javamosdecolar.exceptions.DatabaseException;
 import javamos_decolar.com.javamosdecolar.model.Companhia;
 import javamos_decolar.com.javamosdecolar.model.Comprador;
-import javamos_decolar.com.javamosdecolar.model.TipoUsuario;
 import javamos_decolar.com.javamosdecolar.model.Usuario;
 import javamos_decolar.com.javamosdecolar.repository.CompanhiaRepository;
 import javamos_decolar.com.javamosdecolar.repository.CompradorRepository;
@@ -45,8 +44,9 @@ public class UsuarioService {
             Usuario usuarioCriado = usuarioRepository.adicionar(usuario);
             Comprador comprador = new Comprador(usuarioCriado.getIdUsuario(), usuarioCriado.getLogin(),
                     usuarioCriado.getNome(), usuarioCriado.getSenha(), usuarioCriado.getTipoUsuario(),
-                    cpf, 0);
-            compradorRepository.adicionar(comprador);
+                    cpf);
+            Comprador compradorAdicionado = compradorRepository.adicionar(comprador);
+            System.out.println("Comprador adicinado com sucesso! " + compradorAdicionado);
         } catch (DatabaseException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -76,8 +76,9 @@ public class UsuarioService {
             Usuario usuarioCriado = usuarioRepository.adicionar(usuario);
             Companhia companhia = new Companhia(usuarioCriado.getIdUsuario(), usuarioCriado.getLogin(),
                     usuarioCriado.getNome(), usuarioCriado.getSenha(), usuarioCriado.getTipoUsuario(),
-                    cnpj, 0, nomeFantasia);
-            companhiaRepository.adicionar(companhia);
+                    cnpj, nomeFantasia);
+            Companhia companhiaAdicionada = companhiaRepository.adicionar(companhia);
+            System.out.println("Companhia adicinada com sucesso! " + companhiaAdicionada);
         } catch (DatabaseException e) {
             e.printStackTrace();
         } catch (Exception e) {

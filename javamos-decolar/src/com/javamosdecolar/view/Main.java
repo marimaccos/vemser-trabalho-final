@@ -17,6 +17,9 @@ public class Main {
         UsuarioService usuarioService = new UsuarioService();
         CompanhiaService companhiaService = new CompanhiaService();
         CompradorService compradorService = new CompradorService();
+        PassagemService passagemService = new PassagemService();
+        VendaService vendaService = new VendaService();
+        TrechoService trechoService = new TrechoService();
 
         Usuario usuarioLogado = null;
 
@@ -41,16 +44,16 @@ public class Main {
 
             switch (opcao) {
                 case 1:
-                    cadastrarUsuario(scanner, usuarioService, companhiaService, compradorService);
+                    cadastrarUsuario(scanner, usuarioService);
                     break;
                 case 2:
                     usuarioLogado = entrarComUsuarioExistente(scanner, usuarioService);
                     if (usuarioLogado.getTipoUsuario().getTipo() == 1) { // talvez essa comparação esteja errada
-                        exibeMenuDeUsuarioCompanhia(scanner, (Companhia) usuarioLogado, passagemDados,
-                                trechoDados, FORMATACAO_DATA);
+                        exibeMenuDeUsuarioCompanhia(scanner, FORMATACAO_DATA, companhiaService, usuarioLogado,
+                                passagemService, trechoService);
                     } else if (usuarioLogado.getTipoUsuario().getTipo() == 2) {
-                        exibeMenuDeUsuarioComprador(scanner, (Comprador) usuarioLogado, passagemDados,
-                                trechoDados, FORMATACAO_DATA, companhiaRepository, vendaDados);
+                        exibeMenuDeUsuarioComprador(scanner, passagemService, usuarioLogado, vendaService,
+                                compradorService, FORMATACAO_DATA);
                         break;
                     } else {
                         break;
@@ -65,8 +68,7 @@ public class Main {
 
     }
 
-    private static void cadastrarUsuario(Scanner scanner, UsuarioService usuarioService,
-                                         CompanhiaService companhiaService, CompradorService compradorService) {
+    private static void cadastrarUsuario(Scanner scanner, UsuarioService usuarioService) {
         System.out.println("-------------------------------");
         System.out.println("CADASTRAR USUÁRIO");
         System.out.println("-------------------------------");
@@ -87,13 +89,13 @@ public class Main {
             System.out.print("Digite o nome fantasia: ");
             String nomeFantasia = scanner.nextLine();
 
-            Usuario usuario = new Usuario(0, login, senha, nome, TipoUsuario.COMPANHIA);
+            Usuario usuario = new Usuario(login, senha, nome, TipoUsuario.COMPANHIA);
             usuarioService.criarUsuarioCompanhia(usuario, cnpj, nomeFantasia);
         } else if (tipo.equals("2")) {
             System.out.print("Digite cpf: ");
             String cpf = scanner.nextLine();
 
-            Usuario usuario = new Usuario(0, login, senha, nome, TipoUsuario.COMPRADOR);
+            Usuario usuario = new Usuario(login, senha, nome, TipoUsuario.COMPRADOR);
             usuarioService.criarUsuarioComprador(usuario, cpf);
         } else {
             System.err.println("TipoUsuario inválido!");
@@ -114,7 +116,7 @@ public class Main {
 
     private static void exibeMenuDeUsuarioCompanhia(Scanner scanner, DateTimeFormatter formatacaoData,
                                                     CompanhiaService companhiaService, Usuario usuario,
-                                                    PassagemService passagemService) {
+                                                    PassagemService passagemService, TrechoService trechoService) {
         String opcao = "";
         while (!opcao.equals("0")) {
             System.out.println("-------------------------------");
@@ -174,8 +176,9 @@ public class Main {
                         novoDisponivel = true;
                     }
 
-                    Passagem passagemEditada = new Passagem(codigoPassagem, novaDataPartida, novaDataChegada, novoDisponivel, novoValor);
-                    passagemService.editarPassagem(passagemEditada, novoTrecho);
+                    Passagem passagemEditada = new Passagem(codigoPassagem, novaDataPartida, novaDataChegada,
+                            novoDisponivel, novoValor);
+                    passagemService.editarPassagem(passagemEditada, novoTrecho, usuario);
 
                     break;
                 case "3":
@@ -204,7 +207,7 @@ public class Main {
                     String cadastrarDestino = scanner.nextLine();
 
                     Trecho trechoACadastrar = new Trecho(cadastrarOrigem, cadastrarDestino);
-                    companhiaService.criarTrecho(trechoACadastrar, usuario);
+                    trechoService.criarTrecho(trechoACadastrar, usuario);
                     break;
 
                 case "6":
@@ -219,7 +222,7 @@ public class Main {
                     String editarDestino = scanner.nextLine();
                     Trecho editarTrecho = new Trecho(idEditarTrecho, editarOrigem, editarDestino);
 
-                    companhiaService.editarTrecho(idEditarTrecho, editarTrecho, usuario);
+                    trechoService.editarTrecho(idEditarTrecho, editarTrecho, usuario);
                     break;
 
                 case "7":
@@ -228,7 +231,7 @@ public class Main {
                     System.out.println("-------------------------------");
                     System.out.println("Digite o id do trecho: Ex: 1");
                     Integer idTrecho = Integer.parseInt(scanner.nextLine());
-                    companhiaService.deletarTrecho(idTrecho, usuario);
+                    trechoService.deletarTrecho(idTrecho, usuario);
                     break;
 
                 case "8":

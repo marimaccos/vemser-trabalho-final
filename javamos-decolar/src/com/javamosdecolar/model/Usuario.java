@@ -16,6 +16,13 @@ public class Usuario {
         this.tipoUsuario = tipoUsuario;
     }
 
+    public Usuario(String login, String senha, String nome, TipoUsuario tipoUsuario) {
+        this.login = login;
+        this.senha = senha;
+        this.nome = nome;
+        this.tipoUsuario = tipoUsuario;
+    }
+
     public Integer getIdUsuario() {
         return idUsuario;
     }

@@ -14,6 +14,12 @@ public final class Comprador extends Usuario{
         this.idComprador = idComprador;
     }
 
+    public Comprador(Integer idUsuario, String login, String senha, String nome, TipoUsuario tipoUsuario,
+                     String cpf) {
+        super(idUsuario, login, senha, nome, tipoUsuario);
+        this.cpf = cpf;
+    }
+
     public Integer getIdComprador() {
         return idComprador;
     }
@@ -34,6 +40,9 @@ public final class Comprador extends Usuario{
     public String toString() {
         return "Comprador{" +
                 "idComprador=" + idComprador +
+                ", idUsuario=" + this.getIdUsuario() +
+                ", login=" + this.getLogin() +
+                ", nome=" + this.getNome() +
                 ", cpf='" + cpf + '\'' +
                 '}';
     }

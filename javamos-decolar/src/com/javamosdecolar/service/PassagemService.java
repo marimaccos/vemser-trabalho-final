@@ -25,6 +25,10 @@ public class PassagemService {
     }
 
     public void cadastrarPassagem(Passagem novaPassagem, String trecho, Usuario usuario) {
+        /*
+            gera codigo de passagem, mas consulta no banco pra ver se ja existe uma venda com esse codigo
+            -> sugestão: ver se tem uma forma do oracle fazer isso automaticamente pra gente
+         */
 
         try {
             boolean codigoJaExiste = true;
@@ -165,7 +169,7 @@ public class PassagemService {
 
             boolean conseguiuEditar = passagemRepository.editar(ID_PASSAGEM, passagemEditada);
             System.out.println("editado? " + conseguiuEditar + "| com id=" + ID_PASSAGEM);
-            
+
         } catch (DatabaseException e) {
             e.printStackTrace();
         } catch (Exception e) {

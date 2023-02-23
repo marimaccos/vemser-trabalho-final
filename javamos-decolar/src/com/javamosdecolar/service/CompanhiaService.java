@@ -24,25 +24,9 @@ public class CompanhiaService {
 
     public CompanhiaService() {
         companhiaRepository = new CompanhiaRepository();
-    }
-
-    public void cadastrarPassagem(String trecho, PassagemRepository passagemDados,
-                                  TrechoRepository trechoDados, LocalDate dataPartida,
-                                  LocalDate dataChegada, BigDecimal valor) {
-        String[] origemEDestino = trecho.split("/");
-
-//        Optional<Trecho> trechoOptional = trechoDados.buscarTrecho(origemEDestino[0],
-//                origemEDestino[1], this);
-
-//        if (trechoOptional.isPresent()) {
-//            Passagem passagem = new Passagem(dataPartida, dataChegada,
-//                    trechoOptional.get(), true, valor);
-//            passagemDados.adicionar(passagem);
-//            this.getPassagensCadastradas().add(passagem);
-//            System.out.println("Passagem adicionada com sucesso!");
-//        } else {
-//            System.err.println("Trecho inválido!");
-//        }
+        vendaRepository = new VendaRepository();
+        trechoRepository = new TrechoRepository();
+        passagemRepository = new PassagemRepository();
     }
 
     public void imprimirTrechosDaCompanhia(Usuario usuario) {
@@ -81,95 +65,6 @@ public class CompanhiaService {
         }
     }
 
-    public void deletarTrecho(Integer idTrecho, Usuario usuario) {
-        try {
-            Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
-
-            if(companhia.isEmpty()) {
-                throw new Exception("Companhia não pode ser encontrada!");
-            }
-
-            Optional<Trecho> trecho = trechoRepository.buscarTrechoPorId(idTrecho);
-
-            if(trecho.isEmpty()) {
-                throw new Exception("Trecho não pode ser encontrado!");
-            }
-
-            boolean trechoEhDaMesmaCompanhia =
-                    trecho.get().getCompanhia().getIdCompanhia() == companhia.get().getIdCompanhia();
-
-            if(!trechoEhDaMesmaCompanhia) {
-                throw new Exception("Permissão negada! Trecho não pode ser deletado!");
-            }
-
-            trechoRepository.remover(idTrecho);
-
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            System.err.println("ERRO: " + e.getMessage());
-        }
-    }
-
-    public void editarTrecho(Integer idTrecho, Trecho novoTrecho, Usuario usuario) {
-        try {
-            Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
-
-            if(companhia.isEmpty()) {
-                throw new Exception("Companhia não pode ser encontrada!");
-            }
-
-            Optional<Trecho> trecho = trechoRepository.buscarTrechoPorId(idTrecho);
-
-            if(trecho.isEmpty()) {
-                throw new Exception("Trecho não pode ser encontrado!");
-            }
-
-            boolean trechoEhDaMesmaCompanhia =
-                    trecho.get().getCompanhia().getIdCompanhia() == companhia.get().getIdCompanhia();
-
-            if(!trechoEhDaMesmaCompanhia) {
-                throw new Exception("Permissão negada! Trecho não pode ser editado!");
-            }
-
-            novoTrecho.setCompanhia(companhia.get());
-
-            trechoRepository.editar(idTrecho, novoTrecho);
-
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            System.err.println("ERRO: " + e.getMessage());
-        }
-
-    }
-
-
-    public void criarTrecho(Trecho novoTrecho, Usuario usuario) {
-        try {
-            Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
-
-            if(companhia.isEmpty()) {
-                throw new Exception("Companhia não pode ser encontrada!");
-            }
-
-            Optional<Trecho> trechoJaCadastrado = trechoRepository.buscarTrecho(novoTrecho.getOrigem(),
-                    novoTrecho.getDestino(), companhia.get());
-
-            if(trechoJaCadastrado.isPresent()) {
-                throw new Exception("Trecho já existente!");
-            }
-
-            novoTrecho.setCompanhia(companhia.get());
-            trechoRepository.adicionar(novoTrecho);
-            
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            System.err.println("ERRO: " + e.getMessage());
-        }
-
-    }
 
     public void listarPassagensCadastradas(Usuario usuario) {
         try{
