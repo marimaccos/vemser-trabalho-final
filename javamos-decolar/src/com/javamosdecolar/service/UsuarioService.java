@@ -34,6 +34,18 @@ public class UsuarioService {
                 throw new Exception("CPF no formato incorreto!");
             }
 
+            if(usuario.getNome().length() > 100) {
+                throw new Exception("Nome tem que ter até 100 caracteres");
+            }
+
+            if(usuario.getSenha().length() > 20) {
+                throw new Exception("Senha tem que ter até 20 caracteres");
+            }
+
+            if(usuario.getLogin().length() > 20) {
+                throw new Exception("Login tem que ter até 20 caracteres");
+            }
+
             // verifica se login já foi utilizado
             Optional<Usuario> usuarioEncontrado = usuarioRepository.buscaUsuarioPeloLogin(usuario.getLogin());
 
@@ -64,6 +76,22 @@ public class UsuarioService {
 
             if(cnpj.length() != 11) {
                 throw new Exception("CPF no formato incorreto!");
+            }
+
+            if(usuario.getNome().length() > 100) {
+                throw new Exception("Nome tem que ter até 100 caracteres");
+            }
+
+            if(usuario.getSenha().length() > 20) {
+                throw new Exception("Senha tem que ter até 20 caracteres");
+            }
+
+            if(usuario.getLogin().length() > 20) {
+                throw new Exception("Login tem que ter até 20 caracteres");
+            }
+
+            if(nomeFantasia.length() > 100) {
+                throw new Exception("Nome Fantasia tem que ter até 100 caracteres");
             }
 
             // verifica se login já foi utilizado

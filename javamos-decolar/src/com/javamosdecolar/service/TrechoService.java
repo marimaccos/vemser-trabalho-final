@@ -52,6 +52,9 @@ public class TrechoService {
 
     public void editarTrecho(Integer idTrecho, Trecho novoTrecho, Usuario usuario) {
         try {
+            if(novoTrecho.getOrigem().length() > 3 || novoTrecho.getDestino().length() > 3) {
+                throw new Exception("Origem e Destino só podem ter três caracteres!");
+            }
 
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
@@ -92,6 +95,10 @@ public class TrechoService {
 
             if(companhia.isEmpty()) {
                 throw new Exception("Companhia não pode ser encontrada!");
+            }
+
+            if(novoTrecho.getOrigem().length() > 3 || novoTrecho.getDestino().length() > 3) {
+                throw new Exception("Origem e Destino só podem ter três caracteres!");
             }
 
             Optional<Trecho> trechoJaCadastrado = trechoRepository.buscarTrecho(novoTrecho.getOrigem(),
