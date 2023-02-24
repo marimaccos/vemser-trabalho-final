@@ -6,6 +6,9 @@ public final class Companhia extends Usuario{
     private String cnpj;
     private String nomeFantasia;
 
+    public Companhia() {
+
+    }
     public Companhia(Integer idUsuario, String login, String senha, String nome,
                      TipoUsuario tipoUsuario, String cnpj, Integer idComprador, String nomeFantasia) {
         super(idUsuario, login, senha, nome, tipoUsuario);

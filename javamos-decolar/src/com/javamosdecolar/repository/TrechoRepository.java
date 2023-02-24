@@ -14,7 +14,7 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         try {
-            String sql = "SELECT seq_trecho.nextval mysequence FROM TRECHO";
+            String sql = "SELECT seq_trecho.nextval mysequence from DUAL";
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
 
@@ -76,15 +76,16 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
             connection = ConexaoBancoDeDados.getConnection();
             Statement statement = connection.createStatement();
 
-            String sql = "SELECT * FROM TRECHO";
+            String sql = "SELECT t.*, c.nome_fantasia AS nome_companhia\n" +
+                    "FROM TRECHO t\n" +
+                    "INNER JOIN COMPANHIA c ON t.id_companhia = c.id_companhia\n";
 
             // Executa-se a consulta
             ResultSet resultSet = statement.executeQuery(sql);
 
-            // TODO : finalizar implementação
             while (resultSet.next()) {
-                /*Trecho trecho = ;
-                trechos.add(trecho);*/
+                Trecho trecho = getTrechoFromResultSet(resultSet);
+                trechos.add(trecho);
             }
             return trechos;
 
@@ -104,8 +105,41 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
 
     @Override
     public boolean editar(Integer id, Trecho trecho) throws DatabaseException {
-        // TODO
-        return false;
+        Connection connection = null;
+
+        try {
+            connection = ConexaoBancoDeDados.getConnection();
+
+            StringBuilder sql = new StringBuilder();
+            sql.append("UPDATE TRECHO SET ");
+            sql.append(" origem = ?,");
+            sql.append(" destino = ?\n");
+            sql.append(" WHERE id_trecho = ? ");
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql.toString());
+
+            preparedStatement.setString(1, trecho.getOrigem());
+            preparedStatement.setString(2, trecho.getDestino());
+            preparedStatement.setInt(3, id);
+
+            // Executa-se a consulta
+            int res = preparedStatement.executeUpdate();
+            System.out.println("editartrecho.res=" + res);
+
+            return res > 0;
+
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getCause());
+
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -115,7 +149,7 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
         try {
             connection = ConexaoBancoDeDados.getConnection();
 
-            String sql = "DELETE FROM TRECHO WHERE ID_TRECHO = ?";
+            String sql = "DELETE FROM TRECHO WHERE id_trecho = ?";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -147,19 +181,51 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
     }
 
     public Optional<Trecho> buscarTrechoPorId(Integer idTrecho) throws DatabaseException {
-        //TO-DO
-        return null;
+        Connection connection = null;
+
+        try {
+            connection = ConexaoBancoDeDados.getConnection();
+
+            String sql = "SELECT * FROM TRECHO WHERE id_trecho = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, idTrecho);
+
+            // Executa-se a consulta
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // TODO: RETORNAR UM Optional<Trecho>?
+            return null;
+
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getCause());
+
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
-    private Trecho getTrechoFromResultSet(ResultSet res) throws SQLException {
-        // TODO : pegar id companhia para colocar no trecho
-        /*Trecho trecho = new Trecho();
+    private Trecho getTrechoFromResultSet(ResultSet resultSet) throws SQLException {
 
-        trecho.setIdTrecho(res.getInt("id_trecho"));
-        trecho.setOrigem(res.getString("origem"));
-        trecho.setDestino(res.getString("destino"));
-        trecho.setCompanhia(res.getInt("id_companhia"));*/
+        // Retira os dados necessários da companhia para serem usados no trecho
+        Companhia companhia = new Companhia();
+        companhia.setNomeFantasia(resultSet.getString("nome_fantasia"));
+        companhia.setIdCompanhia(resultSet.getInt("id_companhia"));
 
-        return null;
+        Trecho trecho = new Trecho();
+        trecho.setIdTrecho(resultSet.getInt("id_trecho"));
+        trecho.setOrigem(resultSet.getString("origem"));
+        trecho.setDestino(resultSet.getString("destino"));
+        trecho.setCompanhia(companhia);
+
+        return trecho;
     }
 }

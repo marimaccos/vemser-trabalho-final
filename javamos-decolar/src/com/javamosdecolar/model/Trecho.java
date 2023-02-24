@@ -6,6 +6,9 @@ public class Trecho {
     private String destino;
     private Companhia companhia;
 
+    public Trecho() {
+    }
+
     public Trecho(int idTrecho, String origem, String destino) {
         this.idTrecho = idTrecho;
         this.origem = origem;
