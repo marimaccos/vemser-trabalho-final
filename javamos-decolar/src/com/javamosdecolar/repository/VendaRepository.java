@@ -212,8 +212,7 @@ public class VendaRepository implements Repository<Venda, Integer> {
         }
     }
 
-    public boolean cancelarVenda(Integer idVenda, Venda venda) throws DatabaseException  {
-        //TO-DO - não é pra remover a venda, é só pra mudar o status de concluido pra cancelado
+    public boolean cancelarVenda(Integer idVenda) throws DatabaseException  {
         Connection conexao = null;
         try {
             conexao = ConexaoBancoDeDados.getConnection();
@@ -225,7 +224,7 @@ public class VendaRepository implements Repository<Venda, Integer> {
 
             PreparedStatement statement = conexao.prepareStatement(sql.toString());
 
-            statement.setObject(1, venda.getStatus());
+            statement.setString(1, Status.CANCELADO.name());
             statement.setInt(2, idVenda);
 
             int res = statement.executeUpdate();

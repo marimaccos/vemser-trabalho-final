@@ -63,7 +63,7 @@ public class VendaService {
             }
 
             final int ID_VENDA = venda.get().getIdVenda();
-            boolean vendaFoiCancelada = vendaRepository.cancelarVenda(ID_VENDA, venda.get());
+            boolean vendaFoiCancelada = vendaRepository.cancelarVenda(ID_VENDA);
 
             System.out.println("Venda foi cancelada? " + vendaFoiCancelada + " | id = " + ID_VENDA);
         } catch (DatabaseException e) {
