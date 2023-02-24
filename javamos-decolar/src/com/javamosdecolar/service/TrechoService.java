@@ -91,7 +91,6 @@ public class TrechoService {
 
     }
 
-
     public void criarTrecho(Trecho novoTrecho, Usuario usuario) throws RegraDeNegocioException {
         try {
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
@@ -123,6 +122,4 @@ public class TrechoService {
         }
 
     }
-
-
 }

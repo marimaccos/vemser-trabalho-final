@@ -77,7 +77,7 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
             Statement statement = connection.createStatement();
 
             String sql = "SELECT t.id_trecho, t.origem, t.destino,\n" +
-                    "c.nome_fantasia AS nome_companhia\n" +
+                    "c.nome_fantasia\n" +
                     "FROM TRECHO t\n" +
                     "INNER JOIN COMPANHIA c ON t.id_companhia = c.id_companhia\n";
 
@@ -182,8 +182,10 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
         try {
             connection = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT *\n" +
-                    "FROM TRECHO\n" +
+            String sql = "SELECT t.id_trecho, t.origem, t.destino,\n" +
+                    "c.id_companhia, c.nome_fantasia\n" +
+                    "FROM TRECHO t\n" +
+                    "INNER JOIN COMPANHIA c ON t.id_companhia = c.id_companhia\n" +
                     "WHERE origem = ? AND destino = ? AND id_companhia = ?";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -222,9 +224,11 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
         try {
             connection = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT *\n" +
-                    "FROM TRECHO\n" +
-                    "WHERE id_trecho = ?";
+            String sql = "SELECT t.id_trecho, t.origem, t.destino,\n" +
+                    "c.id_companhia, c.nome_fantasia\n" +
+                    "FROM TRECHO t\n" +
+                    "INNER JOIN COMPANHIA c ON t.id_companhia = c.id_companhia\n" +
+                    "WHERE t.id_trecho = ?";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -254,6 +258,46 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
         }
     }
 
+    public List<Trecho> getTrechosPorCompanhia(Integer idCompanhia) throws DatabaseException {
+        List<Trecho> trechos = new ArrayList<>();
+        Connection connection = null;
+
+        try {
+            connection = ConexaoBancoDeDados.getConnection();
+
+            String sql = "SELECT t.id_trecho, t.origem, t.destino,\n" +
+                    "c.id_companhia, c.nome_fantasia\n" +
+                    "FROM TRECHO t\n" +
+                    "INNER JOIN COMPANHIA c ON t.id_companhia = c.id_companhia\n" +
+                    "WHERE C.id_companhia = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, idCompanhia);
+
+            // Executa-se a consulta
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Trecho trecho = getTrechoPorResultSet(resultSet);
+                trechos.add(trecho);
+            }
+            return trechos;
+
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getCause());
+
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private Trecho getTrechoPorResultSet(ResultSet resultSet) throws SQLException {
 
         // Retira os dados necessários da companhia para serem usados no trecho
@@ -268,10 +312,5 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
         trecho.setCompanhia(companhia);
 
         return trecho;
-    }
-
-    public Optional<Object> buscarTrechosPorCompanhia(Integer idCompanhia) throws DatabaseException {
-        //TO-DO
-        return null;
     }
 }

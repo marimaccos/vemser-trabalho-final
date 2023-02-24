@@ -7,7 +7,6 @@ import javamos_decolar.com.javamosdecolar.model.Trecho;
 
 import java.math.BigDecimal;
 import java.sql.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +85,7 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "t.origem, t.destino,\n" +
-                    "c.nome_fantasia AS nome_companhia\n" +
+                    "c.nome_fantasia\n" +
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n";
@@ -264,7 +263,7 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "t.origem, t.destino,\n" +
-                    "c.nome_fantasia AS nome_companhia\n" +
+                    "c.nome_fantasia\n" +
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
@@ -306,7 +305,7 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "t.origem, t.destino,\n" +
-                    "c.nome_fantasia AS nome_companhia\n" +
+                    "c.nome_fantasia\n" +
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
@@ -349,7 +348,7 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "t.origem, t.destino,\n" +
-                    "c.nome_fantasia AS nome_companhia\n" +
+                    "c.nome_fantasia\n" +
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
@@ -391,7 +390,7 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "t.origem, t.destino,\n" +
-                    "c.nome_fantasia AS nome_companhia\n" +
+                    "c.nome_fantasia\n" +
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
@@ -433,7 +432,7 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "t.origem, t.destino,\n" +
-                    "c.nome_fantasia AS nome_companhia\n" +
+                    "c.nome_fantasia\n" +
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
@@ -475,7 +474,7 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "t.origem, t.destino,\n" +
-                    "c.nome_fantasia AS nome_companhia\n" +
+                    "c.nome_fantasia\n" +
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
@@ -517,7 +516,7 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "v.id_venda, v.codigo, v.status, v.data_venda,\n" +
-                    "cn.nome_fantasia AS nome_companhia\n" +
+                    "cn.nome_fantasia\n" +
                     "FROM VENDA v\n" +
                     "INNER JOIN COMPRADOR cd ON cd.id_comprador = v.id_comprador\n" +
                     "INNER JOIN PASSAGEM p ON p.id_venda = v.id_venda \n" +
@@ -562,7 +561,7 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
             // Seleciona as 5 últimas passagens adicionadas
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "t.origem, t.destino,\n" +
-                    "c.nome_fantasia AS nome_companhia\n" +
+                    "c.nome_fantasia\n" +
                     "FROM (SELECT * FROM PASSAGEM ORDER BY id_passagem DESC) p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia" +

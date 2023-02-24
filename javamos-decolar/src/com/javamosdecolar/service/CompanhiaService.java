@@ -34,7 +34,7 @@ public class CompanhiaService {
                 throw new Exception("Companhia não pode ser encontrada!");
             }
 
-            trechoRepository.buscarTrechosPorCompanhia(companhia.get().getIdCompanhia())
+            trechoRepository.getTrechosPorCompanhia(companhia.get().getIdCompanhia())
                     .stream().forEach(System.out::println);
 
         } catch (DatabaseException e) {
