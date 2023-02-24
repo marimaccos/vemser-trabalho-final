@@ -7,6 +7,7 @@ import javamos_decolar.com.javamosdecolar.model.Passagem;
 import javamos_decolar.com.javamosdecolar.model.Usuario;
 import javamos_decolar.com.javamosdecolar.repository.CompanhiaRepository;
 import javamos_decolar.com.javamosdecolar.repository.PassagemRepository;
+import javamos_decolar.com.javamosdecolar.repository.TrechoRepository;
 import javamos_decolar.com.javamosdecolar.repository.VendaRepository;
 
 import java.util.Optional;
@@ -16,11 +17,13 @@ public class CompanhiaService {
     private CompanhiaRepository companhiaRepository;
     private VendaRepository vendaRepository;
     private PassagemRepository passagemRepository;
+    private TrechoRepository trechoRepository;
 
     public CompanhiaService() {
         companhiaRepository = new CompanhiaRepository();
         vendaRepository = new VendaRepository();
         passagemRepository = new PassagemRepository();
+        trechoRepository = new TrechoRepository();
     }
 
     public void imprimirTrechosDaCompanhia(Usuario usuario) throws RegraDeNegocioException {
@@ -31,7 +34,7 @@ public class CompanhiaService {
                 throw new Exception("Companhia não pode ser encontrada!");
             }
 
-            vendaRepository.buscarTrechosPorCompanhia(companhia.get().getIdCompanhia())
+            trechoRepository.buscarTrechosPorCompanhia(companhia.get().getIdCompanhia())
                     .stream().forEach(System.out::println);
 
         } catch (DatabaseException e) {
