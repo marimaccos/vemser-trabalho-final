@@ -20,6 +20,8 @@ public class Venda {
         this.status = status;
     }
 
+    public Venda () {}
+
     public int getIdVenda() {
         return idVenda;
     }

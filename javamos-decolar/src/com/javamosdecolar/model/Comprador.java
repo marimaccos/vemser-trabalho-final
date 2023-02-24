@@ -17,6 +17,8 @@ public final class Comprador extends Usuario{
         this.cpf = cpf;
     }
 
+    public Comprador() {}
+
     public Integer getIdComprador() {
         return idComprador;
     }
@@ -24,8 +26,6 @@ public final class Comprador extends Usuario{
     public void setIdComprador(Integer idComprador) {
         this.idComprador = idComprador;
     }
-
-    public Comprador() {}
 
     public String getCpf() {
         return cpf;
@@ -41,6 +41,7 @@ public final class Comprador extends Usuario{
                 "idComprador=" + idComprador +
                 ", idUsuario=" + this.getIdUsuario() +
                 ", login=" + this.getLogin() +
+                ", senha=" + this.getSenha() +
                 ", nome=" + this.getNome() +
                 ", cpf='" + cpf + '\'' +
                 '}';
