@@ -24,8 +24,6 @@ public final class Companhia extends Usuario{
         this.nomeFantasia = nomeFantasia;
     }
 
-    public Companhia () {}
-
     public Integer getIdCompanhia() {
         return idCompanhia;
     }

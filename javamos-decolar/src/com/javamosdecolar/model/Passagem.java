@@ -9,8 +9,12 @@ public class Passagem {
     private String codigo;
     private LocalDateTime dataPartida;
     private LocalDateTime dataChegada;
-    private Trecho trecho;
     private boolean disponivel;
+    private BigDecimal valor;
+    private Trecho trecho;
+
+    public Passagem() {
+    }
 
     public Passagem(String codigo, LocalDateTime dataPartida, LocalDateTime dataChegada,
                     Trecho trecho, boolean disponivel, BigDecimal valor) {
@@ -37,10 +41,10 @@ public class Passagem {
         this.disponivel = disponivel;
         this.valor = valor;
     }
-
     public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
+
     public int getIdPassagem() {
         return idPassagem;
     }
@@ -92,8 +96,6 @@ public class Passagem {
     public void setValor(BigDecimal valor) {
         this.valor = valor;
     }
-
-    private BigDecimal valor;
 
     @Override
     public String toString() {

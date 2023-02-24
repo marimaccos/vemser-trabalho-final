@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 public class Venda {
     private int idVenda;
     private String codigo;
-    private Passagem passagem;
+    private Status status;
+    private LocalDateTime data;
     private Comprador comprador;
     private Companhia companhia;
-    private LocalDateTime data;
-    private Status status;
+    private Passagem passagem;
 
     public Venda(String codigo, Passagem passagem, Comprador comprador,
                  Companhia companhia, LocalDateTime data, Status status) {
