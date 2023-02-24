@@ -70,24 +70,19 @@ public class CompanhiaRepository {
         try{
             conexao = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT ID_COMPANHIA, u.ID_USUARIO, LOGIN, NOME, CNPJ, NOME_FANTASIA FROM COMPANHIA c \n" +
-                    "INNER JOIN\n" +
-                    "USUARIO u ON c.ID_USUARIO = u.ID_USUARIO AND c.NOME_FANTASIA = ?";
+            String sql = "SELECT ID_COMPANHIA, CNPJ, NOME_FANTASIA FROM COMPANHIA c \n" +
+                    "WHERE c.NOME_FANTASIA LIKE ?";
 
             PreparedStatement statement = conexao.prepareStatement(sql);
 
-            statement.setString(1, nome);
+            statement.setString(1, "%" + nome + "%");
 
-            ResultSet resultSet = statement.executeQuery(sql);
+            ResultSet resultSet = statement.executeQuery();
 
-            companhiaPesquisa.setIdCompanhia(resultSet.getInt("id_companhia"));
-            companhiaPesquisa.setLogin(resultSet.getString("login"));
-            companhiaPesquisa.setNome(resultSet.getString("nome"));
-            companhiaPesquisa.setTipoUsuario(TipoUsuario.ofTipo(resultSet.getInt("tipo")));
-            companhiaPesquisa.setCnpj(resultSet.getString("cpf"));
-            companhiaPesquisa.setNomeFantasia(resultSet.getString("nome_fantasia"));
-
-            if(resultSet.first()) {
+            if(resultSet.next()) {
+                companhiaPesquisa.setIdCompanhia(resultSet.getInt("id_companhia"));
+                companhiaPesquisa.setCnpj(resultSet.getString("cnpj"));
+                companhiaPesquisa.setNomeFantasia(resultSet.getString("nome_fantasia"));
                 return Optional.of(companhiaPesquisa);
             } else {
                 return Optional.empty();
