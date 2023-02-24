@@ -37,7 +37,7 @@ public class CompanhiaRepository {
             companhia.setIdCompanhia(proximoId);
 
             String sql = "INSERT INTO COMPANHIA \n" +
-                    "(ID_COMPRADOR, CNPJ, NOME_FANTASIA, ID_USUARIO)\n" +
+                    "(ID_COMPANHIA, CNPJ, NOME_FANTASIA, ID_USUARIO)\n" +
                     "VALUES(?, ?, ?, ?)";
 
             PreparedStatement preparedStatement = conexao.prepareStatement(sql);
@@ -80,7 +80,7 @@ public class CompanhiaRepository {
 
             ResultSet resultSet = statement.executeQuery(sql);
 
-            companhiaPesquisa.setIdCompanhia(resultSet.getInt("id_comprador"));
+            companhiaPesquisa.setIdCompanhia(resultSet.getInt("id_companhia"));
             companhiaPesquisa.setLogin(resultSet.getString("login"));
             companhiaPesquisa.setNome(resultSet.getString("nome"));
             companhiaPesquisa.setTipoUsuario(TipoUsuario.ofTipo(resultSet.getInt("tipo")));
@@ -121,15 +121,13 @@ public class CompanhiaRepository {
 
             ResultSet resultSet = statement.executeQuery(sql);
 
-
-            companhiaPesquisa.setIdCompanhia(resultSet.getInt("id_comprador"));
+            companhiaPesquisa.setIdCompanhia(resultSet.getInt("id_companhia"));
             companhiaPesquisa.setLogin(resultSet.getString("login"));
             companhiaPesquisa.setSenha(resultSet.getString("senha"));
             companhiaPesquisa.setNome(resultSet.getString("nome"));
             companhiaPesquisa.setTipoUsuario(TipoUsuario.ofTipo(resultSet.getInt("tipo")));
             companhiaPesquisa.setCnpj(resultSet.getString("cpf"));
             companhiaPesquisa.setNomeFantasia(resultSet.getString("nome_fantasia"));
-
 
             if(resultSet.first()) {
                 return Optional.of(companhiaPesquisa);

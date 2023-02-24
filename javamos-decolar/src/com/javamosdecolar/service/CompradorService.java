@@ -26,17 +26,17 @@ public class CompradorService {
                     .acharCompradorPorIdUsuario(usuario.getIdUsuario());
 
             if(comprador.isEmpty()) {
-                throw new Exception("Comprador não existe!");
+                throw new RegraDeNegocioException("Comprador não existe!");
             }
 
             Optional<Passagem> passagem = passagemRepository.getPassagemPorCodigo(codigoPassagem);
 
             if(passagem.isEmpty()) {
-                throw new Exception("Passagem não existe!");
+                throw new RegraDeNegocioException("Passagem não existe!");
             }
 
             if(!passagem.get().isDisponivel()) {
-                throw new Exception("Passagem indisponível!");
+                throw new RegraDeNegocioException("Passagem indisponível!");
             }
 
             Venda venda = vendaService.efetuarVenda(passagem.get(), comprador.get());
@@ -45,8 +45,6 @@ public class CompradorService {
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a compra.");
-        } catch (Exception e) {
-            System.err.println("ERRO: " + e.getMessage());
         }
     }
 }

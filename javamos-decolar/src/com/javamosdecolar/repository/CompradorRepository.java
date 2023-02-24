@@ -36,16 +36,17 @@ public class CompradorRepository {
             comprador.setIdComprador(proximoId);
 
             String sql = "INSERT INTO COMPRADOR \n" +
-                    "(ID_COMPRADOR, CPF)\n" +
-                    "VALUES(?, ?)";
+                    "(ID_COMPRADOR, CPF, ID_USUARIO)\n" +
+                    "VALUES(?, ?, ?)";
 
             PreparedStatement preparedStatement = conexao.prepareStatement(sql);
 
             preparedStatement.setInt(1, comprador.getIdComprador());
             preparedStatement.setString(2, comprador.getCpf());
+            preparedStatement.setInt(3, comprador.getIdUsuario());
 
-            int res = preparedStatement.executeUpdate();
-            System.out.println("adicionarComprador.res=" + res);
+            preparedStatement.executeUpdate();
+
             return comprador;
 
         } catch (SQLException e) {

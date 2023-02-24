@@ -56,9 +56,10 @@ public class Trecho {
     public String toString() {
         return "Trecho{" +
                 "ID='" + idTrecho + '\'' +
-                "origem='" + origem + '\'' +
+                ", origem='" + origem + '\'' +
                 ", destino='" + destino + '\'' +
-                ", companhia=" + companhia.getNome() +
+                ", ID companhia=" + companhia.getIdCompanhia() +
+                ", nome companhia=" + companhia.getNomeFantasia() +
                 '}';
     }
 }

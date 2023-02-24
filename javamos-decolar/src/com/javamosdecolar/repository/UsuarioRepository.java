@@ -44,8 +44,7 @@ public class UsuarioRepository{
             preparedStatement.setString(4, usuario.getNome());
             preparedStatement.setInt(5, usuario.getTipoUsuario().getTipo());
 
-            int res = preparedStatement.executeUpdate();
-            System.out.println("adicionarComprador.res=" + res);
+            preparedStatement.executeUpdate();
             return usuario;
 
         } catch (SQLException e) {
@@ -72,21 +71,29 @@ public class UsuarioRepository{
 
             statement.setString(1, login);
 
-            ResultSet resultSet = statement.executeQuery(sql);
+            ResultSet resultSet = statement.executeQuery();
 
-            usuarioPesquisa.setIdUsuario(resultSet.getInt("id_usuario"));
-            usuarioPesquisa.setLogin(resultSet.getString("login"));
-            usuarioPesquisa.setSenha(resultSet.getString("senha"));
-            usuarioPesquisa.setNome(resultSet.getString("nome"));
-            usuarioPesquisa.setTipoUsuario((TipoUsuario) resultSet.getObject("tipo"));
+            if(resultSet.next()) {
+                usuarioPesquisa.setIdUsuario(resultSet.getInt("id_usuario"));
+                usuarioPesquisa.setLogin(resultSet.getString("login"));
+                usuarioPesquisa.setSenha(resultSet.getString("senha"));
+                usuarioPesquisa.setNome(resultSet.getString("nome"));
+                String tipo = resultSet.getString("tipo");
 
-            if(resultSet.first()) {
+                if (tipo.equals("1")) {
+                    usuarioPesquisa.setTipoUsuario(TipoUsuario.COMPANHIA);
+
+                } else if (tipo.equals("2")) {
+                    usuarioPesquisa.setTipoUsuario(TipoUsuario.COMPRADOR);
+                }
                 return Optional.of(usuarioPesquisa);
+
             } else {
                 return Optional.empty();
             }
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
         } finally {
             try {

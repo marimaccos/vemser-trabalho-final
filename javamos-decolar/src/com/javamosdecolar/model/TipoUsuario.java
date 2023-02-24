@@ -3,17 +3,23 @@ package javamos_decolar.com.javamosdecolar.model;
 import java.util.Arrays;
 
 public enum TipoUsuario {
-    COMPANHIA(1),
-    COMPRADOR(2);
+    COMPANHIA(1, "1"),
+    COMPRADOR(2, "2"),;
 
     private Integer tipo;
+    private String tipoString;
 
-    TipoUsuario(Integer tipo) {
+
+    TipoUsuario(Integer tipo, String tipoString) {
         this.tipo = tipo;
     }
 
     public Integer getTipo() {
         return tipo;
+    }
+
+    public String getTipoString() {
+        return tipoString;
     }
 
     public static TipoUsuario ofTipo(Integer numero) {

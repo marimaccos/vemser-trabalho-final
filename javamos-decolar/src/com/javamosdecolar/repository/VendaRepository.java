@@ -49,8 +49,8 @@ public class VendaRepository implements Repository<Venda, Integer> {
             preparedStatement.setObject(5, LocalDateTime.now());
             preparedStatement.setString(6, venda.getStatus().name());
 
-            int result = preparedStatement.executeUpdate();
-            System.out.println("adicionarVenda.res=" + result);
+            preparedStatement.executeUpdate();
+
             return venda;
 
         } catch (SQLException e) {
@@ -128,9 +128,8 @@ public class VendaRepository implements Repository<Venda, Integer> {
             statement.setInt(6, id);
 
             int result = statement.executeUpdate();
-            System.out.println("editarVenda.res=" + result);
-
             return result > 0;
+
         } catch (SQLException e) {
             throw new DatabaseException(e.getCause());
         } finally {
@@ -157,11 +156,11 @@ public class VendaRepository implements Repository<Venda, Integer> {
             statement.setInt(1, id);
 
             int result = statement.executeUpdate();
-            System.out.println("removerVendaPorId.res=" + result);
-
             return result > 0;
+
         } catch (SQLException e) {
             throw new DatabaseException(e.getCause());
+
         } finally {
             try {
                 if (conexao != null) {
@@ -176,6 +175,7 @@ public class VendaRepository implements Repository<Venda, Integer> {
     public Optional<Venda> buscaVendaPorCodigo(String codigo) throws DatabaseException {
         Venda vendaPesquisa = new Venda();
         Connection conexao = null;
+
         try{
             conexao = ConexaoBancoDeDados.getConnection();
 
@@ -201,6 +201,7 @@ public class VendaRepository implements Repository<Venda, Integer> {
 
         } catch (SQLException e) {
             throw new DatabaseException(e.getCause());
+
         } finally {
             try {
                 if (conexao != null) {
@@ -228,9 +229,8 @@ public class VendaRepository implements Repository<Venda, Integer> {
             statement.setInt(2, idVenda);
 
             int res = statement.executeUpdate();
-            System.out.println("editartrecho.res=" + res);
-
             return res > 0;
+
         } catch (SQLException e) {
             throw new DatabaseException(e.getCause());
         } finally {

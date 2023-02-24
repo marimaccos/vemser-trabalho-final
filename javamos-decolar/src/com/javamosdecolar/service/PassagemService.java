@@ -36,7 +36,7 @@ public class PassagemService {
             final boolean DIA_ANTERIOR = novaPassagem.getDataChegada().isAfter(novaPassagem.getDataPartida());
 
             if(DIA_ANTERIOR) {
-                throw new Exception("Data inválida!");
+                throw new RegraDeNegocioException("Data inválida!");
             }
 
             boolean codigoJaExiste = true;
@@ -51,7 +51,7 @@ public class PassagemService {
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
             if(companhia.isEmpty()) {
-                throw new Exception("Companhia inválida!");
+                throw new RegraDeNegocioException("Companhia inválida!");
             }
 
             String[] origemEDestino = trecho.split("/");
@@ -60,7 +60,7 @@ public class PassagemService {
                     .getTrecho(origemEDestino[0], origemEDestino[1], companhia.get());
 
             if(trechoEncontrado.isEmpty()) {
-                throw new Exception("Trecho inválido!");
+                throw new RegraDeNegocioException("Trecho inválido!");
             }
 
             novaPassagem.setTrecho(trechoEncontrado.get());
@@ -71,10 +71,7 @@ public class PassagemService {
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante o cadastro.");
-        } catch (Exception e) {
-            System.err.println("ERRO: " + e.getMessage());
         }
-
     }
 
     public void listarPassagemPorData(LocalDateTime data, int tipoDeData) throws RegraDeNegocioException {
@@ -86,13 +83,11 @@ public class PassagemService {
                 passagemRepository.getPassagemPorDataChegada(data).stream()
                         .forEach(System.out::println);
             } else {
-                throw new Exception("Opção inválida!");
+                throw new RegraDeNegocioException("Opção inválida!");
             }
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
-        } catch (Exception e) {
-            System.err.println("ERRO: " + e.getMessage());
         }
     }
 
@@ -110,7 +105,7 @@ public class PassagemService {
             Optional<Companhia> companhiaEncontrada = companhiaRepository.buscaCompanhiaPorNome(nomeCompanhia);
 
             if(companhiaEncontrada.isEmpty()) {
-                throw new Exception("Companhia não encontrada!");
+                throw new RegraDeNegocioException("Companhia não encontrada!");
             }
 
             List<Passagem> passagems = passagemRepository
@@ -121,8 +116,6 @@ public class PassagemService {
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
-        }  catch (Exception e) {
-            System.err.println("ERRO: " + e.getMessage());
         }
     }
 
@@ -140,7 +133,7 @@ public class PassagemService {
             Optional<Comprador> comprador = compradorRepository.acharCompradorPorIdUsuario(usuario.getIdUsuario());
 
             if(comprador.isEmpty()) {
-                throw new Exception("Comprador inexistente");
+                throw new RegraDeNegocioException("Comprador inexistente");
             }
 
             passagemRepository.getPassagensPorComprador(comprador.get().getIdComprador())
@@ -149,8 +142,6 @@ public class PassagemService {
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
-        } catch (Exception e) {
-            System.err.println("ERRO: " + e.getMessage());
         }
     }
 
@@ -159,19 +150,19 @@ public class PassagemService {
             final boolean DIA_ANTERIOR = passagemEditada.getDataChegada().isAfter(passagemEditada.getDataPartida());
 
             if(DIA_ANTERIOR) {
-                throw new Exception("Data inválida!");
+                throw new RegraDeNegocioException("Data inválida!");
             }
 
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
             if(companhia.isEmpty()) {
-                throw new Exception("Companhia inválida!");
+                throw new RegraDeNegocioException("Companhia inválida!");
             }
 
             Optional<Passagem> passagem = passagemRepository.getPassagemPorCodigo(passagemEditada.getCodigo());
 
             if(passagem.isEmpty()) {
-                throw new Exception("Passagem inválida!");
+                throw new RegraDeNegocioException("Passagem inválida!");
             }
 
             String[] origemEDestino = trecho.split("/");
@@ -180,7 +171,7 @@ public class PassagemService {
                     .getTrecho(origemEDestino[0], origemEDestino[1], companhia.get());
 
             if(trechoEncontrado.isEmpty()) {
-                throw new Exception("Trecho inválido!");
+                throw new RegraDeNegocioException("Trecho inválido!");
             }
 
             passagemEditada.setTrecho(trechoEncontrado.get());
@@ -193,8 +184,6 @@ public class PassagemService {
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
-        } catch (Exception e) {
-            System.err.println("ERRO: " + e.getMessage());
         }
     }
 }

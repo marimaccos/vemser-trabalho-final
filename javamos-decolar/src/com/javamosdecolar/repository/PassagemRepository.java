@@ -57,7 +57,6 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
             preparedStatement.setInt(7, passagem.getTrecho().getIdTrecho());
 
             int res = preparedStatement.executeUpdate();
-            System.out.println("adicionarPassagem.res=" + res);
             return passagem;
 
         } catch (SQLException e) {
@@ -84,8 +83,8 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
             Statement statement = connection.createStatement();
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
-                    "t.origem, t.destino,\n" +
-                    "c.nome_fantasia\n" +
+                    "t.id_trecho, t.origem, t.destino,\n" +
+                    "c.id_companhia, c.nome_fantasia\n" +
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n";
@@ -138,8 +137,6 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
 
             // Executa-se a consulta
             int res = preparedStatement.executeUpdate();
-            System.out.println("editarPassagem.res=" + res);
-
             return res > 0;
 
         } catch (SQLException e) {
@@ -171,7 +168,6 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
 
             // Executa-se a consulta
             int res = preparedStatement.executeUpdate();
-            System.out.println("removerPassagemPorId.res=" + res);
 
             return res > 0;
 
@@ -238,8 +234,8 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
             preparedStatement.setInt(2, passagem.getIdPassagem());
 
             // Executa-se a consulta
-            int res = preparedStatement.executeUpdate();
-            System.out.println("editarDispPassagem.res=" + res);
+            preparedStatement.executeUpdate();
+
 
         } catch (SQLException e) {
             throw new DatabaseException(e.getCause());
@@ -262,8 +258,8 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
             connection = ConexaoBancoDeDados.getConnection();
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
-                    "t.origem, t.destino,\n" +
-                    "c.nome_fantasia\n" +
+                    "t.id_trecho, t.origem, t.destino,\n" +
+                    "c.id_companhia, c.nome_fantasia\n" +
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
@@ -304,11 +300,11 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
             connection = ConexaoBancoDeDados.getConnection();
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
-                    "t.origem, t.destino,\n" +
-                    "c.nome_fantasia\n" +
+                    "t.id_trecho, t.origem, t.destino,\n" +
+                    "c.id_companhia, c.nome_fantasia\n" +
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
-                    "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
+                    "INNER JOIN COMPANHIA c ON c.id_companhia = t.id_companhia\n" +
                     "WHERE p.codigo = ?";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -347,8 +343,8 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
             connection = ConexaoBancoDeDados.getConnection();
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
-                    "t.origem, t.destino,\n" +
-                    "c.nome_fantasia\n" +
+                    "t.id_trecho, t.origem, t.destino,\n" +
+                    "c.id_companhia, c.nome_fantasia\n" +
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
@@ -389,11 +385,11 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
             connection = ConexaoBancoDeDados.getConnection();
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
-                    "t.origem, t.destino,\n" +
-                    "c.nome_fantasia\n" +
+                    "t.id_trecho, t.origem, t.destino,\n" +
+                    "c.id_companhia, c.nome_fantasia\n" +
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
-                    "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
+                    "INNER JOIN COMPANHIA c ON c.id_companhia = t.id_companhia\n" +
                     "WHERE p.data_chegada = ?";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -431,8 +427,8 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
             connection = ConexaoBancoDeDados.getConnection();
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
-                    "t.origem, t.destino,\n" +
-                    "c.nome_fantasia\n" +
+                    "t.id_trecho, t.origem, t.destino,\n" +
+                    "c.id_companhia, c.nome_fantasia\n" +
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
@@ -473,8 +469,8 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
             connection = ConexaoBancoDeDados.getConnection();
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
-                    "t.origem, t.destino,\n" +
-                    "c.nome_fantasia\n" +
+                    "t.id_trecho, t.origem, t.destino,\n" +
+                    "c.id_companhia, c.nome_fantasia\n" +
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
@@ -515,8 +511,8 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
             connection = ConexaoBancoDeDados.getConnection();
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
-                    "v.id_venda, v.codigo, v.status, v.data_venda,\n" +
-                    "cn.nome_fantasia\n" +
+                    "v.id_venda, v.id_venda, v.codigo, v.status, v.data_venda,\n" +
+                    "cn.id_companhia, cn.nome_fantasia\n" +
                     "FROM VENDA v\n" +
                     "INNER JOIN COMPRADOR cd ON cd.id_comprador = v.id_comprador\n" +
                     "INNER JOIN PASSAGEM p ON p.id_venda = v.id_venda \n" +
@@ -560,11 +556,11 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
 
             // Seleciona as 5 últimas passagens adicionadas
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
-                    "t.origem, t.destino,\n" +
-                    "c.nome_fantasia\n" +
+                    "t.id_trecho, t.origem, t.destino,\n" +
+                    "c.id_companhia, c.nome_fantasia\n" +
                     "FROM (SELECT * FROM PASSAGEM ORDER BY id_passagem DESC) p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
-                    "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia" +
+                    "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
                     "WHERE ROWNUM <= 5";
 
             // Executa-se a consulta
@@ -577,6 +573,7 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
             return passagens;
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {

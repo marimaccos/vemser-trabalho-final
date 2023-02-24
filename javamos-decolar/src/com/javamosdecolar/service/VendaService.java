@@ -55,11 +55,11 @@ public class VendaService {
             Optional<Venda> venda = vendaRepository.buscaVendaPorCodigo(codigo);
 
             if(venda.isEmpty()) {
-                throw new Exception("Venda não pode ser encontrada!");
+                throw new RegraDeNegocioException("Venda não pode ser encontrada!");
             }
 
             if(venda.get().getStatus().getTipo() == 3) {
-                throw new Exception("Venda já cancelada!");
+                throw new RegraDeNegocioException("Venda já cancelada!");
             }
 
             final int ID_VENDA = venda.get().getIdVenda();
@@ -69,9 +69,6 @@ public class VendaService {
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante o cancelamento.");
-        } catch (Exception e) {
-            System.err.println("ERRO: " + e.getMessage());
         }
-
     }
 }

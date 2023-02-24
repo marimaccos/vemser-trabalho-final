@@ -25,20 +25,20 @@ public class TrechoService {
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
             if(companhia.isEmpty()) {
-                throw new Exception("Companhia não pode ser encontrada!");
+                throw new RegraDeNegocioException("Companhia não pode ser encontrada!");
             }
 
             Optional<Trecho> trecho = trechoRepository.getTrechoPorId(idTrecho);
 
             if(trecho.isEmpty()) {
-                throw new Exception("Trecho não pode ser encontrado!");
+                throw new RegraDeNegocioException("Trecho não pode ser encontrado!");
             }
 
             boolean trechoEhDaMesmaCompanhia =
                     trecho.get().getCompanhia().getIdCompanhia() == companhia.get().getIdCompanhia();
 
             if(!trechoEhDaMesmaCompanhia) {
-                throw new Exception("Permissão negada! Trecho não pode ser deletado!");
+                throw new RegraDeNegocioException("Permissão negada! Trecho não pode ser deletado!");
             }
 
             boolean conseguiuRemover = trechoRepository.remover(idTrecho);
@@ -47,34 +47,32 @@ public class TrechoService {
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a deleção.");
-        } catch (Exception e) {
-            System.err.println("ERRO: " + e.getMessage());
         }
     }
 
     public void editarTrecho(Integer idTrecho, Trecho novoTrecho, Usuario usuario) throws RegraDeNegocioException {
         try {
             if(novoTrecho.getOrigem().length() > 3 || novoTrecho.getDestino().length() > 3) {
-                throw new Exception("Origem e Destino só podem ter três caracteres!");
+                throw new RegraDeNegocioException("Origem e Destino só podem ter três caracteres!");
             }
 
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
             if(companhia.isEmpty()) {
-                throw new Exception("Companhia não pode ser encontrada!");
+                throw new RegraDeNegocioException("Companhia não pode ser encontrada!");
             }
 
             Optional<Trecho> trecho = trechoRepository.getTrechoPorId(idTrecho);
 
             if(trecho.isEmpty()) {
-                throw new Exception("Trecho não pode ser encontrado!");
+                throw new RegraDeNegocioException("Trecho não pode ser encontrado!");
             }
 
             boolean trechoEhDaMesmaCompanhia =
                     trecho.get().getCompanhia().getIdCompanhia() == companhia.get().getIdCompanhia();
 
             if(!trechoEhDaMesmaCompanhia) {
-                throw new Exception("Permissão negada! Trecho não pode ser editado!");
+                throw new RegraDeNegocioException("Permissão negada! Trecho não pode ser editado!");
             }
 
             novoTrecho.setCompanhia(companhia.get());
@@ -85,8 +83,6 @@ public class TrechoService {
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a edição.");
-        } catch (Exception e) {
-            System.err.println("ERRO: " + e.getMessage());
         }
 
     }
@@ -96,18 +92,18 @@ public class TrechoService {
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
             if(companhia.isEmpty()) {
-                throw new Exception("Companhia não pode ser encontrada!");
+                throw new RegraDeNegocioException("Companhia não pode ser encontrada!");
             }
 
             if(novoTrecho.getOrigem().length() > 3 || novoTrecho.getDestino().length() > 3) {
-                throw new Exception("Origem e Destino só podem ter três caracteres!");
+                throw new RegraDeNegocioException("Origem e Destino só podem ter três caracteres!");
             }
 
             Optional<Trecho> trechoJaCadastrado = trechoRepository.getTrecho(novoTrecho.getOrigem(),
                     novoTrecho.getDestino(), companhia.get());
 
             if(trechoJaCadastrado.isPresent()) {
-                throw new Exception("Trecho já existente!");
+                throw new RegraDeNegocioException("Trecho já existente!");
             }
 
             novoTrecho.setCompanhia(companhia.get());
@@ -117,9 +113,6 @@ public class TrechoService {
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a criação.");
-        } catch (Exception e) {
-            System.err.println("ERRO: " + e.getMessage());
         }
-
     }
 }

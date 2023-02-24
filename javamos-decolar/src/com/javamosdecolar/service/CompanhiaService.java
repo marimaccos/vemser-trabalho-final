@@ -31,7 +31,7 @@ public class CompanhiaService {
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
             if(companhia.isEmpty()) {
-                throw new Exception("Companhia não pode ser encontrada!");
+                throw new RegraDeNegocioException("Companhia não pode ser encontrada!");
             }
 
             trechoRepository.getTrechosPorCompanhia(companhia.get().getIdCompanhia())
@@ -40,8 +40,6 @@ public class CompanhiaService {
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
-        } catch (Exception e) {
-            System.err.println("ERRO: " + e.getMessage());
         }
     }
 
@@ -50,7 +48,7 @@ public class CompanhiaService {
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
             if(companhia.isEmpty()) {
-                throw new Exception("Companhia não pode ser encontrada!");
+                throw new RegraDeNegocioException("Companhia não pode ser encontrada!");
             }
 
             vendaRepository.buscarVendasPorCompanhia(companhia.get().getIdCompanhia())
@@ -59,8 +57,6 @@ public class CompanhiaService {
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
-        } catch (Exception e) {
-            System.err.println("ERRO: " + e.getMessage());
         }
     }
 
@@ -70,7 +66,7 @@ public class CompanhiaService {
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
             if(companhia.isEmpty()) {
-                throw new Exception("Companhia não pode ser encontrada!");
+                throw new RegraDeNegocioException("Companhia não pode ser encontrada!");
             }
 
             passagemRepository.getPassagemPorCompanhia(companhia.get().getIdCompanhia())
@@ -79,8 +75,6 @@ public class CompanhiaService {
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
-        } catch (Exception e) {
-            System.err.println("ERRO: " + e.getMessage());
         }
     }
 
@@ -89,7 +83,7 @@ public class CompanhiaService {
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
             if(companhia.isEmpty()) {
-                throw new Exception("Companhia não pode ser encontrada!");
+                throw new RegraDeNegocioException("Companhia não pode ser encontrada!");
             }
 
             Optional<Passagem> passagem = passagemRepository.getPassagemPeloId(indexRemocaoPassagem);
@@ -97,7 +91,7 @@ public class CompanhiaService {
             boolean companhiaEhDonaDaPassagem = passagem.get().getTrecho().getCompanhia().equals(companhia.get());
 
             if(!companhiaEhDonaDaPassagem) {
-                throw new Exception("Permissão negada! Passagem não pode ser deletada!");
+                throw new RegraDeNegocioException("Permissão negada! Passagem não pode ser deletada!");
             }
 
             passagemRepository.remover(indexRemocaoPassagem);
@@ -105,9 +99,6 @@ public class CompanhiaService {
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
-        } catch (Exception e) {
-            System.err.println("ERRO: " + e.getMessage());
-            return false;
         }
     }
 }

@@ -49,8 +49,8 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
             preparedStatement.setString(3, trecho.getDestino());
             preparedStatement.setInt(4, trecho.getCompanhia().getIdCompanhia());
 
-            int res = preparedStatement.executeUpdate();
-            System.out.println("adicionarTrecho.res=" + res);
+            preparedStatement.executeUpdate();
+
             return trecho;
 
         } catch (SQLException e) {
@@ -125,8 +125,6 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
 
             // Executa-se a consulta
             int res = preparedStatement.executeUpdate();
-            System.out.println("editarTrecho.res=" + res);
-
             return res > 0;
 
         } catch (SQLException e) {
@@ -158,8 +156,6 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
 
             // Executa-se a consulta
             int res = preparedStatement.executeUpdate();
-            System.out.println("removerTrechoPorId.res=" + res);
-
             return res > 0;
 
         } catch (SQLException e) {
