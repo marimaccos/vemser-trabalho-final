@@ -72,7 +72,7 @@ public class CompanhiaRepository {
 
             String sql = "SELECT ID_COMPANHIA, u.ID_USUARIO, LOGIN, NOME, CNPJ, NOME_FANTASIA FROM COMPANHIA c \n" +
                     "INNER JOIN\n" +
-                    "USUARIO u ON c.ID_USUARIO = u.ID_USUARIO AND u.NOME = ?";
+                    "USUARIO u ON c.ID_USUARIO = u.ID_USUARIO AND c.NOME_FANTASIA = ?";
 
             PreparedStatement statement = conexao.prepareStatement(sql);
 
