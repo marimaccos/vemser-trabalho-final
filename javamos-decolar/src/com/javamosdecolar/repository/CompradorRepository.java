@@ -26,7 +26,7 @@ public class CompradorRepository implements Repository<Comprador, Integer> {
             }
             return null;
         } catch (SQLException e) {
-            throw new SQLException(e.getCause());
+            throw new DatabaseException(e.getCause());
         }
     }
 
@@ -39,8 +39,8 @@ public class CompradorRepository implements Repository<Comprador, Integer> {
             Integer proximoId = this.getProximoId(conexao);
             comprador.setIdComprador(proximoId);
 
-            String sql = "INSERT INTO PESSOA \n" +
-                    "(ID_COMPRADOR, LOGIN, SENHA, NOME, TIPO, CPF)\n" +
+            String sql = "INSERT INTO COMPRADOR \n" +
+                    "(ID_COMPANIA, LOGIN, SENHA, NOME, TIPO, CPF)\n" +
                     "VALUES(?, ?, ?, ?, ?, ?)";
 
             PreparedStatement preparedStatement = conexao.prepareStatement(sql);
@@ -53,7 +53,7 @@ public class CompradorRepository implements Repository<Comprador, Integer> {
             preparedStatement.setString(6, comprador.getCpf());
 
             int res = preparedStatement.executeUpdate();
-            System.out.println("adicionarPessoa.res=" + res);
+            System.out.println("adicionarComprador.res=" + res);
             return comprador;
 
         } catch (SQLException e) {
@@ -88,7 +88,7 @@ public class CompradorRepository implements Repository<Comprador, Integer> {
                 comprador.setLogin(resultSet.getString("login"));
                 comprador.setSenha(resultSet.getString("senha"));
                 comprador.setNome(resultSet.getString("nome"));
-                comprador.setTipo(TipoUsuario.ofTipo(resultSet.getInt("tipo")));
+                comprador.setTipoUsuario(TipoUsuario.ofTipo(resultSet.getInt("tipo")));
                 comprador.setCpf(resultSet.getString("cpf"));
                 compradores.add(comprador);
             }
@@ -108,14 +108,70 @@ public class CompradorRepository implements Repository<Comprador, Integer> {
 
     @Override
     public boolean editar(Integer id, Comprador comprador) throws DatabaseException {
-        //TO-DO
-        return false;
+        Connection conexao = null;
+        try {
+            conexao = ConexaoBancoDeDados.getConnection();
+
+            StringBuilder sql = new StringBuilder();
+            sql.append("UPDATE COMPRADOR SET ");
+            sql.append("login = ?,");
+            sql.append("senha = ?,");
+            sql.append("nome = ?, ");
+            sql.append("cpf = ?");
+            sql.append("WHERE id_comprador = ?");
+
+            PreparedStatement statement = conexao.prepareStatement(sql.toString());
+
+            statement.setString(1, comprador.getLogin());
+            statement.setString(2, comprador.getSenha());
+            statement.setString(3, comprador.getNome());
+            statement.setString(4, comprador.getCpf());
+            statement.setInt(5, id);
+
+            int result = statement.executeUpdate();
+            System.out.println("editarComprador.res=" + result);
+
+            return result > 0;
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getCause());
+        } finally {
+            try {
+                if (conexao != null) {
+                    conexao.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public boolean remover(Integer id) throws DatabaseException {
-        //TO-DO
-        return false;
+        Connection conexao = null;
+        try{
+            conexao = ConexaoBancoDeDados.getConnection();
+
+            String sql = "DELETE FROM COMPRADOR WHERE id_comprador = ?";
+
+            PreparedStatement statement = conexao.prepareStatement(sql);
+
+            statement.setInt(1, id);
+
+            int result = statement.executeUpdate();
+            System.out.println("removerCompradorPorId.res=" + result);
+
+            return result > 0;
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getCause());
+        } finally {
+            try {
+                if (conexao != null) {
+                    conexao.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public Optional<Comprador> acharCompradorPorIdUsuario(Integer idUsuario) throws DatabaseException {
