@@ -41,7 +41,7 @@ public class CompradorRepository implements Repository<Comprador, Integer> {
 
             String sql = "INSERT INTO COMPRADOR \n" +
                     "(ID_COMPANIA, LOGIN, SENHA, NOME, TIPO, CPF)\n" +
-                    "VALUES(?, ?, ?, ?, ?, ?)";
+                    "VALUES(?, ?, ?, ?, 2, ?)";
 
             PreparedStatement preparedStatement = conexao.prepareStatement(sql);
 
@@ -49,8 +49,7 @@ public class CompradorRepository implements Repository<Comprador, Integer> {
             preparedStatement.setString(2, comprador.getLogin());
             preparedStatement.setString(3, comprador.getSenha());
             preparedStatement.setString(4, comprador.getNome());
-            preparedStatement.setInt(5,2);
-            preparedStatement.setString(6, comprador.getCpf());
+            preparedStatement.setString(5, comprador.getCpf());
 
             int res = preparedStatement.executeUpdate();
             System.out.println("adicionarComprador.res=" + res);
@@ -175,8 +174,42 @@ public class CompradorRepository implements Repository<Comprador, Integer> {
     }
 
     public Optional<Comprador> acharCompradorPorIdUsuario(Integer idUsuario) throws DatabaseException {
-        //TO-DO
-        return null;
+        Comprador compradorPesquisa = new Comprador();
+        Connection conexao = null;
+        try{
+            conexao = ConexaoBancoDeDados.getConnection();
+
+            String sql = "SELECT * FROM COMPRADOR WHERE id_comprador = ?";
+            PreparedStatement statement = conexao.prepareStatement(sql);
+
+            statement.setInt(1, idUsuario);
+
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            compradorPesquisa.setIdComprador(resultSet.getInt("id_comprador"));
+            compradorPesquisa.setLogin(resultSet.getString("login"));
+            compradorPesquisa.setSenha(resultSet.getString("senha"));
+            compradorPesquisa.setNome(resultSet.getString("nome"));
+            compradorPesquisa.setTipoUsuario(TipoUsuario.ofTipo(resultSet.getInt("tipo")));
+            compradorPesquisa.setCpf(resultSet.getString("cpf"));
+
+            if(resultSet.first()) {
+                return Optional.of(compradorPesquisa);
+            } else {
+                return Optional.empty();
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getCause());
+        } finally {
+            try {
+                if (conexao != null) {
+                    conexao.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

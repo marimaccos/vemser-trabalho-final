@@ -10,10 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CompanhiaRepository implements Repository<Companhia, Integer> {
+public class CompanhiaRepository {
 
-
-    @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         try {
             String sql = "SELECT seq_companhia.nextval mysequence from DUAL";
@@ -29,9 +27,9 @@ public class CompanhiaRepository implements Repository<Companhia, Integer> {
         }
     }
 
-    @Override
-    public Companhia adicionar(Companhia companhia) throws DatabaseException {
+    public Companhia adicionar(Companhia companhia, Integer idUsuario) throws DatabaseException {
         Connection conexao = null;
+
         try {
             conexao = ConexaoBancoDeDados.getConnection();
 
@@ -40,7 +38,7 @@ public class CompanhiaRepository implements Repository<Companhia, Integer> {
 
             String sql = "INSERT INTO COMPANHIA \n" +
                     "(ID_COMPRADOR, LOGIN, SENHA, NOME, TIPO, CPF, NOME_FANTASIA)\n" +
-                    "VALUES(?, ?, ?, ?, ?, ?, ?)";
+                    "VALUES(?, ?, ?, ?, 1, ?, ?)";
 
             PreparedStatement preparedStatement = conexao.prepareStatement(sql);
 
@@ -48,9 +46,8 @@ public class CompanhiaRepository implements Repository<Companhia, Integer> {
             preparedStatement.setString(2, companhia.getLogin());
             preparedStatement.setString(3, companhia.getSenha());
             preparedStatement.setString(4, companhia.getNome());
-            preparedStatement.setInt(5,1);
-            preparedStatement.setString(6, companhia.getCnpj());
-            preparedStatement.setString(7, companhia.getNomeFantasia());
+            preparedStatement.setString(5, companhia.getCnpj());
+            preparedStatement.setString(6, companhia.getNomeFantasia());
 
             int result = preparedStatement.executeUpdate();
             System.out.println("adicionarCompanhia.res=" + result);
@@ -68,8 +65,6 @@ public class CompanhiaRepository implements Repository<Companhia, Integer> {
             }
         }
     }
-
-    @Override
     public List<Companhia> listar() throws DatabaseException {
         List<Companhia> companhias = new ArrayList<>();
         Connection conexao = null;
@@ -148,7 +143,6 @@ public class CompanhiaRepository implements Repository<Companhia, Integer> {
         }
     }
 
-    @Override
     public boolean remover(Integer id) throws DatabaseException {
         Connection conexao = null;
         try{
@@ -178,12 +172,84 @@ public class CompanhiaRepository implements Repository<Companhia, Integer> {
     }
 
     public Optional<Companhia> buscaCompanhiaPorNome (String nome) throws DatabaseException {
-        //TO-DO
-        return null;
+        Companhia companhiaPesquisa = new Companhia();
+        Connection conexao = null;
+        try{
+            conexao = ConexaoBancoDeDados.getConnection();
+
+            String sql = "SELECT * FROM COMPANHIA WHERE nome = ?";
+            PreparedStatement statement = conexao.prepareStatement(sql);
+
+            statement.setString(1, nome);
+
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            companhiaPesquisa.setIdCompanhia(resultSet.getInt("id_comprador"));
+            companhiaPesquisa.setLogin(resultSet.getString("login"));
+            companhiaPesquisa.setSenha(resultSet.getString("senha"));
+            companhiaPesquisa.setNome(resultSet.getString("nome"));
+            companhiaPesquisa.setTipoUsuario(TipoUsuario.ofTipo(resultSet.getInt("tipo")));
+            companhiaPesquisa.setCnpj(resultSet.getString("cpf"));
+            companhiaPesquisa.setNomeFantasia(resultSet.getString("nome_fantasia"));
+
+            if(resultSet.first()) {
+                return Optional.of(companhiaPesquisa);
+            } else {
+                return Optional.empty();
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getCause());
+        } finally {
+            try {
+                if (conexao != null) {
+                    conexao.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public Optional<Companhia> buscaCompanhiaPorIdUsuario(Integer idUsuario) throws DatabaseException {
-        //TO-DO
-        return null;
+        Companhia companhiaPesquisa = new Companhia();
+        Connection conexao = null;
+        try{
+            conexao = ConexaoBancoDeDados.getConnection();
+
+            String sql = "SELECT * FROM COMPANHIA WHERE id_usuario = ?";
+            PreparedStatement statement = conexao.prepareStatement(sql);
+
+            statement.setInt(1, idUsuario);
+
+            ResultSet resultSet = statement.executeQuery(sql);
+
+
+            companhiaPesquisa.setIdCompanhia(resultSet.getInt("id_comprador"));
+            companhiaPesquisa.setLogin(resultSet.getString("login"));
+            companhiaPesquisa.setSenha(resultSet.getString("senha"));
+            companhiaPesquisa.setNome(resultSet.getString("nome"));
+            companhiaPesquisa.setTipoUsuario(TipoUsuario.ofTipo(resultSet.getInt("tipo")));
+            companhiaPesquisa.setCnpj(resultSet.getString("cpf"));
+            companhiaPesquisa.setNomeFantasia(resultSet.getString("nome_fantasia"));
+
+
+            if(resultSet.first()) {
+                return Optional.of(companhiaPesquisa);
+            } else {
+                return Optional.empty();
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getCause());
+        } finally {
+            try {
+                if (conexao != null) {
+                    conexao.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -174,22 +174,114 @@ public class VendaRepository implements Repository<Venda, Integer> {
     }
 
     public Optional<Venda> buscaVendaPorCodigo(String codigo) throws DatabaseException {
-        // TO-DO
-        return null;
+        Venda vendaPesquisa = new Venda();
+        Connection conexao = null;
+        try{
+            conexao = ConexaoBancoDeDados.getConnection();
+
+            String sql = "SELECT * FROM VENDA WHERE codigo = ?";
+            PreparedStatement statement = conexao.prepareStatement(sql);
+
+            statement.setString(1, codigo);
+
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            vendaPesquisa.setIdVenda(resultSet.getInt("id_comprador"));
+            vendaPesquisa.setPassagem((Passagem) resultSet.getObject("passagem"));
+            vendaPesquisa.setComprador((Comprador) resultSet.getObject("senha"));
+            vendaPesquisa.setCompanhia((Companhia) resultSet.getObject("nome"));
+            vendaPesquisa.setData((LocalDateTime) resultSet.getObject("data"));
+            vendaPesquisa.setStatus((Status) resultSet.getObject("status"));
+
+            if(resultSet.first()) {
+                return Optional.of(vendaPesquisa);
+            } else {
+                return Optional.empty();
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getCause());
+        } finally {
+            try {
+                if (conexao != null) {
+                    conexao.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public boolean cancelarVenda(Integer idVenda, Venda venda) throws DatabaseException  {
         //TO-DO - não é pra remover a venda, é só pra mudar o status de concluido pra cancelado
-        return false;
+        Connection conexao = null;
+        try {
+            conexao = ConexaoBancoDeDados.getConnection();
+
+            StringBuilder sql = new StringBuilder();
+            sql.append("UPDATE VENDA SET ");
+            sql.append("status = ?");
+            sql.append("WHERE id_venda = ?");
+
+            PreparedStatement statement = conexao.prepareStatement(sql.toString());
+
+            statement.setObject(1, venda.getStatus());
+            statement.setInt(2, idVenda);
+
+            int res = statement.executeUpdate();
+            System.out.println("editartrecho.res=" + res);
+
+            return res > 0;
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getCause());
+        } finally {
+            try {
+                if (conexao != null) {
+                    conexao.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public List<Venda> buscarVendasPorCompanhia(Integer idCompanhia) throws DatabaseException {
-        //TO-DO
-        return null;
+        List<Venda> listaVendaPesquisa = new ArrayList<>();
+        Connection conexao = null;
+        try{
+            conexao = ConexaoBancoDeDados.getConnection();
+
+            String sql = "SELECT * FROM VENDA WHERE id_companhia = ?";
+            PreparedStatement statement = conexao.prepareStatement(sql);
+
+            statement.setInt(1, idCompanhia);
+
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                Venda vendaPesquisa = new Venda();
+                vendaPesquisa.setIdVenda(resultSet.getInt("id_venda"));
+                vendaPesquisa.setCodigo(resultSet.getString("codigo"));
+                vendaPesquisa.setPassagem((Passagem) resultSet.getObject("passagem"));
+                vendaPesquisa.setComprador((Comprador) resultSet.getObject("comprador"));
+                vendaPesquisa.setCompanhia((Companhia) resultSet.getObject("companhia"));
+                vendaPesquisa.setData((LocalDateTime) resultSet.getObject("data"));
+                vendaPesquisa.setStatus((Status) resultSet.getObject("status"));
+                listaVendaPesquisa.add(vendaPesquisa);
+            }
+
+            return listaVendaPesquisa;
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getCause());
+        } finally {
+            try {
+                if (conexao != null) {
+                    conexao.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public Optional<Object> buscarTrechosPorCompanhia(Integer idCompanhia) throws DatabaseException {
-        //TO-DO
-        return null;
-    }
 }
