@@ -10,10 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CompanhiaRepository implements Repository<Companhia, Integer> {
+public class CompanhiaRepository {
 
-
-    @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         try {
             String sql = "SELECT seq_companhia.nextval mysequence from DUAL";
@@ -29,9 +27,9 @@ public class CompanhiaRepository implements Repository<Companhia, Integer> {
         }
     }
 
-    @Override
-    public Companhia adicionar(Companhia companhia) throws DatabaseException {
+    public Companhia adicionar(Companhia companhia, Integer idUsuario) throws DatabaseException {
         Connection conexao = null;
+
         try {
             conexao = ConexaoBancoDeDados.getConnection();
 
@@ -67,8 +65,6 @@ public class CompanhiaRepository implements Repository<Companhia, Integer> {
             }
         }
     }
-
-    @Override
     public List<Companhia> listar() throws DatabaseException {
         List<Companhia> companhias = new ArrayList<>();
         Connection conexao = null;
@@ -147,7 +143,6 @@ public class CompanhiaRepository implements Repository<Companhia, Integer> {
         }
     }
 
-    @Override
     public boolean remover(Integer id) throws DatabaseException {
         Connection conexao = null;
         try{
@@ -222,7 +217,7 @@ public class CompanhiaRepository implements Repository<Companhia, Integer> {
         try{
             conexao = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT * FROM COMPANHIA WHERE id_companhia = ?";
+            String sql = "SELECT * FROM COMPANHIA WHERE id_usuario = ?";
             PreparedStatement statement = conexao.prepareStatement(sql);
 
             statement.setInt(1, idUsuario);

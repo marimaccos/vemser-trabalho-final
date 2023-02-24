@@ -228,4 +228,9 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
 
         return trecho;
     }
+
+    public Optional<Object> buscarTrechosPorCompanhia(Integer idCompanhia) throws DatabaseException {
+        //TO-DO
+        return null;
+    }
 }
