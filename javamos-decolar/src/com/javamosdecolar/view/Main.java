@@ -39,8 +39,8 @@ public class Main {
                 System.out.println("\t\tMENU PRINCIPAL");
                 System.out.println("-------------------------------");
                 System.out.println("[1] - Cadastrar Usuário\n" +
-                        "[2] - Entrar com Usuário Existente\n" +
-                        "[0] - Sair");
+                                   "[2] - Entrar com Usuário Existente\n" +
+                                   "[0] - Sair");
 
                 opcao = scanner.nextInt();
                 scanner.nextLine();
@@ -75,7 +75,8 @@ public class Main {
 
     }
 
-    private static void cadastrarUsuario(Scanner scanner, UsuarioService usuarioService) throws RegraDeNegocioException {
+    private static void cadastrarUsuario(Scanner scanner, UsuarioService usuarioService)
+                                            throws RegraDeNegocioException {
         System.out.println("-------------------------------");
         System.out.println("CADASTRAR USUÁRIO");
         System.out.println("-------------------------------");
@@ -87,7 +88,7 @@ public class Main {
         String senha = scanner.nextLine();
         System.out.println("Digite o tipo de usuário: ");
         System.out.println("[1] - Companhia\n" +
-                "[2] - Comprador");
+                           "[2] - Comprador");
         String tipo = scanner.nextLine();
 
         if (tipo.equals("1")) {
@@ -98,18 +99,21 @@ public class Main {
 
             Usuario usuario = new Usuario(login, senha, nome, TipoUsuario.COMPANHIA);
             usuarioService.criarUsuarioCompanhia(usuario, cnpj, nomeFantasia);
+
         } else if (tipo.equals("2")) {
             System.out.print("Digite cpf: ");
             String cpf = scanner.nextLine();
 
             Usuario usuario = new Usuario(login, senha, nome, TipoUsuario.COMPRADOR);
             usuarioService.criarUsuarioComprador(usuario, cpf);
+
         } else {
-            System.err.println("TipoUsuario inválido!");
+            System.err.println("Tipo Usuário inválido!");
         }
     }
 
-    private static Usuario entrarComUsuarioExistente(Scanner scanner, UsuarioService usuarioService) throws RegraDeNegocioException {
+    private static Usuario entrarComUsuarioExistente(Scanner scanner, UsuarioService usuarioService)
+                                                        throws RegraDeNegocioException {
         System.out.println("-------------------------------");
         System.out.println("\t\tLOGIN");
         System.out.println("-------------------------------");
@@ -122,8 +126,9 @@ public class Main {
     }
 
     private static void exibeMenuDeUsuarioCompanhia(Scanner scanner, DateTimeFormatter formatacaoData,
-                                                    CompanhiaService companhiaService, Usuario usuario,
-                                                    PassagemService passagemService, TrechoService trechoService) throws RegraDeNegocioException {
+                                                        CompanhiaService companhiaService, Usuario usuario,
+                                                        PassagemService passagemService, TrechoService trechoService)
+                                                        throws RegraDeNegocioException {
         String opcao = "";
         while (!opcao.equals("0")) {
             System.out.println("-------------------------------");
