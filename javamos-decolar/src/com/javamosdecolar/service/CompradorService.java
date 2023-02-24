@@ -29,7 +29,7 @@ public class CompradorService {
                 throw new Exception("Comprador não existe!");
             }
 
-            Optional<Passagem> passagem = passagemRepository.pegarPassagemPorCodigo(codigoPassagem);
+            Optional<Passagem> passagem = passagemRepository.getPassagemPorCodigo(codigoPassagem);
 
             if(passagem.isEmpty()) {
                 throw new Exception("Passagem não existe!");

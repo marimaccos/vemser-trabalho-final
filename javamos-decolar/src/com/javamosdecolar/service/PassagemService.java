@@ -8,6 +8,7 @@ import javamos_decolar.com.javamosdecolar.utils.Codigo;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +43,7 @@ public class PassagemService {
             String codigo = "";
             while(codigoJaExiste) {
                 codigo = Codigo.gerarCodigo();
-                if(passagemRepository.pegarPassagemPorCodigo(codigo).isEmpty()) {
+                if(passagemRepository.getPassagemPorCodigo(codigo).isEmpty()) {
                     codigoJaExiste = false;
                 }
             }
@@ -56,7 +57,7 @@ public class PassagemService {
             String[] origemEDestino = trecho.split("/");
 
             Optional<Trecho> trechoEncontrado = trechoRepository
-                    .buscarTrecho(origemEDestino[0], origemEDestino[1], companhia.get());
+                    .getTrecho(origemEDestino[0], origemEDestino[1], companhia.get());
 
             if(trechoEncontrado.isEmpty()) {
                 throw new Exception("Trecho inválido!");
@@ -76,13 +77,13 @@ public class PassagemService {
 
     }
 
-    public void listarPassagemPorData(LocalDate data, int tipoDeData) throws RegraDeNegocioException {
+    public void listarPassagemPorData(LocalDateTime data, int tipoDeData) throws RegraDeNegocioException {
         try {
             if(tipoDeData == 1) {
-                passagemRepository.pegarPassagemPorDataPartida(data).stream()
+                passagemRepository.getPassagemPorDataPartida(data).stream()
                         .forEach(System.out::println);
             } else if (tipoDeData == 2) {
-                passagemRepository.pegarPassagemPorDataChegada(data).stream()
+                passagemRepository.getPassagemPorDataChegada(data).stream()
                         .forEach(System.out::println);
             } else {
                 throw new Exception("Opção inválida!");
@@ -97,7 +98,7 @@ public class PassagemService {
 
     public void listarPassagemPorValorMaximo(BigDecimal valorMaximo) throws RegraDeNegocioException {
         try {
-            passagemRepository.pegarPassagemPorValor(valorMaximo).stream().forEach(System.out::println);
+            passagemRepository.getPassagemPorValor(valorMaximo).stream().forEach(System.out::println);
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
@@ -113,7 +114,7 @@ public class PassagemService {
             }
 
             List<Passagem> passagems = passagemRepository
-                    .pegarPassagemPorCompanhia(companhiaEncontrada.get().getIdCompanhia());
+                    .getPassagemPorCompanhia(companhiaEncontrada.get().getIdCompanhia());
 
             passagems.stream().forEach(System.out::println);
 
@@ -127,7 +128,7 @@ public class PassagemService {
 
     public void listarUltimasPassagens() throws RegraDeNegocioException {
         try {
-            passagemRepository.pegarUltimasPassagens().stream().forEach(System.out::println);
+            passagemRepository.getUltimasPassagens().stream().forEach(System.out::println);
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
@@ -142,7 +143,7 @@ public class PassagemService {
                 throw new Exception("Comprador inexistente");
             }
 
-            passagemRepository.pegarPassagensPorComprador(comprador.get().getIdComprador())
+            passagemRepository.getPassagensPorComprador(comprador.get().getIdComprador())
                     .stream().forEach(System.out::println);
 
         } catch (DatabaseException e) {
@@ -167,7 +168,7 @@ public class PassagemService {
                 throw new Exception("Companhia inválida!");
             }
 
-            Optional<Passagem> passagem = passagemRepository.pegarPassagemPorCodigo(passagemEditada.getCodigo());
+            Optional<Passagem> passagem = passagemRepository.getPassagemPorCodigo(passagemEditada.getCodigo());
 
             if(passagem.isEmpty()) {
                 throw new Exception("Passagem inválida!");
@@ -176,7 +177,7 @@ public class PassagemService {
             String[] origemEDestino = trecho.split("/");
 
             Optional<Trecho> trechoEncontrado = trechoRepository
-                    .buscarTrecho(origemEDestino[0], origemEDestino[1], companhia.get());
+                    .getTrecho(origemEDestino[0], origemEDestino[1], companhia.get());
 
             if(trechoEncontrado.isEmpty()) {
                 throw new Exception("Trecho inválido!");

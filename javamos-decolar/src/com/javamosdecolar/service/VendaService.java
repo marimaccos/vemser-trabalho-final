@@ -40,7 +40,7 @@ public class VendaService {
                     passagem.getTrecho().getCompanhia(), LocalDateTime.now(), Status.CONCLUIDO);
 
             vendaRepository.adicionar(vendaAtual);
-            passagemRepository.mudarDisponibilidadeDaPassagem(false, passagem);
+            passagemRepository.editarDisponibilidadeDaPassagem(false, passagem);
 
             return vendaAtual;
         } catch (DatabaseException e) {

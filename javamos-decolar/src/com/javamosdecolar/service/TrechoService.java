@@ -28,7 +28,7 @@ public class TrechoService {
                 throw new Exception("Companhia não pode ser encontrada!");
             }
 
-            Optional<Trecho> trecho = trechoRepository.buscarTrechoPorId(idTrecho);
+            Optional<Trecho> trecho = trechoRepository.getTrechoPorId(idTrecho);
 
             if(trecho.isEmpty()) {
                 throw new Exception("Trecho não pode ser encontrado!");
@@ -64,7 +64,7 @@ public class TrechoService {
                 throw new Exception("Companhia não pode ser encontrada!");
             }
 
-            Optional<Trecho> trecho = trechoRepository.buscarTrechoPorId(idTrecho);
+            Optional<Trecho> trecho = trechoRepository.getTrechoPorId(idTrecho);
 
             if(trecho.isEmpty()) {
                 throw new Exception("Trecho não pode ser encontrado!");
@@ -104,7 +104,7 @@ public class TrechoService {
                 throw new Exception("Origem e Destino só podem ter três caracteres!");
             }
 
-            Optional<Trecho> trechoJaCadastrado = trechoRepository.buscarTrecho(novoTrecho.getOrigem(),
+            Optional<Trecho> trechoJaCadastrado = trechoRepository.getTrecho(novoTrecho.getOrigem(),
                     novoTrecho.getDestino(), companhia.get());
 
             if(trechoJaCadastrado.isPresent()) {

@@ -70,7 +70,7 @@ public class CompanhiaService {
                 throw new Exception("Companhia não pode ser encontrada!");
             }
 
-            passagemRepository.pegarPassagemPorCompanhia(companhia.get().getIdCompanhia())
+            passagemRepository.getPassagemPorCompanhia(companhia.get().getIdCompanhia())
                     .stream().forEach(System.out::println);
 
         } catch (DatabaseException e) {
@@ -89,7 +89,7 @@ public class CompanhiaService {
                 throw new Exception("Companhia não pode ser encontrada!");
             }
 
-            Optional<Passagem> passagem = passagemRepository.pegarPassagemPeloId(indexRemocaoPassagem);
+            Optional<Passagem> passagem = passagemRepository.getPassagemPeloId(indexRemocaoPassagem);
 
             boolean companhiaEhDonaDaPassagem = passagem.get().getTrecho().getCompanhia().equals(companhia.get());
 

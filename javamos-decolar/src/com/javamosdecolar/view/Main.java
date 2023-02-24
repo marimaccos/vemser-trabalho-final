@@ -354,7 +354,7 @@ public class Main {
                     System.out.println("[2] - Data de Chegada");
                     int tipoDeData = Integer.parseInt(scanner.nextLine());
                     System.out.println("Digite a data: dd-MM-yyyy ");
-                    LocalDate data = LocalDate.parse(scanner.nextLine(), formatacaoData);
+                    LocalDateTime data = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
 
                     passagemService.listarPassagemPorData(data, tipoDeData);
                     break;
