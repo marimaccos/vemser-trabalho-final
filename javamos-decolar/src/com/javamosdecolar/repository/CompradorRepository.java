@@ -11,10 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CompradorRepository implements Repository<Comprador, Integer> {
-
-
-    @Override
+public class CompradorRepository {
     public Integer getProximoId(Connection connection) throws SQLException {
         try {
             String sql = "SELECT seq_comprador.nextval mysequence from DUAL";
@@ -30,7 +27,6 @@ public class CompradorRepository implements Repository<Comprador, Integer> {
         }
     }
 
-    @Override
     public Comprador adicionar(Comprador comprador) throws DatabaseException {
         Connection conexao = null;
         try {
@@ -40,16 +36,13 @@ public class CompradorRepository implements Repository<Comprador, Integer> {
             comprador.setIdComprador(proximoId);
 
             String sql = "INSERT INTO COMPRADOR \n" +
-                    "(ID_COMPANIA, LOGIN, SENHA, NOME, TIPO, CPF)\n" +
-                    "VALUES(?, ?, ?, ?, 2, ?)";
+                    "(ID_COMPRADOR, CPF)\n" +
+                    "VALUES(?, ?)";
 
             PreparedStatement preparedStatement = conexao.prepareStatement(sql);
 
             preparedStatement.setInt(1, comprador.getIdComprador());
-            preparedStatement.setString(2, comprador.getLogin());
-            preparedStatement.setString(3, comprador.getSenha());
-            preparedStatement.setString(4, comprador.getNome());
-            preparedStatement.setString(5, comprador.getCpf());
+            preparedStatement.setString(2, comprador.getCpf());
 
             int res = preparedStatement.executeUpdate();
             System.out.println("adicionarComprador.res=" + res);
@@ -68,118 +61,15 @@ public class CompradorRepository implements Repository<Comprador, Integer> {
         }
     }
 
-    @Override
-    public List<Comprador> listar() throws DatabaseException {
-        List<Comprador> compradores = new ArrayList<>();
-        Connection conexao = null;
-
-        try{
-            conexao = ConexaoBancoDeDados.getConnection();
-            Statement statement = conexao.createStatement();
-
-            String sql = "SELECT * FROM COMPRADOR";
-
-            ResultSet resultSet = statement.executeQuery(sql);
-
-            while(resultSet.next()){
-                Comprador comprador = new Comprador();
-                comprador.setIdComprador(resultSet.getInt("id_comprador"));
-                comprador.setLogin(resultSet.getString("login"));
-                comprador.setSenha(resultSet.getString("senha"));
-                comprador.setNome(resultSet.getString("nome"));
-                comprador.setTipoUsuario(TipoUsuario.ofTipo(resultSet.getInt("tipo")));
-                comprador.setCpf(resultSet.getString("cpf"));
-                compradores.add(comprador);
-            }
-        } catch (SQLException e) {
-            throw new DatabaseException(e.getCause());
-        } finally {
-            try {
-                if (conexao != null) {
-                    conexao.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return compradores;
-    }
-
-    @Override
-    public boolean editar(Integer id, Comprador comprador) throws DatabaseException {
-        Connection conexao = null;
-        try {
-            conexao = ConexaoBancoDeDados.getConnection();
-
-            StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE COMPRADOR SET ");
-            sql.append("login = ?,");
-            sql.append("senha = ?,");
-            sql.append("nome = ?, ");
-            sql.append("cpf = ?");
-            sql.append("WHERE id_comprador = ?");
-
-            PreparedStatement statement = conexao.prepareStatement(sql.toString());
-
-            statement.setString(1, comprador.getLogin());
-            statement.setString(2, comprador.getSenha());
-            statement.setString(3, comprador.getNome());
-            statement.setString(4, comprador.getCpf());
-            statement.setInt(5, id);
-
-            int result = statement.executeUpdate();
-            System.out.println("editarComprador.res=" + result);
-
-            return result > 0;
-        } catch (SQLException e) {
-            throw new DatabaseException(e.getCause());
-        } finally {
-            try {
-                if (conexao != null) {
-                    conexao.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public boolean remover(Integer id) throws DatabaseException {
-        Connection conexao = null;
-        try{
-            conexao = ConexaoBancoDeDados.getConnection();
-
-            String sql = "DELETE FROM COMPRADOR WHERE id_comprador = ?";
-
-            PreparedStatement statement = conexao.prepareStatement(sql);
-
-            statement.setInt(1, id);
-
-            int result = statement.executeUpdate();
-            System.out.println("removerCompradorPorId.res=" + result);
-
-            return result > 0;
-        } catch (SQLException e) {
-            throw new DatabaseException(e.getCause());
-        } finally {
-            try {
-                if (conexao != null) {
-                    conexao.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public Optional<Comprador> acharCompradorPorIdUsuario(Integer idUsuario) throws DatabaseException {
         Comprador compradorPesquisa = new Comprador();
         Connection conexao = null;
         try{
             conexao = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT * FROM COMPRADOR WHERE id_comprador = ?";
+            String sql = "SELECT ID_COMPRADOR, u.ID_USUARIO, LOGIN, NOME, CPF FROM COMPRADOR c \n" +
+                    "INNER JOIN\n" +
+                    "USUARIO u ON c.ID_USUARIO = u.ID_USUARIO WHERE c.ID_USUARIO = ?";
             PreparedStatement statement = conexao.prepareStatement(sql);
 
             statement.setInt(1, idUsuario);
@@ -187,10 +77,9 @@ public class CompradorRepository implements Repository<Comprador, Integer> {
             ResultSet resultSet = statement.executeQuery(sql);
 
             compradorPesquisa.setIdComprador(resultSet.getInt("id_comprador"));
+            compradorPesquisa.setIdUsuario(resultSet.getInt("id_usuario"));
             compradorPesquisa.setLogin(resultSet.getString("login"));
-            compradorPesquisa.setSenha(resultSet.getString("senha"));
             compradorPesquisa.setNome(resultSet.getString("nome"));
-            compradorPesquisa.setTipoUsuario(TipoUsuario.ofTipo(resultSet.getInt("tipo")));
             compradorPesquisa.setCpf(resultSet.getString("cpf"));
 
             if(resultSet.first()) {
@@ -211,5 +100,4 @@ public class CompradorRepository implements Repository<Comprador, Integer> {
             }
         }
     }
-
 }
