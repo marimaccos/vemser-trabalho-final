@@ -42,8 +42,8 @@ public class CompradorService {
             Venda venda = vendaService.efetuarVenda(passagem.get(), comprador.get());
 
             System.out.println("Venda criada com sucesso! " + venda);
+
         } catch (DatabaseException e) {
-            e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a compra.");
         }
     }

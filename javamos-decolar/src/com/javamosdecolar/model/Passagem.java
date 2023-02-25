@@ -101,7 +101,7 @@ public class Passagem {
     public String toString() {
         return "Passagem{" +
                 "ID='" + idPassagem + '\'' +
-                "codigo='" + codigo + '\'' +
+                ", codigo='" + codigo + '\'' +
                 ", dataPartida=" + dataPartida +
                 ", dataChegada=" + dataChegada +
                 ", trecho=" + trecho +

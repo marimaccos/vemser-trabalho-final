@@ -38,7 +38,7 @@ public final class Comprador extends Usuario{
     @Override
     public String toString() {
         return "Comprador{" +
-                "idComprador=" + idComprador +
+                ", idComprador=" + idComprador +
                 ", idUsuario=" + this.getIdUsuario() +
                 ", login=" + this.getLogin() +
                 ", senha=" + this.getSenha() +

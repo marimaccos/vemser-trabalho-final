@@ -527,6 +527,7 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia = t.id_companhia\n" +
+                    "WHERE p.disponivel = 1\n" +
                     "ORDER BY ID_PASSAGEM DESC) tables\n" +
                     "WHERE ROWNUM <= 5";
 

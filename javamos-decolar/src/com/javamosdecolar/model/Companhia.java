@@ -51,7 +51,7 @@ public final class Companhia extends Usuario{
     @Override
     public String toString() {
         return "Companhia{" +
-                "idCompanhia=" + idCompanhia +
+                ", idCompanhia=" + idCompanhia +
                 ", idUsuario='" + this.getIdUsuario() + '\'' +
                 ", login='" + this.getLogin() + '\'' +
                 ", nome='" + this.getNome() + '\'' +

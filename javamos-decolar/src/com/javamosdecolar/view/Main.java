@@ -400,7 +400,6 @@ public class Main {
                         System.out.println("-------------------------------");
                         System.out.println("COMPRADOR - COMPRAR PASSAGEM");
                         System.out.println("-------------------------------");
-                        System.out.println(" ");
 
                         menuDeCompra(scanner, compradorService, usuario);
                         break;

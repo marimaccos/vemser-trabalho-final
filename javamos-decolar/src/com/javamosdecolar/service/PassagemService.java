@@ -131,7 +131,15 @@ public class PassagemService {
 
     public void listarUltimasPassagens() throws RegraDeNegocioException {
         try {
-            passagemRepository.getUltimasPassagens().stream().forEach(System.out::println);
+
+            List<Passagem> ultimasPassagens = passagemRepository.getUltimasPassagens();
+
+            if (ultimasPassagens.isEmpty()) {
+                System.out.println("Não há passagens disponíveis!");
+            } else {
+                ultimasPassagens.stream().forEach(System.out::println);
+            }
+
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");

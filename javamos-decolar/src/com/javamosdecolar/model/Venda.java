@@ -82,7 +82,7 @@ public class Venda {
     public String toString() {
         return "Venda{" +
                 "ID='" + idVenda + '\'' +
-                "codigo='" + codigo + '\'' +
+                ", codigo='" + codigo + '\'' +
                 ", passagem=" + passagem +
                 ", comprador=" + comprador.getIdComprador() +
                 ", data=" + data +

@@ -7,6 +7,7 @@ import javamos_decolar.com.javamosdecolar.repository.*;
 import javamos_decolar.com.javamosdecolar.utils.Codigo;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public class VendaService {
@@ -62,7 +63,7 @@ public class VendaService {
             Optional<Venda> venda = vendaRepository.getVendaPorCodigo(codigo);
 
             if(venda.isEmpty()) {
-                throw new RegraDeNegocioException("Venda não pode ser encontrada!");
+                throw new RegraDeNegocioException("Venda não encontrada!");
             }
 
             if(venda.get().getStatus().getTipo() == 3) {
@@ -73,8 +74,8 @@ public class VendaService {
             boolean vendaFoiCancelada = vendaRepository.cancelarVenda(ID_VENDA);
 
             System.out.println("Venda foi cancelada? " + vendaFoiCancelada + " | id = " + ID_VENDA);
+
         } catch (DatabaseException e) {
-            e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante o cancelamento.");
         }
     }
@@ -88,8 +89,13 @@ public class VendaService {
                 throw new RegraDeNegocioException("Comprador inexistente");
             }
 
-            vendaRepository.getVendasPorComprador(comprador.get().getIdComprador())
-                    .stream().forEach(System.out::println);
+            List<Venda> vendasPorComprador = vendaRepository.getVendasPorComprador(comprador.get().getIdComprador());
+
+            if (vendasPorComprador.isEmpty()) {
+                System.out.println("Não há Histórico!");
+            } else {
+                vendasPorComprador.stream().forEach(System.out::println);
+            }
 
         } catch (DatabaseException e) {
             e.printStackTrace();
