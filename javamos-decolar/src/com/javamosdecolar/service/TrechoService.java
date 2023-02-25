@@ -38,15 +38,14 @@ public class TrechoService {
                     trecho.get().getCompanhia().getIdCompanhia() == companhia.get().getIdCompanhia();
 
             if(!trechoEhDaMesmaCompanhia) {
-                throw new RegraDeNegocioException("Permissão negada! Trecho não pode ser deletado!");
+                throw new RegraDeNegocioException("Trecho não pode ser deletado!");
             }
 
             boolean conseguiuRemover = trechoRepository.remover(idTrecho);
             System.out.println("removido? " + conseguiuRemover + "| com id=" + idTrecho);
 
         } catch (DatabaseException e) {
-            e.printStackTrace();
-            throw new RegraDeNegocioException("Aconteceu algum problema durante a deleção.");
+            throw new RegraDeNegocioException("Trecho não pode ser deletado!");
         }
     }
 

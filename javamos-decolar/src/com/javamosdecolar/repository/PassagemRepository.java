@@ -272,7 +272,7 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
             // Executa-se a consulta
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            if(resultSet.first()) {
+            if(resultSet.next()) {
                 Passagem passagem = getPassagemPorResultSet(resultSet);
                 return Optional.of(passagem);
             } else {
@@ -280,6 +280,7 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
             }
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {
