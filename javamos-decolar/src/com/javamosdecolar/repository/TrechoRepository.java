@@ -40,7 +40,7 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
 
             String sql = "INSERT INTO TRECHO\n" +
                     "(id_trecho, origem, destino, id_companhia)\n" +
-                    "VALUES(?, ?, ?, ?)\n";
+                    "VALUES(?, UPPER(?), UPPER(?), ?)\n";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -76,8 +76,8 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
             connection = ConexaoBancoDeDados.getConnection();
             Statement statement = connection.createStatement();
 
-            String sql = "SELECT t.id_trecho, t.origem, t.destino,\n" +
-                    "c.nome_fantasia\n" +
+            String sql = "SELECT t.id_trecho, UPPER(t.origem), UPPER(t.destino),\n" +
+                    "LOWER(c.nome_fantasia)\n" +
                     "FROM TRECHO t\n" +
                     "INNER JOIN COMPANHIA c ON t.id_companhia = c.id_companhia\n";
 
@@ -178,11 +178,11 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
         try {
             connection = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT t.id_trecho, t.origem, t.destino,\n" +
-                    "c.id_companhia, c.nome_fantasia\n" +
+            String sql = "SELECT t.id_trecho, UPPER(t.origem), UPPER(t.destino),\n" +
+                    "c.id_companhia, LOWER(c.nome_fantasia)\n" +
                     "FROM TRECHO t\n" +
                     "INNER JOIN COMPANHIA c ON t.id_companhia = c.id_companhia\n" +
-                    "WHERE t.origem = ? AND t.destino = ? AND t.id_companhia = ?";
+                    "WHERE t.origem = UPPER(?) AND t.destino = UPPER(?) AND t.id_companhia = ?";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -221,8 +221,8 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
         try {
             connection = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT t.id_trecho, t.origem, t.destino,\n" +
-                    "c.id_companhia, c.nome_fantasia\n" +
+            String sql = "SELECT t.id_trecho, UPPER(t.origem), UPPER(t.destino),\n" +
+                    "c.id_companhia, LOWER(c.nome_fantasia)\n" +
                     "FROM TRECHO t\n" +
                     "INNER JOIN COMPANHIA c ON t.id_companhia = c.id_companhia\n" +
                     "WHERE t.id_trecho = ?";
@@ -262,8 +262,8 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
         try {
             connection = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT t.id_trecho, t.origem, t.destino,\n" +
-                    "c.id_companhia, c.nome_fantasia\n" +
+            String sql = "SELECT t.id_trecho, UPPER(t.origem), UPPER(t.destino),\n" +
+                    "c.id_companhia, LOWER(c.nome_fantasia)\n" +
                     "FROM TRECHO t\n" +
                     "INNER JOIN COMPANHIA c ON t.id_companhia = c.id_companhia\n" +
                     "WHERE C.id_companhia = ?";

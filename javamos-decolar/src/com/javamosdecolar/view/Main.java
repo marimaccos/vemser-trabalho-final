@@ -89,9 +89,9 @@ public class Main {
         System.out.println("CADASTRAR USUÁRIO");
         System.out.println("-------------------------------");
         System.out.print("Digite seu nome: ");
-        String nome = scanner.nextLine();
+        String nome = scanner.nextLine().toLowerCase();
         System.out.print("Digite seu login: ");
-        String login = scanner.nextLine();
+        String login = scanner.nextLine().toLowerCase();
         System.out.print("Digite sua senha: ");
         String senha = scanner.nextLine();
         System.out.println("Digite o tipo de usuário: ");
@@ -103,7 +103,7 @@ public class Main {
             System.out.print("Digite cnpj: ");
             String cnpj = scanner.nextLine();
             System.out.print("Digite o nome fantasia: ");
-            String nomeFantasia = scanner.nextLine();
+            String nomeFantasia = scanner.nextLine().toLowerCase();
 
             Usuario usuario = new Usuario(login, senha, nome, TipoUsuario.COMPANHIA);
             usuarioService.criarUsuarioCompanhia(usuario, cnpj, nomeFantasia);
@@ -126,7 +126,7 @@ public class Main {
         System.out.println("\t\tLOGIN");
         System.out.println("-------------------------------");
         System.out.print("Digite seu login: ");
-        String login = scanner.nextLine();
+        String login = scanner.nextLine().toLowerCase();
         System.out.print("Digite sua senha: ");
         String senha = scanner.nextLine();
 
@@ -172,7 +172,7 @@ public class Main {
                     System.out.println("Insira a data de chegada: Ex: dd/MM/yyyy HH:mm ");
                     LocalDateTime dataChegada = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
                     System.out.println("Insira o trecho correspondente: Ex: BEL/CWB ");
-                    String trecho = scanner.nextLine();
+                    String trecho = scanner.nextLine().toUpperCase();
                     System.out.println("Insira o valor da passagem: ");
                     BigDecimal valor = scanner.nextBigDecimal();
                     scanner.nextLine();
@@ -231,9 +231,9 @@ public class Main {
                     System.out.println("COMPANHIA - CADASTRAR TRECHO");
                     System.out.println("-------------------------------");
                     System.out.println("Digite a origem: Ex: BEL");
-                    String cadastrarOrigem = scanner.nextLine();
+                    String cadastrarOrigem = scanner.nextLine().toUpperCase();
                     System.out.println("Digite o destino: Ex: CWB");
-                    String cadastrarDestino = scanner.nextLine();
+                    String cadastrarDestino = scanner.nextLine().toUpperCase();
 
                     Trecho trechoACadastrar = new Trecho(cadastrarOrigem, cadastrarDestino);
                     trechoService.criarTrecho(trechoACadastrar, usuario);
@@ -246,9 +246,9 @@ public class Main {
                     System.out.println("Digite o index do trecho: Ex: 1");
                     Integer idEditarTrecho = Integer.parseInt(scanner.nextLine());
                     System.out.println("Digite a origem: Ex: BEL");
-                    String editarOrigem = scanner.nextLine();
+                    String editarOrigem = scanner.nextLine().toUpperCase();
                     System.out.println("Digite o destino: Ex: CWB");
-                    String editarDestino = scanner.nextLine();
+                    String editarDestino = scanner.nextLine().toUpperCase();
                     Trecho editarTrecho = new Trecho(idEditarTrecho, editarOrigem, editarDestino);
 
                     trechoService.editarTrecho(idEditarTrecho, editarTrecho, usuario);
@@ -397,7 +397,7 @@ public class Main {
                     System.out.println("COMPRADOR - PESQUISAR PASSAGEM\n\t\t\tPOR COMPANHIA AEREA");
                     System.out.println("-------------------------------");
                     System.out.println("Digite o nome da companhia aerea: ");
-                    String nomeCompanhia = scanner.nextLine();
+                    String nomeCompanhia = scanner.nextLine().toLowerCase();
 
                     passagemService.listarPassagemPorCompanhia(nomeCompanhia);
                     break;

@@ -38,7 +38,7 @@ public class CompanhiaRepository {
 
             String sql = "INSERT INTO COMPANHIA \n" +
                     "(ID_COMPANHIA, CNPJ, NOME_FANTASIA, ID_USUARIO)\n" +
-                    "VALUES(?, ?, ?, ?)";
+                    "VALUES(?, ?, LOWER(?), ?)";
 
             PreparedStatement preparedStatement = conexao.prepareStatement(sql);
 
@@ -70,7 +70,7 @@ public class CompanhiaRepository {
         try{
             conexao = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT ID_COMPANHIA, CNPJ, NOME_FANTASIA FROM COMPANHIA c \n" +
+            String sql = "SELECT ID_COMPANHIA, CNPJ, LOWER(NOME_FANTASIA) FROM COMPANHIA c \n" +
                     "WHERE c.NOME_FANTASIA LIKE ?";
 
             PreparedStatement statement = conexao.prepareStatement(sql);
@@ -107,7 +107,7 @@ public class CompanhiaRepository {
         try{
             conexao = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT ID_COMPANHIA, CNPJ, NOME_FANTASIA, ID_USUARIO FROM COMPANHIA c \n" +
+            String sql = "SELECT ID_COMPANHIA, CNPJ, LOWER(NOME_FANTASIA), ID_USUARIO FROM COMPANHIA c \n" +
                     "WHERE c.ID_USUARIO = ?";
             PreparedStatement statement = conexao.prepareStatement(sql);
 

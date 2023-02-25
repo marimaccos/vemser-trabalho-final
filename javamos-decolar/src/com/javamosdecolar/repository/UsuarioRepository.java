@@ -34,7 +34,7 @@ public class UsuarioRepository{
 
             String sql = "INSERT INTO USUARIO \n" +
                     "(ID_USUARIO, LOGIN, SENHA, NOME, TIPO)\n" +
-                    "VALUES(?, ?, ?, ?, ?)";
+                    "VALUES(?, LOWER(?), ?, LOWER(?), ?)";
 
             PreparedStatement preparedStatement = conexao.prepareStatement(sql);
 
@@ -66,7 +66,7 @@ public class UsuarioRepository{
         try{
             conexao = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT * FROM USUARIO WHERE login = ?";
+            String sql = "SELECT * FROM USUARIO WHERE login = LOWER(?)";
             PreparedStatement statement = conexao.prepareStatement(sql);
 
             statement.setString(1, login);
