@@ -181,13 +181,13 @@ public class VendaRepository implements Repository<Venda, Integer> {
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "v.id_venda, v.codigo, v.status, v.data_venda,\n" +
-                    "cn.id_companhia, cn.nome_fantasia,\n" +
+                    "c.id_companhia, c.nome_fantasia,\n" +
                     "t.id_trecho, t.origem, t.destino,\n" +
                     "cd.id_comprador\n" +
                     "FROM VENDA v\n" +
                     "INNER JOIN COMPRADOR cd ON cd.id_comprador = v.id_comprador\n" +
                     "INNER JOIN PASSAGEM p ON p.id_venda = v.id_venda \n" +
-                    "INNER JOIN COMPANHIA cn ON cn.id_companhia = v.id_companhia\n" +
+                    "INNER JOIN COMPANHIA c ON c.id_companhia = v.id_companhia\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "WHERE v.codigo = ?";
 
@@ -259,13 +259,13 @@ public class VendaRepository implements Repository<Venda, Integer> {
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "v.id_venda, v.codigo, v.status, v.data_venda,\n" +
-                    "cn.id_companhia, LOWER(cn.nome_fantasia),\n" +
-                    "t.id_trecho, UPPER(t.origem), UPPER(t.destino),\n" +
+                    "c.id_companhia, c.nome_fantasia,\n" +
+                    "t.id_trecho, t.origem, t.destino,\n" +
                     "cd.id_comprador\n" +
                     "FROM VENDA v\n" +
                     "INNER JOIN COMPRADOR cd ON cd.id_comprador = v.id_comprador\n" +
                     "INNER JOIN PASSAGEM p ON p.id_venda = v.id_venda \n" +
-                    "INNER JOIN COMPANHIA cn ON cn.id_companhia = v.id_companhia\n" +
+                    "INNER JOIN COMPANHIA c ON c.id_companhia = v.id_companhia\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "WHERE v.id_companhia = ?";
 
@@ -341,13 +341,13 @@ public class VendaRepository implements Repository<Venda, Integer> {
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "v.id_venda, v.codigo, v.status, v.data_venda,\n" +
-                    "cn.id_companhia, (LOWER)cn.nome_fantasia,\n" +
-                    "t.id_trecho, UPPER(t.origem), UPPER(t.destino),\n" +
+                    "c.id_companhia, c.nome_fantasia,\n" +
+                    "t.id_trecho, t.origem, t.destino,\n" +
                     "cd.id_comprador\n" +
                     "FROM VENDA v\n" +
                     "INNER JOIN COMPRADOR cd ON cd.id_comprador = v.id_comprador\n" +
                     "INNER JOIN PASSAGEM p ON p.id_venda = v.id_venda \n" +
-                    "INNER JOIN COMPANHIA cn ON cn.id_companhia = v.id_companhia\n" +
+                    "INNER JOIN COMPANHIA c ON c.id_companhia = v.id_companhia\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "WHERE v.id_comprador = ?";
 

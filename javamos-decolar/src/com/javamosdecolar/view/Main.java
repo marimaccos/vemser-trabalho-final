@@ -2,19 +2,18 @@ package javamos_decolar.com.javamosdecolar.view;
 
 import javamos_decolar.com.javamosdecolar.exceptions.RegraDeNegocioException;
 import javamos_decolar.com.javamosdecolar.model.*;
-import javamos_decolar.com.javamosdecolar.repository.*;
 import javamos_decolar.com.javamosdecolar.service.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+
+        final DateTimeFormatter FORMATACAO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
         UsuarioService usuarioService = new UsuarioService();
         CompanhiaService companhiaService = new CompanhiaService();
@@ -22,38 +21,34 @@ public class Main {
         PassagemService passagemService = new PassagemService();
         VendaService vendaService = new VendaService();
         TrechoService trechoService = new TrechoService();
-
         Usuario usuarioLogado = null;
 
         Scanner scanner = new Scanner(System.in);
         Integer opcao = 3;
 
-        final DateTimeFormatter FORMATACAO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-
-        // MENU
+        // MENU INICIAL
         System.out.println("-------------------------------");
-        System.out.println("BEM-VINDO AO SISTEMA JAVAMOS DECOLAR!");
+        System.out.println("\t  BEM-VINDO AO SISTEMA\n\t\tJAVAMOS DECOLAR!");
+
         while (opcao != 0) {
             System.out.println("-------------------------------");
             System.out.println("\t\tMENU PRINCIPAL");
             System.out.println("-------------------------------");
             System.out.println("[1] - Cadastrar Usuário\n" +
-                               "[2] - Entrar com Usuário Existente\n" +
+                               "[2] - Logar\n" +
                                "[0] - Sair");
 
             opcao = scanner.nextInt();
             scanner.nextLine();
 
             try {
-
-
                 switch (opcao) {
                     case 1:
                         cadastrarUsuario(scanner, usuarioService);
                         break;
 
                     case 2:
-                        usuarioLogado = entrarComUsuarioExistente(scanner, usuarioService);
+                        usuarioLogado = logar(scanner, usuarioService);
 
                         if (usuarioLogado.getTipoUsuario().getTipo() == 1) { // talvez essa comparação esteja errada
                             exibeMenuDeUsuarioCompanhia(scanner, FORMATACAO_DATA, companhiaService, usuarioLogado,
@@ -63,12 +58,15 @@ public class Main {
                             exibeMenuDeUsuarioComprador(scanner, passagemService, usuarioLogado, vendaService,
                                     compradorService, FORMATACAO_DATA);
                             break;
+
                         } else {
                             break;
                         }
+
                     case 0:
                         opcao = 0;
                         break;
+
                     default:
                         System.err.println("Opção inválida.");
                         break;
@@ -86,7 +84,7 @@ public class Main {
     private static void cadastrarUsuario(Scanner scanner, UsuarioService usuarioService)
                                             throws RegraDeNegocioException {
         System.out.println("-------------------------------");
-        System.out.println("CADASTRAR USUÁRIO");
+        System.out.println("\t\tCADASTRAR USUÁRIO");
         System.out.println("-------------------------------");
         System.out.print("Digite seu nome: ");
         String nome = scanner.nextLine().toLowerCase();
@@ -120,10 +118,10 @@ public class Main {
         }
     }
 
-    private static Usuario entrarComUsuarioExistente(Scanner scanner, UsuarioService usuarioService)
+    private static Usuario logar(Scanner scanner, UsuarioService usuarioService)
                                                         throws RegraDeNegocioException {
         System.out.println("-------------------------------");
-        System.out.println("\t\tLOGIN");
+        System.out.println("\t\t\tLOGIN");
         System.out.println("-------------------------------");
         System.out.print("Digite seu login: ");
         String login = scanner.nextLine().toLowerCase();
@@ -146,7 +144,7 @@ public class Main {
         String opcao = "";
         while (!opcao.equals("0")) {
             System.out.println("-------------------------------");
-            System.out.println("BEM VINDO AO MENU DA COMPANHIA");
+            System.out.println("\t\tMENU COMPANHIA");
             System.out.println("-------------------------------");
             System.out.println("Escolha uma das opções abaixo:");
             System.out.println("[1] - Cadastrar Passagem");
@@ -157,131 +155,143 @@ public class Main {
             System.out.println("[6] - Editar Trecho");
             System.out.println("[7] - Remover Trecho");
             System.out.println("[8] - Trechos Cadastrados");
-            System.out.println("[9] - Historico de Vendas");
+            System.out.println("[9] - Histórico de Vendas");
             System.out.println("[0] - Sair");
-
             opcao = scanner.nextLine();
 
-            switch (opcao) {
-                case "1":
-                    System.out.println("-------------------------------");
-                    System.out.println("COMPANHIA - CADASTRAR PASSAGEM");
-                    System.out.println("-------------------------------");
-                    System.out.println("Insira a data de partida: Ex: dd/MM/yyyy HH:mm ");
-                    LocalDateTime dataPartida = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
-                    System.out.println("Insira a data de chegada: Ex: dd/MM/yyyy HH:mm ");
-                    LocalDateTime dataChegada = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
-                    System.out.println("Insira o trecho correspondente: Ex: BEL/CWB ");
-                    String trecho = scanner.nextLine().toUpperCase();
-                    System.out.println("Insira o valor da passagem: ");
-                    BigDecimal valor = scanner.nextBigDecimal();
-                    scanner.nextLine();
+            try {
+                switch (opcao) {
+                    case "1":
+                        System.out.println("-------------------------------");
+                        System.out.println("COMPANHIA - CADASTRAR PASSAGEM");
+                        System.out.println("-------------------------------");
+                        System.out.println("Insira a data de partida: Ex: dd/MM/yyyy HH:mm ");
+                        LocalDateTime dataPartida = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
+                        System.out.println("Insira a data de chegada: Ex: dd/MM/yyyy HH:mm ");
+                        LocalDateTime dataChegada = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
+                        System.out.println("Insira o trecho correspondente: Ex: BEL/CWB ");
+                        String trecho = scanner.nextLine().toUpperCase();
+                        System.out.println("Insira o valor da passagem: ");
+                        BigDecimal valor = scanner.nextBigDecimal();
+                        scanner.nextLine();
 
-                    Passagem novaPassagem = new Passagem(dataPartida, dataChegada, valor);
-                    passagemService.cadastrarPassagem(novaPassagem, trecho, usuario);
+                        Passagem novaPassagem = new Passagem(dataPartida, dataChegada, valor);
+                        passagemService.cadastrarPassagem(novaPassagem, trecho, usuario);
+                        break;
 
-                    break;
+                    case "2":
+                        System.out.println("-------------------------------");
+                        System.out.println("COMPANHIA - EDITAR PASSAGEM");
+                        System.out.println("-------------------------------");
+                        System.out.println("Digite o codigo da passagem:");
+                        String codigoPassagem = scanner.nextLine();
+                        System.out.println("Insira a data de partida: Ex: dd/MM/yyyy HH:mm");
+                        LocalDateTime novaDataPartida = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
+                        System.out.println("Insira a data de chegada:  Ex: dd/MM/yyyy HH:mm ");
+                        LocalDateTime novaDataChegada = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
+                        System.out.println("Insira o trecho correspondente. Ex: BEL/CWB ");
+                        String novoTrecho = scanner.nextLine().toUpperCase();
+                        System.out.println("Insira o valor da passagem: ");
+                        BigDecimal novoValor = scanner.nextBigDecimal();
+                        scanner.nextLine();
+                        System.out.println("Disponibilidade:\n[1] - disponivel\n[2] - indisponivel");
+                        String disponivel = scanner.nextLine();
 
-                case "2":
-                    System.out.println("-------------------------------");
-                    System.out.println("COMPANHIA - EDITAR PASSAGEM");
-                    System.out.println("-------------------------------");
-                    System.out.println("Digite o codigo da passagem:");
-                    String codigoPassagem = scanner.nextLine();
-                    System.out.println("Insira a data de partida: Ex: dd/MM/yyyy HH:mm");
-                    LocalDateTime novaDataPartida = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
-                    System.out.println("Insira a data de chegada:  Ex: dd/MM/yyyy HH:mm ");
-                    LocalDateTime novaDataChegada = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
-                    System.out.println("Insira o trecho correspondente. Ex: BEL/CWB ");
-                    String novoTrecho = scanner.nextLine().toUpperCase();
-                    System.out.println("Insira o valor da passagem: ");
-                    BigDecimal novoValor = scanner.nextBigDecimal();
-                    scanner.nextLine();
-                    System.out.println("Disponibilidade:\n[1] - disponivel\n[2] - indisponivel");
-                    String disponivel = scanner.nextLine();
-                    boolean novoDisponivel = false;
+                        boolean novoDisponivel = false;
 
-                    if (disponivel.equals("1")) {
-                        novoDisponivel = true;
-                    }
+                        if (disponivel.equals("1")) {
+                            novoDisponivel = true;
+                        }
 
-                    Passagem passagemEditada = new Passagem(codigoPassagem, novaDataPartida, novaDataChegada,
-                            novoDisponivel, novoValor);
-                    passagemService.editarPassagem(passagemEditada, novoTrecho, usuario);
+                        Passagem passagemEditada = new Passagem(codigoPassagem, novaDataPartida, novaDataChegada,
+                                                                novoDisponivel, novoValor);
+                        passagemService.editarPassagem(passagemEditada, novoTrecho, usuario);
+                        break;
 
-                    break;
-                case "3":
-                    System.out.println("-------------------------------");
-                    System.out.println("COMPANHIA - REMOVER PASSAGEM");
-                    System.out.println("-------------------------------");
-                    System.out.println("Digite a passagem a ser removida:");
-                    Integer indexRemocaoPassagem = Integer.parseInt(scanner.nextLine());
-                    companhiaService.deletarPassagem(indexRemocaoPassagem, usuario);
-                    break;
+                    case "3":
+                        System.out.println("-------------------------------");
+                        System.out.println("COMPANHIA - REMOVER PASSAGEM");
+                        System.out.println("-------------------------------");
+                        System.out.println("Digite o ID da passagem:");
+                        Integer indexRemocaoPassagem = Integer.parseInt(scanner.nextLine());
 
-                case "4":
-                    System.out.println("-------------------------------");
-                    System.out.println("COMPANHIA - PASSAGENS CADASTRADAS");
-                    System.out.println("-------------------------------");
-                    companhiaService.listarPassagensCadastradas(usuario);
-                    break;
+                        companhiaService.deletarPassagem(indexRemocaoPassagem, usuario);
+                        break;
 
-                case "5":
-                    System.out.println("-------------------------------");
-                    System.out.println("COMPANHIA - CADASTRAR TRECHO");
-                    System.out.println("-------------------------------");
-                    System.out.println("Digite a origem: Ex: BEL");
-                    String cadastrarOrigem = scanner.nextLine().toUpperCase();
-                    System.out.println("Digite o destino: Ex: CWB");
-                    String cadastrarDestino = scanner.nextLine().toUpperCase();
+                    case "4":
+                        System.out.println("-------------------------------");
+                        System.out.println("COMPANHIA - PASSAGENS CADASTRADAS");
+                        System.out.println("-------------------------------");
 
-                    Trecho trechoACadastrar = new Trecho(cadastrarOrigem, cadastrarDestino);
-                    trechoService.criarTrecho(trechoACadastrar, usuario);
-                    break;
+                        companhiaService.listarPassagensCadastradas(usuario);
+                        break;
 
-                case "6":
-                    System.out.println("-------------------------------");
-                    System.out.println("COMPANHIA - EDITAR TRECHO");
-                    System.out.println("-------------------------------");
-                    System.out.println("Digite o index do trecho: Ex: 1");
-                    Integer idEditarTrecho = Integer.parseInt(scanner.nextLine());
-                    System.out.println("Digite a origem: Ex: BEL");
-                    String editarOrigem = scanner.nextLine().toUpperCase();
-                    System.out.println("Digite o destino: Ex: CWB");
-                    String editarDestino = scanner.nextLine().toUpperCase();
-                    Trecho editarTrecho = new Trecho(idEditarTrecho, editarOrigem, editarDestino);
+                    case "5":
+                        System.out.println("-------------------------------");
+                        System.out.println("COMPANHIA - CADASTRAR TRECHO");
+                        System.out.println("-------------------------------");
+                        System.out.println("Digite a origem: Ex: BEL");
+                        String cadastrarOrigem = scanner.nextLine().toUpperCase();
+                        System.out.println("Digite o destino: Ex: CWB");
+                        String cadastrarDestino = scanner.nextLine().toUpperCase();
 
-                    trechoService.editarTrecho(idEditarTrecho, editarTrecho, usuario);
-                    break;
+                        Trecho trechoACadastrar = new Trecho(cadastrarOrigem, cadastrarDestino);
+                        trechoService.criarTrecho(trechoACadastrar, usuario);
+                        break;
 
-                case "7":
-                    System.out.println("-------------------------------");
-                    System.out.println("COMPANHIA - REMOVER TRECHO");
-                    System.out.println("-------------------------------");
-                    System.out.println("Digite o id do trecho: Ex: 1");
-                    Integer idTrecho = Integer.parseInt(scanner.nextLine());
-                    trechoService.deletarTrecho(idTrecho, usuario);
-                    break;
+                    case "6":
+                        System.out.println("-------------------------------");
+                        System.out.println("COMPANHIA - EDITAR TRECHO");
+                        System.out.println("-------------------------------");
+                        System.out.println("Digite o ID do trecho:");
+                        Integer idEditarTrecho = Integer.parseInt(scanner.nextLine());
+                        System.out.println("Digite a origem: Ex: BEL");
+                        String editarOrigem = scanner.nextLine().toUpperCase();
+                        System.out.println("Digite o destino: Ex: CWB");
+                        String editarDestino = scanner.nextLine().toUpperCase();
 
-                case "8":
-                    System.out.println("-------------------------------");
-                    System.out.println("COMPANHIA - TRECHOS CADASTRADOS");
-                    System.out.println("-------------------------------");
-                    companhiaService.imprimirTrechosDaCompanhia(usuario);
-                    break;
+                        Trecho editarTrecho = new Trecho(idEditarTrecho, editarOrigem, editarDestino);
+                        trechoService.editarTrecho(idEditarTrecho, editarTrecho, usuario);
+                        break;
 
-                case "9":
-                    System.out.println("-------------------------------");
-                    System.out.println("COMPANHIA - IMPRIMIR HISTORICO");
-                    System.out.println("-------------------------------");
-                    companhiaService.imprimirHistoricoDeVendas(usuario);
-                    break;
+                    case "7":
+                        System.out.println("-------------------------------");
+                        System.out.println("COMPANHIA - REMOVER TRECHO");
+                        System.out.println("-------------------------------");
+                        System.out.println("Digite o ID do trecho:");
+                        Integer idTrecho = Integer.parseInt(scanner.nextLine());
 
-                case "0":
-                    break;
+                        trechoService.deletarTrecho(idTrecho, usuario);
+                        break;
 
-                default:
-                    System.err.println("Opção inválida!");
+                    case "8":
+                        System.out.println("-------------------------------");
+                        System.out.println("COMPANHIA - TRECHOS CADASTRADOS");
+                        System.out.println("-------------------------------");
+
+                        companhiaService.imprimirTrechosDaCompanhia(usuario);
+                        break;
+
+                    case "9":
+                        System.out.println("-------------------------------");
+                        System.out.println("COMPANHIA - HISTÓRICO DE VENDAS");
+                        System.out.println("-------------------------------");
+
+                        companhiaService.imprimirHistoricoDeVendas(usuario);
+                        break;
+
+                    case "0":
+                        break;
+
+                    default:
+                        System.err.println("Opção inválida!");
+                }
+
+            } catch (RegraDeNegocioException er) {
+                System.out.println(er.getMessage());
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -293,67 +303,67 @@ public class Main {
 
         while (!opcao.equals("0")) {
             System.out.println("-------------------------------");
-            System.out.println("BEM VINDO AO MENU DO COMPRADOR");
+            System.out.println("\t\tMENU COMPRADOR");
             System.out.println("-------------------------------");
             System.out.println("Escolha uma das opções abaixo:");
             System.out.println("[1] - Pesquisar Passagem");
             System.out.println("[2] - Comprar Passagem");
             System.out.println("[3] - Cancelar Compra");
             System.out.println("[4] - Histórico de Compras");
-            System.out.println("[5] - Ultimas Passagens Cadastradas");
             System.out.println("[0] - Sair");
-
             opcao = scanner.nextLine();
 
-            switch (opcao) {
-                case "1":
-                    System.out.println(" ");
-                    buscarTrecho(scanner, formatacaoData, passagemService);
-                    break;
+            try {
+                switch (opcao) {
+                    case "1":
+                        System.out.println(" ");
+                        pesquisarPassagem(scanner, formatacaoData, passagemService);
+                        break;
 
-                case "2":
-                    System.out.println("-------------------------------");
-                    System.out.println("COMPRADOR - COMPRAR PASSAGEM");
-                    System.out.println("-------------------------------");
-                    System.out.println(" ");
-                    menuDeCompra(scanner, compradorService, usuario);
-                    break;
+                    case "2":
+                        System.out.println("-------------------------------");
+                        System.out.println("COMPRADOR - COMPRAR PASSAGEM");
+                        System.out.println("-------------------------------");
+                        System.out.println(" ");
 
-                case "3":
-                    System.out.println("-------------------------------");
-                    System.out.println("COMPRADOR - CANCELAR COMPRA");
-                    System.out.println("-------------------------------");
-                    System.out.println("Digite o codigo da compra: Ex: '01235'");
-                    String codigo = scanner.nextLine();
-                    vendaService.cancelarVenda(codigo);
-                    break;
+                        menuDeCompra(scanner, compradorService, usuario);
+                        break;
 
-                case "4":
-                    System.out.println("-------------------------------");
-                    System.out.println("COMPRADOR - HISTÓRICO");
-                    System.out.println("-------------------------------");
-                    vendaService.getHistoricoVendasComprador(usuario);
-                    break;
+                    case "3":
+                        System.out.println("-------------------------------");
+                        System.out.println("COMPRADOR - CANCELAR COMPRA");
+                        System.out.println("-------------------------------");
+                        System.out.println("Digite o codigo da compra: Ex: '01235'");
+                        String codigo = scanner.nextLine();
 
-                case "5":
-                    System.out.println("-------------------------------");
-                    System.out.println("COMPRADOR - ULTIMAS PASSAGENS\n\t\t\tCADASTRADAS");
-                    System.out.println("-------------------------------");
-                    passagemService.listarUltimasPassagens();
-                    break;
+                        vendaService.cancelarVenda(codigo);
+                        break;
 
-                case "0":
-                    break;
+                    case "4":
+                        System.out.println("-------------------------------");
+                        System.out.println("COMPRADOR - HISTÓRICO");
+                        System.out.println("-------------------------------");
+                        vendaService.getHistoricoVendasComprador(usuario);
+                        break;
 
-                default:
-                    System.err.println("Opção inválida!");
-                    break;
+                    case "0":
+                        break;
+
+                    default:
+                        System.err.println("Opção inválida!");
+                        break;
+                }
+            } catch (RegraDeNegocioException er) {
+                System.out.println(er.getMessage());
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     }
 
-    private static void buscarTrecho(Scanner scanner, DateTimeFormatter formatacaoData,
-                                     PassagemService passagemService) throws RegraDeNegocioException {
+    private static void pesquisarPassagem(Scanner scanner, DateTimeFormatter formatacaoData,
+                                          PassagemService passagemService) throws RegraDeNegocioException {
         String opcao = "";
 
         while (!opcao.equals("0")) {
@@ -363,51 +373,68 @@ public class Main {
             System.out.println("Escolha uma das opções abaixo:");
             System.out.println("[1] - Data");
             System.out.println("[2] - Valor");
-            System.out.println("[3] - Companhia Aerea");
+            System.out.println("[3] - Companhia");
+            System.out.println("[4] - Últimas Passagens Cadastradas");
             System.out.println("[0] - Sair");
 
             opcao = scanner.nextLine();
 
-            switch (opcao) {
-                case "1":
-                    System.out.println("-------------------------------");
-                    System.out.println("COMPRADOR - PESQUISAR PASSAGEM\n\t\t\tPOR DATA");
-                    System.out.println("-------------------------------");
-                    System.out.println("[1] - Data de Partida");
-                    System.out.println("[2] - Data de Chegada");
-                    int tipoDeData = Integer.parseInt(scanner.nextLine());
-                    System.out.println("Digite a data: dd/MM/yyyy HH:mm");
-                    LocalDateTime data = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
+            try {
+                switch (opcao) {
+                    case "1":
+                        System.out.println("-------------------------------");
+                        System.out.println("COMPRADOR - PESQUISAR PASSAGEM\n\t\t\tPOR DATA");
+                        System.out.println("-------------------------------");
+                        System.out.println("[1] - Data de Partida");
+                        System.out.println("[2] - Data de Chegada");
+                        int tipoDeData = Integer.parseInt(scanner.nextLine());
+                        System.out.println("Digite a data: dd/MM/yyyy HH:mm");
+                        LocalDateTime data = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
 
-                    passagemService.listarPassagemPorData(data, tipoDeData);
-                    break;
+                        passagemService.listarPassagemPorData(data, tipoDeData);
+                        break;
 
-                case "2":
-                    System.out.println("-------------------------------");
-                    System.out.println("COMPRADOR - PESQUISAR PASSAGEM\n\t\t\tPOR VALOR");
-                    System.out.println("-------------------------------");
-                    System.out.println("Digite o limite maximo de valor: ");
-                    BigDecimal valorMaximo = scanner.nextBigDecimal();
-                    scanner.nextLine();
+                    case "2":
+                        System.out.println("-------------------------------");
+                        System.out.println("COMPRADOR - PESQUISAR PASSAGEM\n\t\t\tPOR VALOR");
+                        System.out.println("-------------------------------");
+                        System.out.println("Digite o limite maximo de valor: ");
+                        BigDecimal valorMaximo = scanner.nextBigDecimal();
+                        scanner.nextLine();
 
-                    passagemService.listarPassagemPorValorMaximo(valorMaximo);
-                    break;
-                case "3":
-                    System.out.println("-------------------------------");
-                    System.out.println("COMPRADOR - PESQUISAR PASSAGEM\n\t\t\tPOR COMPANHIA AEREA");
-                    System.out.println("-------------------------------");
-                    System.out.println("Digite o nome da companhia aerea: ");
-                    String nomeCompanhia = scanner.nextLine().toLowerCase();
+                        passagemService.listarPassagemPorValorMaximo(valorMaximo);
+                        break;
 
-                    passagemService.listarPassagemPorCompanhia(nomeCompanhia);
-                    break;
+                    case "3":
+                        System.out.println("-------------------------------");
+                        System.out.println("COMPRADOR - PESQUISAR PASSAGEM\n\t\t\tPOR COMPANHIA");
+                        System.out.println("-------------------------------");
+                        System.out.println("Digite o nome da Companhia:");
+                        String nomeCompanhia = scanner.nextLine().toLowerCase();
 
-                case "0":
-                    break;
+                        passagemService.listarPassagemPorCompanhia(nomeCompanhia);
+                        break;
 
-                default:
-                    System.err.println("Opção inválida!");
-                    break;
+                    case "4":
+                        System.out.println("-------------------------------");
+                        System.out.println("COMPRADOR - ÚLTIMAS PASSAGENS\n\t\t\tCADASTRADAS");
+                        System.out.println("-------------------------------");
+
+                        passagemService.listarUltimasPassagens();
+                        break;
+
+                    case "0":
+                        break;
+
+                    default:
+                        System.err.println("Opção inválida!");
+                        break;
+                }
+            } catch (RegraDeNegocioException er) {
+                System.out.println(er.getMessage());
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -415,6 +442,7 @@ public class Main {
     private static void menuDeCompra(Scanner scanner, CompradorService compradorService, Usuario usuario) throws RegraDeNegocioException {
         System.out.println("Digite o código da passagem: ");
         String codigoPassagem = scanner.nextLine();
+
         compradorService.comprarPassagem(codigoPassagem, usuario);
     }
 }
