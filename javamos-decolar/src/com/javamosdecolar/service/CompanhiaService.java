@@ -10,6 +10,7 @@ import javamos_decolar.com.javamosdecolar.repository.PassagemRepository;
 import javamos_decolar.com.javamosdecolar.repository.TrechoRepository;
 import javamos_decolar.com.javamosdecolar.repository.VendaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public class CompanhiaService {
@@ -69,9 +70,14 @@ public class CompanhiaService {
                 throw new RegraDeNegocioException("Companhia não pode ser encontrada!");
             }
 
-            passagemRepository.getPassagemPorCompanhia(companhia.get().getIdCompanhia())
-                    .stream().forEach(System.out::println);
+            List<Passagem> passagemPorCompanhia = passagemRepository
+                    .getPassagemPorCompanhia(companhia.get().getIdCompanhia());
 
+            if(passagemPorCompanhia.isEmpty()) {
+                System.out.println("Não há passagens a serem listadas!");
+            } else {
+                passagemPorCompanhia.stream().forEach(System.out::println);
+            }
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
