@@ -4,6 +4,7 @@ import javamos_decolar.com.javamosdecolar.exceptions.DatabaseException;
 import javamos_decolar.com.javamosdecolar.model.Passagem;
 import javamos_decolar.com.javamosdecolar.model.Companhia;
 import javamos_decolar.com.javamosdecolar.model.Trecho;
+import javamos_decolar.com.javamosdecolar.model.Venda;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -540,6 +541,40 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new DatabaseException(e.getCause());
+
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean inserirIdVenda(Passagem passagem, Venda vendaCriada) throws DatabaseException {
+        Connection connection = null;
+
+        try {
+            connection = ConexaoBancoDeDados.getConnection();
+
+            StringBuilder sql = new StringBuilder();
+            sql.append("UPDATE PASSAGEM SET ");
+            sql.append(" id_venda = ?\n");
+            sql.append(" WHERE id_passagem = ? ");
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql.toString());
+
+            preparedStatement.setInt(1, vendaCriada.getIdVenda());
+            preparedStatement.setInt(2, passagem.getIdPassagem());
+
+            // Executa-se a consulta
+            int res = preparedStatement.executeUpdate();
+            return res > 0;
+
+        } catch (SQLException e) {
             throw new DatabaseException(e.getCause());
 
         } finally {

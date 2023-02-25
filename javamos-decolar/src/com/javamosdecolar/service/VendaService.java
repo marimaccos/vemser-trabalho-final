@@ -41,11 +41,14 @@ public class VendaService {
             Venda vendaAtual = new Venda(codigo, passagem, comprador,
                     passagem.getTrecho().getCompanhia(), LocalDateTime.now(), Status.CONCLUIDO);
 
-            vendaRepository.adicionar(vendaAtual);
+            Venda vendaCriada = vendaRepository.adicionar(vendaAtual);
             boolean conseguiuEditar = passagemRepository.editarDisponibilidadeDaPassagem(false, passagem);
             if(conseguiuEditar) {
                 vendaAtual.getPassagem().setDisponivel(false);
             }
+
+            passagemRepository.inserirIdVenda(passagem, vendaCriada);
+
             return vendaAtual;
         } catch (DatabaseException e) {
             e.printStackTrace();

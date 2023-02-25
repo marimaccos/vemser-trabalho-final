@@ -51,15 +51,7 @@ public class VendaRepository implements Repository<Venda, Integer> {
             preparedStatement.setString(6, venda.getCodigo());
 
             preparedStatement.executeUpdate();
-
-            String passagemSql = "UPDATE SET PASSAGEM " +
-                    " id_venda = ? " +
-                    " WHERE id_passagem = ?";
-
-            PreparedStatement updateStatement = conexao.prepareStatement(passagemSql);
-            updateStatement.setInt(1, venda.getIdVenda());
-            updateStatement.setObject(2, venda.getPassagem().getIdPassagem());
-
+            
             return venda;
 
         } catch (SQLException e) {
