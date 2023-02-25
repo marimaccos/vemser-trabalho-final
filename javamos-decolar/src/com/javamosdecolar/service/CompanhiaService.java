@@ -93,7 +93,7 @@ public class CompanhiaService {
         }
     }
 
-    public boolean deletarPassagem(Integer indexRemocaoPassagem, Usuario usuario) throws RegraDeNegocioException {
+    public void deletarPassagem(Integer indexRemocaoPassagem, Usuario usuario) throws RegraDeNegocioException {
         try{
             Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
 
@@ -103,14 +103,16 @@ public class CompanhiaService {
 
             Optional<Passagem> passagem = passagemRepository.getPassagemPeloId(indexRemocaoPassagem);
 
-            boolean companhiaEhDonaDaPassagem = passagem.get().getTrecho().getCompanhia().equals(companhia.get());
+            boolean companhiaEhDonaDaPassagem = passagem.get().getTrecho().getCompanhia().getIdCompanhia()
+                    .equals(companhia.get().getIdCompanhia());
 
             if(!companhiaEhDonaDaPassagem) {
-                throw new RegraDeNegocioException("Permissão negada! Passagem não pode ser deletada!");
+                throw new RegraDeNegocioException("Passagem não pode ser deletada!");
             }
 
-            passagemRepository.remover(indexRemocaoPassagem);
-            return true;
+            boolean conseguiuRemover = passagemRepository.remover(indexRemocaoPassagem);
+            System.out.println("removido? " + conseguiuRemover + "| com id=" + indexRemocaoPassagem);
+
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");

@@ -159,6 +159,7 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
             return res > 0;
 
         } catch (SQLException e) {
+            System.out.println("Trecho conectado com outras entidades!");
             throw new DatabaseException(e.getCause());
 
         } finally {
