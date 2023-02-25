@@ -259,8 +259,8 @@ public class VendaRepository implements Repository<Venda, Integer> {
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "v.id_venda, v.codigo, v.status, v.data_venda,\n" +
-                    "cn.id_companhia, cn.nome_fantasia,\n" +
-                    "t.id_trecho, t.origem, t.destino,\n" +
+                    "cn.id_companhia, LOWER(cn.nome_fantasia),\n" +
+                    "t.id_trecho, UPPER(t.origem), UPPER(t.destino),\n" +
                     "cd.id_comprador\n" +
                     "FROM VENDA v\n" +
                     "INNER JOIN COMPRADOR cd ON cd.id_comprador = v.id_comprador\n" +
@@ -341,8 +341,8 @@ public class VendaRepository implements Repository<Venda, Integer> {
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "v.id_venda, v.codigo, v.status, v.data_venda,\n" +
-                    "cn.id_companhia, cn.nome_fantasia,\n" +
-                    "t.id_trecho, t.origem, t.destino,\n" +
+                    "cn.id_companhia, (LOWER)cn.nome_fantasia,\n" +
+                    "t.id_trecho, UPPER(t.origem), UPPER(t.destino),\n" +
                     "cd.id_comprador\n" +
                     "FROM VENDA v\n" +
                     "INNER JOIN COMPRADOR cd ON cd.id_comprador = v.id_comprador\n" +
