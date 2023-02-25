@@ -57,8 +57,8 @@ public class Main {
                             exibeMenuDeUsuarioComprador(scanner, passagemService, usuarioLogado, vendaService,
                                     compradorService, FORMATACAO_DATA);
                         }
-
                         break;
+
                     case 0:
                         opcao = 0;
                         break;
@@ -159,6 +159,7 @@ public class Main {
                     case 2:
                         exibeMenuOperacoesTrecho(scanner, companhiaService, usuario, trechoService);
                         break;
+
                     case 0:
                         opcao = 0;
                         break;
@@ -262,7 +263,7 @@ public class Main {
 
                         companhiaService.listarPassagensCadastradas(usuario);
                         break;
-                    case 9:
+                    case 5:
                         System.out.println("-------------------------------");
                         System.out.println("COMPANHIA - HISTÓRICO DE VENDAS");
                         System.out.println("-------------------------------");
