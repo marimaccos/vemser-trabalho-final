@@ -431,6 +431,7 @@ public class Main {
                         break;
                 }
             } catch (RegraDeNegocioException er) {
+                er.printStackTrace();
                 System.out.println(er.getMessage());
 
             } catch (Exception e) {

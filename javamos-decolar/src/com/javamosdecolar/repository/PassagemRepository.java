@@ -216,27 +216,32 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
         return passagem;
     }
 
-    public void editarDisponibilidadeDaPassagem(boolean disponivel, Passagem passagem) throws DatabaseException {
+    public boolean editarDisponibilidadeDaPassagem(boolean disponivel, Passagem passagem) throws DatabaseException {
 
         Connection connection = null;
+
+        Integer boolOracle = 0;
+
+        if(disponivel) {
+            boolOracle = 1;
+        }
 
         try {
             connection = ConexaoBancoDeDados.getConnection();
 
-            StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE PASSAGEM SET ");
-            sql.append(" disponivel = ?,");
-            sql.append(" WHERE id_passagem = ? ");
+            String sql = "UPDATE PASSAGEM SET " +
+                    " disponivel = ? " +
+                    " WHERE ID_PASSAGEM = ?";
 
-            PreparedStatement preparedStatement = connection.prepareStatement(sql.toString());
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-            preparedStatement.setBoolean(1, passagem.isDisponivel());
+            preparedStatement.setInt(1, boolOracle);
             preparedStatement.setInt(2, passagem.getIdPassagem());
 
             // Executa-se a consulta
-            preparedStatement.executeUpdate();
+            int res = preparedStatement.executeUpdate();
 
-
+            return res > 0;
         } catch (SQLException e) {
             throw new DatabaseException(e.getCause());
 

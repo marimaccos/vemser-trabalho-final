@@ -37,23 +37,25 @@ public class VendaRepository implements Repository<Venda, Integer> {
             venda.setIdVenda(proximoId);
 
             String sql = "INSERT INTO VENDA \n" +
-                    "(ID_VENDA, PASSAGEM, COMPRADOR, COMPANHIA, DATA, STATUS)\n" +
+                    "(ID_VENDA, ID_COMPRADOR, ID_COMPANHIA, DATA_VENDA, STATUS, CODIGO)\n" +
                     "VALUES(?, ?, ?, ?, ?, ?)";
 
             PreparedStatement preparedStatement = conexao.prepareStatement(sql);
 
+
             preparedStatement.setInt(1, venda.getIdVenda());
-            preparedStatement.setObject(2, venda.getPassagem());
-            preparedStatement.setObject(3, venda.getComprador());
-            preparedStatement.setObject(4, venda.getCompanhia());
-            preparedStatement.setObject(5, LocalDateTime.now());
-            preparedStatement.setString(6, venda.getStatus().name());
+            preparedStatement.setObject(2, venda.getComprador().getIdComprador());
+            preparedStatement.setObject(3, venda.getCompanhia().getIdCompanhia());
+            preparedStatement.setObject(4, LocalDateTime.now());
+            preparedStatement.setString(5, venda.getStatus().name());
+            preparedStatement.setString(6, venda.getCodigo());
 
             preparedStatement.executeUpdate();
 
             return venda;
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
         } finally {
             try{
@@ -82,7 +84,6 @@ public class VendaRepository implements Repository<Venda, Integer> {
             while(resultSet.next()){
                 Venda venda = new Venda();
                 venda.setIdVenda(resultSet.getInt("id_venda"));
-                venda.setPassagem((Passagem) resultSet.getObject("passagem"));
                 venda.setComprador((Comprador) resultSet.getObject("comprador"));
                 venda.setCompanhia((Companhia) resultSet.getObject("companhia"));
                 venda.setData((LocalDateTime) resultSet.getObject("data"));
@@ -111,21 +112,19 @@ public class VendaRepository implements Repository<Venda, Integer> {
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE VENDA SET ");
-            sql.append("passagem = ?,");
-            sql.append("comprador = ?,");
-            sql.append("companhia = ?, ");
-            sql.append("data = ?");
+            sql.append("id_comprador = ?,");
+            sql.append("id_companhia = ?, ");
+            sql.append("data_venda = ?");
             sql.append("status = ?");
             sql.append("WHERE id_venda = ?");
 
             PreparedStatement statement = conexao.prepareStatement(sql.toString());
 
-            statement.setObject(1, venda.getPassagem());
-            statement.setObject(2, venda.getComprador());
-            statement.setObject(3, venda.getCompanhia());
-            statement.setObject(4, venda.getData());
-            statement.setObject(5, venda.getStatus());
-            statement.setInt(6, id);
+            statement.setObject(1, venda.getComprador().getIdComprador());
+            statement.setObject(2, venda.getCompanhia().getIdCompanhia());
+            statement.setObject(3, venda.getData());
+            statement.setObject(4, venda.getStatus());
+            statement.setInt(5, id);
 
             int result = statement.executeUpdate();
             return result > 0;
@@ -318,7 +317,6 @@ public class VendaRepository implements Repository<Venda, Integer> {
         trecho.setIdTrecho(resultSet.getInt("id_trecho"));
         trecho.setOrigem(resultSet.getString("origem"));
         trecho.setDestino(resultSet.getString("destino"));
-        passagem.setIdPassagem(resultSet.getInt("id_passagem"));
         passagem.setCodigo(resultSet.getString("codigo"));
         passagem.setDataPartida((resultSet.getTimestamp("data_partida").toLocalDateTime()));
         passagem.setDataChegada((resultSet.getTimestamp("data_chegada").toLocalDateTime()));
