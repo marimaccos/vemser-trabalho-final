@@ -5,6 +5,7 @@ import javamos_decolar.com.javamosdecolar.exceptions.RegraDeNegocioException;
 import javamos_decolar.com.javamosdecolar.model.Companhia;
 import javamos_decolar.com.javamosdecolar.model.Passagem;
 import javamos_decolar.com.javamosdecolar.model.Usuario;
+import javamos_decolar.com.javamosdecolar.model.Venda;
 import javamos_decolar.com.javamosdecolar.repository.CompanhiaRepository;
 import javamos_decolar.com.javamosdecolar.repository.PassagemRepository;
 import javamos_decolar.com.javamosdecolar.repository.TrechoRepository;
@@ -52,8 +53,13 @@ public class CompanhiaService {
                 throw new RegraDeNegocioException("Companhia não pode ser encontrada!");
             }
 
-            vendaRepository.getVendasPorCompanhia(companhia.get().getIdCompanhia())
-                    .stream().forEach(System.out::println);
+            List<Venda> vendasPorCompanhia = vendaRepository.getVendasPorCompanhia(companhia.get().getIdCompanhia());
+
+            if (vendasPorCompanhia.isEmpty()) {
+                System.out.println("Não há nada para exibir.");
+            } else {
+                vendasPorCompanhia.stream().forEach(System.out::println);
+            }
 
         } catch (DatabaseException e) {
             e.printStackTrace();

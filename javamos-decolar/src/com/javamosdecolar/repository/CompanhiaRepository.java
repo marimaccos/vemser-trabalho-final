@@ -70,12 +70,12 @@ public class CompanhiaRepository {
         try{
             conexao = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT ID_COMPANHIA, CNPJ, LOWER(NOME_FANTASIA) FROM COMPANHIA c \n" +
+            String sql = "SELECT ID_COMPANHIA, CNPJ, NOME_FANTASIA FROM COMPANHIA c \n" +
                     "WHERE c.NOME_FANTASIA LIKE ?";
 
             PreparedStatement statement = conexao.prepareStatement(sql);
 
-            statement.setString(1, "%" + nome + "%");
+            statement.setString(1, "%" + nome + "%".toLowerCase());
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -107,7 +107,7 @@ public class CompanhiaRepository {
         try{
             conexao = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT ID_COMPANHIA, CNPJ, LOWER(NOME_FANTASIA), ID_USUARIO FROM COMPANHIA c \n" +
+            String sql = "SELECT ID_COMPANHIA, CNPJ, NOME_FANTASIA, ID_USUARIO FROM COMPANHIA c \n" +
                     "WHERE c.ID_USUARIO = ?";
             PreparedStatement statement = conexao.prepareStatement(sql);
 
