@@ -38,20 +38,25 @@ vendas da companhia, todos os trechos e também todas as passagens que foram cad
 
 ## 4. Diagrama de Classe
 
-<a href="https://lucid.app/lucidchart/1285a8ee-1100-4262-87d2-cc9b84bccaa6/edit?viewport_loc=-1745%2C-3413%2C2462%2C1454%2C0_0&invitationId=inv_b02c3c8a-8822-45b1-8d36-091e9d42d020">Clique aqui para acessar o diagrama de classes desenvolvido no LucidChart</a>
+<a href="https://lucid.app/lucidchart/1285a8ee-1100-4262-87d2-cc9b84bccaa6/edit?viewport_loc=-1745%2C-3413%2C2462%2C1454%2C0_0&invitationId=inv_b02c3c8a-8822-45b1-8d36-091e9d42d020">Clique aqui para acessar o diagrama de classes desenvolvido no LucidChart</a>.
 
 ## 5. Fluxograma
 
-<a href="https://lucid.app/lucidchart/4c69e8e0-7622-456d-af34-4524033bb477/edit?viewport_loc=-1489%2C-1252%2C3189%2C1755%2C0_0&invitationId=inv_df65617b-c3b2-4b66-804a-ef7de31656b8">Clique aqui para acessar o fluxograma de telas desenvolvido no LucidChart</a>
+<a href="https://lucid.app/lucidchart/4c69e8e0-7622-456d-af34-4524033bb477/edit?viewport_loc=-1489%2C-1252%2C3189%2C1755%2C0_0&invitationId=inv_df65617b-c3b2-4b66-804a-ef7de31656b8">Clique aqui para acessar o fluxograma de telas desenvolvido no LucidChart</a>.
 
 ## 6. Diagrama ER
 
-<a href="https://lucid.app/lucidchart/2e81f5bd-cd54-4b25-8416-47a994d87fcc/edit?viewport_loc=52%2C-75%2C2318%2C1276%2C0_0&invitationId=inv_a6736357-686c-486b-8e63-1957c80c061b">Clique aqui para acessar o diagrama ER no LucidChart</a>
+<a href="https://lucid.app/lucidchart/2e81f5bd-cd54-4b25-8416-47a994d87fcc/edit?viewport_loc=52%2C-75%2C2318%2C1276%2C0_0&invitationId=inv_a6736357-686c-486b-8e63-1957c80c061b">Clique aqui para acessar o diagrama ER no LucidChart</a>.
+
+## 7. Trello
+
+<a href="https://trello.com/b/AxMinlcn/tf-oracle-oop">Clique aqui para ver o Trello do projeto e conhecer e ver um pouco mais sobre como foi a organização das tarefas</a>.
+
 
 <hr>
 
 ## Contribuidores
-* Time POO e Idealizadores: [Henrique Miranda](https://github.com/miranda-henrique), [Kelly Castelo](https://github.com/zam0k) e [Mariana Machado](https://github.com/marimaccos).
+* Time POO e Idealizadores: [Henrique Miranda](https://github.com/miranda-henrique), [Kelly Castelo](https://github.com/zam0k), [Mariana Machado](https://github.com/marimaccos) e [Bruno Rodrigues](https://github.com/brunorodriguesdias).
 
 <hr>
 
