@@ -35,7 +35,7 @@ public class PassagemService {
          */
 
         try {
-            final boolean DIA_ANTERIOR = novaPassagem.getDataChegada().isAfter(novaPassagem.getDataPartida());
+            final boolean DIA_ANTERIOR = novaPassagem.getDataChegada().isBefore(novaPassagem.getDataPartida());
 
             if(DIA_ANTERIOR) {
                 throw new RegraDeNegocioException("Data inválida!");
@@ -43,6 +43,7 @@ public class PassagemService {
 
             boolean codigoJaExiste = true;
             String codigo = "";
+
             while(codigoJaExiste) {
                 codigo = Codigo.gerarCodigo();
                 if(passagemRepository.getPassagemPorCodigo(codigo).isEmpty()) {
@@ -70,6 +71,7 @@ public class PassagemService {
 
             Passagem passagemCriada = passagemRepository.adicionar(novaPassagem);
             System.out.println("Passagem criada com sucesso! " + passagemCriada);
+
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante o cadastro.");
@@ -142,7 +144,7 @@ public class PassagemService {
 
     public void editarPassagem(Passagem passagemEditada, String trecho, Usuario usuario) throws RegraDeNegocioException {
         try {
-            final boolean DIA_ANTERIOR = passagemEditada.getDataChegada().isAfter(passagemEditada.getDataPartida());
+            final boolean DIA_ANTERIOR = passagemEditada.getDataChegada().isBefore(passagemEditada.getDataPartida());
 
             if(DIA_ANTERIOR) {
                 throw new RegraDeNegocioException("Data inválida!");

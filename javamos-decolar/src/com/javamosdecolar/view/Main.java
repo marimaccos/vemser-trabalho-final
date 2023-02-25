@@ -73,7 +73,11 @@ public class Main {
                         System.err.println("Opção inválida.");
                         break;
                 }
-            } catch (RegraDeNegocioException e) {
+
+            } catch (RegraDeNegocioException er) {
+                System.out.println(er.getMessage());
+
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -184,13 +188,13 @@ public class Main {
                     System.out.println("-------------------------------");
                     System.out.println("Digite o codigo da passagem:");
                     String codigoPassagem = scanner.nextLine();
-                    System.out.print("Insira a data de partida: Ex: dd/MM/yyyy HH:mm");
+                    System.out.println("Insira a data de partida: Ex: dd/MM/yyyy HH:mm");
                     LocalDateTime novaDataPartida = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
-                    System.out.print("Insira a data de chegada:  Ex: dd/MM/yyyy HH:mm ");
+                    System.out.println("Insira a data de chegada:  Ex: dd/MM/yyyy HH:mm ");
                     LocalDateTime novaDataChegada = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
-                    System.out.print("Insira o trecho correspondente. Ex: BEL/CWB ");
+                    System.out.println("Insira o trecho correspondente. Ex: BEL/CWB ");
                     String novoTrecho = scanner.nextLine().toUpperCase();
-                    System.out.print("Insira o valor da passagem: ");
+                    System.out.println("Insira o valor da passagem: ");
                     BigDecimal novoValor = scanner.nextBigDecimal();
                     scanner.nextLine();
                     System.out.println("Disponibilidade:\n[1] - disponivel\n[2] - indisponivel");
