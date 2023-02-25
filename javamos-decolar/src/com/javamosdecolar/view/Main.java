@@ -144,15 +144,54 @@ public class Main {
             System.out.println("\t\tMENU COMPANHIA");
             System.out.println("-------------------------------");
             System.out.println("Escolha uma das opções abaixo:");
+            System.out.println("[1] - Menu de Operações Passagem");
+            System.out.println("[2] - Menu de Operações Trecho");
+            System.out.println("[0] - Sair");
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            try {
+                switch (opcao) {
+                    case 1:
+                        exibeMenuOperacoesPassagem(scanner, formatacaoData, companhiaService, usuario, passagemService);
+                        break;
+
+                    case 2:
+                        exibeMenuOperacoesTrecho(scanner, companhiaService, usuario, trechoService);
+                        break;
+                    case 0:
+                        opcao = 0;
+                        break;
+
+                    default:
+                        System.err.println("Opção inválida!");
+                        break;
+                }
+
+            } catch (RegraDeNegocioException er) {
+                System.out.println(er.getMessage());
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    private static void exibeMenuOperacoesPassagem(Scanner scanner, DateTimeFormatter formatacaoData,
+                                                    CompanhiaService companhiaService, Usuario usuario,
+                                                    PassagemService passagemService) throws RegraDeNegocioException {
+        Integer opcao = -1;
+
+        while (opcao != 0) {
+            System.out.println("-------------------------------");
+            System.out.println("\t\tOPERAÇÕES PASSAGEM");
+            System.out.println("-------------------------------");
+            System.out.println("Escolha uma das opções abaixo:");
             System.out.println("[1] - Cadastrar Passagem");
             System.out.println("[2] - Editar Passagem");
             System.out.println("[3] - Remover Passagem");
             System.out.println("[4] - Passagens Cadastradas");
-            System.out.println("[5] - Cadastrar Trecho");
-            System.out.println("[6] - Editar Trecho");
-            System.out.println("[7] - Remover Trecho");
-            System.out.println("[8] - Trechos Cadastrados");
-            System.out.println("[9] - Histórico de Vendas");
+            System.out.println("[5] - Histórico de Vendas");
             System.out.println("[0] - Sair");
             opcao = scanner.nextInt();
             scanner.nextLine();
@@ -202,7 +241,7 @@ public class Main {
                         }
 
                         Passagem passagemEditada = new Passagem(codigoPassagem, novaDataPartida, novaDataChegada,
-                                                                novoDisponivel, novoValor);
+                                novoDisponivel, novoValor);
                         passagemService.editarPassagem(passagemEditada, novoTrecho, usuario);
                         break;
 
@@ -223,8 +262,52 @@ public class Main {
 
                         companhiaService.listarPassagensCadastradas(usuario);
                         break;
+                    case 9:
+                        System.out.println("-------------------------------");
+                        System.out.println("COMPANHIA - HISTÓRICO DE VENDAS");
+                        System.out.println("-------------------------------");
 
-                    case 5:
+                        companhiaService.imprimirHistoricoDeVendas(usuario);
+                        break;
+
+                    case 0:
+                        opcao = 0;
+                        break;
+
+                    default:
+                        System.err.println("Opção inválida!");
+                        break;
+                }
+
+            } catch (RegraDeNegocioException er) {
+                System.out.println(er.getMessage());
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    private static void exibeMenuOperacoesTrecho(Scanner scanner, CompanhiaService companhiaService, Usuario usuario,
+                                                 TrechoService trechoService) throws RegraDeNegocioException {
+        Integer opcao = -1;
+
+        while (opcao != 0) {
+            System.out.println("-------------------------------");
+            System.out.println("\t\tOPERAÇÕES TRECHO");
+            System.out.println("-------------------------------");
+            System.out.println("Escolha uma das opções abaixo:");
+            System.out.println("[1] - Cadastrar Trecho");
+            System.out.println("[2] - Editar Trecho");
+            System.out.println("[3] - Remover Trecho");
+            System.out.println("[4] - Trechos Cadastrados");
+            System.out.println("[0] - Sair");
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            try {
+                switch (opcao) {
+                    case 1:
                         System.out.println("-------------------------------");
                         System.out.println("COMPANHIA - CADASTRAR TRECHO");
                         System.out.println("-------------------------------");
@@ -237,7 +320,7 @@ public class Main {
                         trechoService.criarTrecho(trechoACadastrar, usuario);
                         break;
 
-                    case 6:
+                    case 2:
                         System.out.println("-------------------------------");
                         System.out.println("COMPANHIA - EDITAR TRECHO");
                         System.out.println("-------------------------------");
@@ -252,7 +335,7 @@ public class Main {
                         trechoService.editarTrecho(idEditarTrecho, editarTrecho, usuario);
                         break;
 
-                    case 7:
+                    case 3:
                         System.out.println("-------------------------------");
                         System.out.println("COMPANHIA - REMOVER TRECHO");
                         System.out.println("-------------------------------");
@@ -262,22 +345,13 @@ public class Main {
                         trechoService.deletarTrecho(idTrecho, usuario);
                         break;
 
-                    case 8:
+                    case 4:
                         System.out.println("-------------------------------");
                         System.out.println("COMPANHIA - TRECHOS CADASTRADOS");
                         System.out.println("-------------------------------");
 
                         companhiaService.imprimirTrechosDaCompanhia(usuario);
                         break;
-
-                    case 9:
-                        System.out.println("-------------------------------");
-                        System.out.println("COMPANHIA - HISTÓRICO DE VENDAS");
-                        System.out.println("-------------------------------");
-
-                        companhiaService.imprimirHistoricoDeVendas(usuario);
-                        break;
-
                     case 0:
                         opcao = 0;
                         break;
