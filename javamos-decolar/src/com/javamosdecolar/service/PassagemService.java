@@ -18,12 +18,14 @@ public class PassagemService {
     private TrechoRepository trechoRepository;
     private CompanhiaRepository companhiaRepository;
     private CompradorRepository compradorRepository;
+    private VendaRepository vendaRepository;
 
     public PassagemService() {
         passagemRepository = new PassagemRepository();
         trechoRepository = new TrechoRepository();
         companhiaRepository = new CompanhiaRepository();
         compradorRepository = new CompradorRepository();
+        vendaRepository = new VendaRepository();
     }
 
     public void cadastrarPassagem(Passagem novaPassagem, String trecho, Usuario usuario) throws RegraDeNegocioException {
@@ -77,11 +79,21 @@ public class PassagemService {
     public void listarPassagemPorData(LocalDateTime data, int tipoDeData) throws RegraDeNegocioException {
         try {
             if(tipoDeData == 1) {
-                passagemRepository.getPassagemPorDataPartida(data).stream()
-                        .forEach(System.out::println);
+                List<Passagem> passagemPorDataPartida = passagemRepository.getPassagemPorDataPartida(data);
+                if (passagemPorDataPartida.size() == 0) {
+                    System.out.println("Não há passagens com essa data.");
+                } else {
+                    passagemPorDataPartida.stream().forEach(System.out::println);
+                }
+
             } else if (tipoDeData == 2) {
-                passagemRepository.getPassagemPorDataChegada(data).stream()
-                        .forEach(System.out::println);
+                List<Passagem> passagemPorDataChegada = passagemRepository.getPassagemPorDataChegada(data);
+
+                if (passagemPorDataChegada.size() == 0) {
+                    System.out.println("Não há passagens com essa data.");
+                } else {
+                    passagemPorDataChegada.stream().forEach(System.out::println);
+                }
             } else {
                 throw new RegraDeNegocioException("Opção inválida!");
             }
@@ -122,23 +134,6 @@ public class PassagemService {
     public void listarUltimasPassagens() throws RegraDeNegocioException {
         try {
             passagemRepository.getUltimasPassagens().stream().forEach(System.out::println);
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
-        }
-    }
-
-    public void listarHistoricoDePassagensComprador(Usuario usuario) throws RegraDeNegocioException {
-        try {
-            Optional<Comprador> comprador = compradorRepository.acharCompradorPorIdUsuario(usuario.getIdUsuario());
-
-            if(comprador.isEmpty()) {
-                throw new RegraDeNegocioException("Comprador inexistente");
-            }
-
-            passagemRepository.getPassagensPorComprador(comprador.get().getIdComprador())
-                    .stream().forEach(System.out::println);
-
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");

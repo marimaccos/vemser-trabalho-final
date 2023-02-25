@@ -52,7 +52,7 @@ public class CompanhiaService {
                 throw new RegraDeNegocioException("Companhia não pode ser encontrada!");
             }
 
-            vendaRepository.buscarVendasPorCompanhia(companhia.get().getIdCompanhia())
+            vendaRepository.getVendasPorCompanhia(companhia.get().getIdCompanhia())
                     .stream().forEach(System.out::println);
 
         } catch (DatabaseException e) {

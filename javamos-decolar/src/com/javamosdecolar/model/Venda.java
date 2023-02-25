@@ -83,9 +83,8 @@ public class Venda {
         return "Venda{" +
                 "ID='" + idVenda + '\'' +
                 "codigo='" + codigo + '\'' +
-                ", passagemId=" + passagem.getIdPassagem() +
-                ", comprador=" + comprador.getNome() +
-                ", companhia=" + companhia.getNome() +
+                ", passagem=" + passagem +
+                ", comprador=" + comprador.getIdComprador() +
                 ", data=" + data +
                 ", status=" + status +
                 '}';

@@ -13,10 +13,12 @@ public class VendaService {
 
     private VendaRepository vendaRepository;
     private PassagemRepository passagemRepository;
+    private CompradorRepository compradorRepository;
 
     public VendaService() {
         vendaRepository = new VendaRepository();
         passagemRepository = new PassagemRepository();
+        compradorRepository = new CompradorRepository();
     }
 
     public Venda efetuarVenda(Passagem passagem, Comprador comprador) throws RegraDeNegocioException {
@@ -31,7 +33,7 @@ public class VendaService {
             String codigo = "";
             while(codigoJaExiste) {
                 codigo = Codigo.gerarCodigo();
-                if(vendaRepository.buscaVendaPorCodigo(codigo).isEmpty()) {
+                if(vendaRepository.getVendaPorCodigo(codigo).isEmpty()) {
                     codigoJaExiste = false;
                 }
             }
@@ -52,7 +54,7 @@ public class VendaService {
     public void cancelarVenda(String codigo) throws RegraDeNegocioException {
 
         try {
-            Optional<Venda> venda = vendaRepository.buscaVendaPorCodigo(codigo);
+            Optional<Venda> venda = vendaRepository.getVendaPorCodigo(codigo);
 
             if(venda.isEmpty()) {
                 throw new RegraDeNegocioException("Venda não pode ser encontrada!");
@@ -69,6 +71,24 @@ public class VendaService {
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante o cancelamento.");
+        }
+    }
+
+    public void getHistoricoVendasComprador(Usuario usuario) throws RegraDeNegocioException {
+        try {
+            Integer idUsuario = usuario.getIdUsuario();
+            Optional<Comprador> comprador = compradorRepository.acharCompradorPorIdUsuario(idUsuario);
+
+            if(comprador.isEmpty()) {
+                throw new RegraDeNegocioException("Comprador inexistente");
+            }
+
+            vendaRepository.getVendasPorComprador(comprador.get().getIdComprador())
+                    .stream().forEach(System.out::println);
+
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
     }
 }

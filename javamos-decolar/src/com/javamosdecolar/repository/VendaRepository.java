@@ -172,34 +172,41 @@ public class VendaRepository implements Repository<Venda, Integer> {
         }
     }
 
-    public Optional<Venda> buscaVendaPorCodigo(String codigo) throws DatabaseException {
-        Venda vendaPesquisa = new Venda();
+    public Optional<Venda> getVendaPorCodigo(String codigo) throws DatabaseException {
+
         Connection conexao = null;
 
         try{
             conexao = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT * FROM VENDA WHERE codigo = ?";
+            String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
+                    "v.id_venda, v.codigo, v.status, v.data_venda,\n" +
+                    "cn.id_companhia, cn.nome_fantasia,\n" +
+                    "t.id_trecho, t.origem, t.destino,\n" +
+                    "cd.id_comprador\n" +
+                    "FROM VENDA v\n" +
+                    "INNER JOIN COMPRADOR cd ON cd.id_comprador = v.id_comprador\n" +
+                    "INNER JOIN PASSAGEM p ON p.id_venda = v.id_venda \n" +
+                    "INNER JOIN COMPANHIA cn ON cn.id_companhia = v.id_companhia\n" +
+                    "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
+                    "WHERE v.codigo = ?";
+
             PreparedStatement statement = conexao.prepareStatement(sql);
 
             statement.setString(1, codigo);
 
-            ResultSet resultSet = statement.executeQuery(sql);
+            ResultSet resultSet = statement.executeQuery();
 
-            vendaPesquisa.setIdVenda(resultSet.getInt("id_comprador"));
-            vendaPesquisa.setPassagem((Passagem) resultSet.getObject("passagem"));
-            vendaPesquisa.setComprador((Comprador) resultSet.getObject("senha"));
-            vendaPesquisa.setCompanhia((Companhia) resultSet.getObject("nome"));
-            vendaPesquisa.setData((LocalDateTime) resultSet.getObject("data"));
-            vendaPesquisa.setStatus((Status) resultSet.getObject("status"));
+            if(resultSet.next()) {
+                Venda venda = getVendaPorResultSet(resultSet);
+                return Optional.of(venda);
 
-            if(resultSet.first()) {
-                return Optional.of(vendaPesquisa);
             } else {
                 return Optional.empty();
             }
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {
@@ -244,8 +251,8 @@ public class VendaRepository implements Repository<Venda, Integer> {
         }
     }
 
-    public List<Venda> buscarVendasPorCompanhia(Integer idCompanhia) throws DatabaseException {
-        List<Venda> listaVendaPesquisa = new ArrayList<>();
+    public List<Venda> getVendasPorCompanhia(Integer idCompanhia) throws DatabaseException {
+        List<Venda> vendas = new ArrayList<>();
         Connection conexao = null;
         try{
             conexao = ConexaoBancoDeDados.getConnection();
@@ -255,21 +262,14 @@ public class VendaRepository implements Repository<Venda, Integer> {
 
             statement.setInt(1, idCompanhia);
 
-            ResultSet resultSet = statement.executeQuery(sql);
+            ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                Venda vendaPesquisa = new Venda();
-                vendaPesquisa.setIdVenda(resultSet.getInt("id_venda"));
-                vendaPesquisa.setCodigo(resultSet.getString("codigo"));
-                vendaPesquisa.setPassagem((Passagem) resultSet.getObject("passagem"));
-                vendaPesquisa.setComprador((Comprador) resultSet.getObject("comprador"));
-                vendaPesquisa.setCompanhia((Companhia) resultSet.getObject("companhia"));
-                vendaPesquisa.setData((LocalDateTime) resultSet.getObject("data"));
-                vendaPesquisa.setStatus((Status) resultSet.getObject("status"));
-                listaVendaPesquisa.add(vendaPesquisa);
+                Venda venda = getVendaPorResultSet(resultSet);
+                vendas.add(venda);
             }
+            return vendas;
 
-            return listaVendaPesquisa;
         } catch (SQLException e) {
             throw new DatabaseException(e.getCause());
         } finally {
@@ -283,4 +283,88 @@ public class VendaRepository implements Repository<Venda, Integer> {
         }
     }
 
+    private Venda getVendaPorResultSet(ResultSet resultSet) throws SQLException {
+
+        Venda venda = new Venda();
+        Companhia companhia = new Companhia();
+        Comprador comprador = new Comprador();
+        Trecho trecho = new Trecho();
+        Passagem passagem = new Passagem();
+
+        venda.setIdVenda(resultSet.getInt("id_venda"));
+        venda.setCodigo(resultSet.getString("codigo"));
+        venda.setData((resultSet.getTimestamp("data_venda").toLocalDateTime()));
+
+        if (resultSet.getString("status").equals(Status.CANCELADO.name())) {
+            venda.setStatus(Status.CANCELADO);
+        } else if (resultSet.getString("status").equals(Status.CONCLUIDO.name())) {
+            venda.setStatus(Status.CONCLUIDO);
+        }
+
+        companhia.setNomeFantasia(resultSet.getString("nome_fantasia"));
+        companhia.setIdCompanhia(resultSet.getInt("id_companhia"));
+        comprador.setIdComprador(resultSet.getInt("id_comprador"));
+        trecho.setIdTrecho(resultSet.getInt("id_trecho"));
+        trecho.setOrigem(resultSet.getString("origem"));
+        trecho.setDestino(resultSet.getString("destino"));
+        passagem.setIdPassagem(resultSet.getInt("id_passagem"));
+        passagem.setCodigo(resultSet.getString("codigo"));
+        passagem.setDataPartida((resultSet.getTimestamp("data_partida").toLocalDateTime()));
+        passagem.setDataChegada((resultSet.getTimestamp("data_chegada").toLocalDateTime()));
+        passagem.setValor((resultSet.getBigDecimal("valor")));
+        trecho.setCompanhia(companhia);
+        passagem.setTrecho(trecho);
+        venda.setCompanhia(companhia);
+        venda.setComprador(comprador);
+        venda.setPassagem(passagem);
+
+        return venda;
+    }
+
+    public List<Venda> getVendasPorComprador(Integer idComprador) throws DatabaseException {
+        List<Venda> vendas = new ArrayList<>();
+        Connection connection = null;
+
+        try {
+            connection = ConexaoBancoDeDados.getConnection();
+
+            String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
+                    "v.id_venda, v.codigo, v.status, v.data_venda,\n" +
+                    "cn.id_companhia, cn.nome_fantasia,\n" +
+                    "t.id_trecho, t.origem, t.destino,\n" +
+                    "cd.id_comprador\n" +
+                    "FROM VENDA v\n" +
+                    "INNER JOIN COMPRADOR cd ON cd.id_comprador = v.id_comprador\n" +
+                    "INNER JOIN PASSAGEM p ON p.id_venda = v.id_venda \n" +
+                    "INNER JOIN COMPANHIA cn ON cn.id_companhia = v.id_companhia\n" +
+                    "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
+                    "WHERE v.id_comprador = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, idComprador);
+
+            // Executa-se a consulta
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Venda venda = getVendaPorResultSet(resultSet);
+                vendas.add(venda);
+            }
+            return vendas;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DatabaseException(e.getCause());
+
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

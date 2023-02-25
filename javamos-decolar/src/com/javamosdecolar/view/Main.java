@@ -28,7 +28,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Integer opcao = 3;
 
-        final DateTimeFormatter FORMATACAO_DATA = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        final DateTimeFormatter FORMATACAO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
         // MENU
         System.out.println("-------------------------------");
@@ -58,6 +58,7 @@ public class Main {
                         if (usuarioLogado.getTipoUsuario().getTipo() == 1) { // talvez essa comparação esteja errada
                             exibeMenuDeUsuarioCompanhia(scanner, FORMATACAO_DATA, companhiaService, usuarioLogado,
                                     passagemService, trechoService);
+
                         } else if (usuarioLogado.getTipoUsuario().getTipo() == 2) {
                             exibeMenuDeUsuarioComprador(scanner, passagemService, usuarioLogado, vendaService,
                                     compradorService, FORMATACAO_DATA);
@@ -76,7 +77,6 @@ public class Main {
                 System.out.println(e.getMessage());
             }
         }
-
     }
 
     private static void cadastrarUsuario(Scanner scanner, UsuarioService usuarioService)
@@ -133,7 +133,6 @@ public class Main {
         } else {
             return null;
         }
-
     }
 
     private static void exibeMenuDeUsuarioCompanhia(Scanner scanner, DateTimeFormatter formatacaoData,
@@ -164,14 +163,15 @@ public class Main {
                     System.out.println("-------------------------------");
                     System.out.println("COMPANHIA - CADASTRAR PASSAGEM");
                     System.out.println("-------------------------------");
-                    System.out.print("Insira a data de partida: Ex: dd-MM-yyyy HH:mm");
+                    System.out.println("Insira a data de partida: Ex: dd/MM/yyyy HH:mm ");
                     LocalDateTime dataPartida = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
-                    System.out.print("Insira a data de chegada: Ex: dd-MM-yyyy HH:mm");
+                    System.out.println("Insira a data de chegada: Ex: dd/MM/yyyy HH:mm ");
                     LocalDateTime dataChegada = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
-                    System.out.print("Insira o trecho correspondente: Ex: BEL/CWB ");
+                    System.out.println("Insira o trecho correspondente: Ex: BEL/CWB ");
                     String trecho = scanner.nextLine();
-                    System.out.print("Insira o valor da passagem: ");
-                    BigDecimal valor = BigDecimal.valueOf(Double.valueOf(scanner.nextLine()));
+                    System.out.println("Insira o valor da passagem: ");
+                    BigDecimal valor = scanner.nextBigDecimal();
+                    scanner.nextLine();
 
                     Passagem novaPassagem = new Passagem(dataPartida, dataChegada, valor);
                     passagemService.cadastrarPassagem(novaPassagem, trecho, usuario);
@@ -184,17 +184,19 @@ public class Main {
                     System.out.println("-------------------------------");
                     System.out.println("Digite o codigo da passagem:");
                     String codigoPassagem = scanner.nextLine();
-                    System.out.print("Insira a data de partida: Ex: dd-MM-yyyy ");
+                    System.out.print("Insira a data de partida: Ex: dd/MM/yyyy HH:mm");
                     LocalDateTime novaDataPartida = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
-                    System.out.print("Insira a data de chegada:  Ex: dd-MM-yyyy ");
+                    System.out.print("Insira a data de chegada:  Ex: dd/MM/yyyy HH:mm ");
                     LocalDateTime novaDataChegada = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
                     System.out.print("Insira o trecho correspondente. Ex: BEL/CWB ");
                     String novoTrecho = scanner.nextLine().toUpperCase();
                     System.out.print("Insira o valor da passagem: ");
-                    BigDecimal novoValor = BigDecimal.valueOf(Double.valueOf(scanner.nextLine()));
+                    BigDecimal novoValor = scanner.nextBigDecimal();
+                    scanner.nextLine();
                     System.out.println("Disponibilidade:\n[1] - disponivel\n[2] - indisponivel");
                     String disponivel = scanner.nextLine();
                     boolean novoDisponivel = false;
+
                     if (disponivel.equals("1")) {
                         novoDisponivel = true;
                     }
@@ -293,7 +295,7 @@ public class Main {
             System.out.println("[1] - Pesquisar Passagem");
             System.out.println("[2] - Comprar Passagem");
             System.out.println("[3] - Cancelar Compra");
-            System.out.println("[4] - Histórico de Passagens");
+            System.out.println("[4] - Histórico de Compras");
             System.out.println("[5] - Ultimas Passagens Cadastradas");
             System.out.println("[0] - Sair");
 
@@ -321,20 +323,21 @@ public class Main {
                     String codigo = scanner.nextLine();
                     vendaService.cancelarVenda(codigo);
                     break;
+
                 case "4":
                     System.out.println("-------------------------------");
-                    System.out.println("COMPRADOR - HISTÓRICO DE PASSAGENS");
+                    System.out.println("COMPRADOR - HISTÓRICO");
                     System.out.println("-------------------------------");
-                    System.out.println(" ");
-                    passagemService.listarHistoricoDePassagensComprador(usuario);
+                    vendaService.getHistoricoVendasComprador(usuario);
                     break;
+
                 case "5":
                     System.out.println("-------------------------------");
                     System.out.println("COMPRADOR - ULTIMAS PASSAGENS\n\t\t\tCADASTRADAS");
                     System.out.println("-------------------------------");
-                    System.out.println(" ");
                     passagemService.listarUltimasPassagens();
                     break;
+
                 case "0":
                     break;
 
@@ -369,11 +372,12 @@ public class Main {
                     System.out.println("[1] - Data de Partida");
                     System.out.println("[2] - Data de Chegada");
                     int tipoDeData = Integer.parseInt(scanner.nextLine());
-                    System.out.println("Digite a data: dd-MM-yyyy ");
+                    System.out.println("Digite a data: dd/MM/yyyy HH:mm");
                     LocalDateTime data = LocalDateTime.parse(scanner.nextLine(), formatacaoData);
 
                     passagemService.listarPassagemPorData(data, tipoDeData);
                     break;
+
                 case "2":
                     System.out.println("-------------------------------");
                     System.out.println("COMPRADOR - PESQUISAR PASSAGEM\n\t\t\tPOR VALOR");

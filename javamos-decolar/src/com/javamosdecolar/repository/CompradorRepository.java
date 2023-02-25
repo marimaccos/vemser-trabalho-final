@@ -68,28 +68,27 @@ public class CompradorRepository {
         try{
             conexao = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT ID_COMPRADOR, u.ID_USUARIO, LOGIN, NOME, CPF FROM COMPRADOR c \n" +
-                    "INNER JOIN\n" +
-                    "USUARIO u ON c.ID_USUARIO = u.ID_USUARIO WHERE c.ID_USUARIO = ?";
+            String sql = "SELECT c.id_comprador, c.cpf, c.id_usuario\n" +
+                    "FROM COMPRADOR c \n" +
+                    "WHERE c.id_usuario = ?";
+
             PreparedStatement statement = conexao.prepareStatement(sql);
 
             statement.setInt(1, idUsuario);
 
-            ResultSet resultSet = statement.executeQuery(sql);
+            ResultSet resultSet = statement.executeQuery();
 
-            compradorPesquisa.setIdComprador(resultSet.getInt("id_comprador"));
-            compradorPesquisa.setIdUsuario(resultSet.getInt("id_usuario"));
-            compradorPesquisa.setLogin(resultSet.getString("login"));
-            compradorPesquisa.setNome(resultSet.getString("nome"));
-            compradorPesquisa.setCpf(resultSet.getString("cpf"));
-
-            if(resultSet.first()) {
+            if(resultSet.next()) {
+                compradorPesquisa.setIdComprador(resultSet.getInt("id_comprador"));
+                compradorPesquisa.setIdUsuario(resultSet.getInt("id_usuario"));
+                compradorPesquisa.setCpf(resultSet.getString("cpf"));
                 return Optional.of(compradorPesquisa);
             } else {
                 return Optional.empty();
             }
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
         } finally {
             try {
