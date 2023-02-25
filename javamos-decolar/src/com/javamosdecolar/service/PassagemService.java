@@ -17,15 +17,11 @@ public class PassagemService {
     private PassagemRepository passagemRepository;
     private TrechoRepository trechoRepository;
     private CompanhiaRepository companhiaRepository;
-    private CompradorRepository compradorRepository;
-    private VendaRepository vendaRepository;
 
     public PassagemService() {
         passagemRepository = new PassagemRepository();
         trechoRepository = new TrechoRepository();
         companhiaRepository = new CompanhiaRepository();
-        compradorRepository = new CompradorRepository();
-        vendaRepository = new VendaRepository();
     }
 
     public void cadastrarPassagem(Passagem novaPassagem, String trecho, Usuario usuario) throws RegraDeNegocioException {
