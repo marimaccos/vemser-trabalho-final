@@ -178,8 +178,9 @@ public class VendaRepository implements Repository<Venda, Integer> {
         try{
             conexao = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
-                    "v.id_venda, v.codigo, v.status, v.data_venda,\n" +
+            String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor, " +
+                    "p.id_passagem,\n" +
+                    "v.id_venda, v.codigo as codigo_venda, v.status, v.data_venda,\n" +
                     "c.id_companhia, c.nome_fantasia,\n" +
                     "t.id_trecho, t.origem, t.destino,\n" +
                     "cd.id_comprador\n" +
@@ -256,8 +257,9 @@ public class VendaRepository implements Repository<Venda, Integer> {
         try{
             conexao = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
-                    "v.id_venda, v.codigo, v.status, v.data_venda,\n" +
+            String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor, " +
+                    "p.id_passagem,\n" +
+                    "v.id_venda, v.codigo as codigo_venda, v.status, v.data_venda,\n" +
                     "c.id_companhia, c.nome_fantasia,\n" +
                     "t.id_trecho, t.origem, t.destino,\n" +
                     "cd.id_comprador\n" +
@@ -293,43 +295,6 @@ public class VendaRepository implements Repository<Venda, Integer> {
         }
     }
 
-    private Venda getVendaPorResultSet(ResultSet resultSet) throws SQLException {
-
-        Venda venda = new Venda();
-        Companhia companhia = new Companhia();
-        Comprador comprador = new Comprador();
-        Trecho trecho = new Trecho();
-        Passagem passagem = new Passagem();
-
-        venda.setIdVenda(resultSet.getInt("id_venda"));
-        venda.setCodigo(resultSet.getString("codigo"));
-        venda.setData((resultSet.getTimestamp("data_venda").toLocalDateTime()));
-
-        if (resultSet.getString("status").equals(Status.CANCELADO.name())) {
-            venda.setStatus(Status.CANCELADO);
-        } else if (resultSet.getString("status").equals(Status.CONCLUIDO.name())) {
-            venda.setStatus(Status.CONCLUIDO);
-        }
-
-        companhia.setNomeFantasia(resultSet.getString("nome_fantasia"));
-        companhia.setIdCompanhia(resultSet.getInt("id_companhia"));
-        comprador.setIdComprador(resultSet.getInt("id_comprador"));
-        trecho.setIdTrecho(resultSet.getInt("id_trecho"));
-        trecho.setOrigem(resultSet.getString("origem"));
-        trecho.setDestino(resultSet.getString("destino"));
-        passagem.setCodigo(resultSet.getString("codigo"));
-        passagem.setDataPartida((resultSet.getTimestamp("data_partida").toLocalDateTime()));
-        passagem.setDataChegada((resultSet.getTimestamp("data_chegada").toLocalDateTime()));
-        passagem.setValor((resultSet.getBigDecimal("valor")));
-        trecho.setCompanhia(companhia);
-        passagem.setTrecho(trecho);
-        venda.setCompanhia(companhia);
-        venda.setComprador(comprador);
-        venda.setPassagem(passagem);
-
-        return venda;
-    }
-
     public List<Venda> getVendasPorComprador(Integer idComprador) throws DatabaseException {
         List<Venda> vendas = new ArrayList<>();
         Connection connection = null;
@@ -337,8 +302,9 @@ public class VendaRepository implements Repository<Venda, Integer> {
         try {
             connection = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
-                    "v.id_venda, v.codigo, v.status, v.data_venda,\n" +
+            String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor, " +
+                    "p.id_passagem,\n" +
+                    "v.id_venda, v.codigo as codigo_venda, v.status, v.data_venda,\n" +
                     "c.id_companhia, c.nome_fantasia,\n" +
                     "t.id_trecho, t.origem, t.destino,\n" +
                     "cd.id_comprador\n" +
@@ -375,5 +341,43 @@ public class VendaRepository implements Repository<Venda, Integer> {
                 e.printStackTrace();
             }
         }
+    }
+
+    private Venda getVendaPorResultSet(ResultSet resultSet) throws SQLException {
+
+        Venda venda = new Venda();
+        Companhia companhia = new Companhia();
+        Comprador comprador = new Comprador();
+        Trecho trecho = new Trecho();
+        Passagem passagem = new Passagem();
+
+        venda.setIdVenda(resultSet.getInt("id_venda"));
+        venda.setCodigo(resultSet.getString("codigo_venda"));
+        venda.setData((resultSet.getTimestamp("data_venda").toLocalDateTime()));
+
+        if (resultSet.getString("status").equals(Status.CANCELADO.name())) {
+            venda.setStatus(Status.CANCELADO);
+        } else if (resultSet.getString("status").equals(Status.CONCLUIDO.name())) {
+            venda.setStatus(Status.CONCLUIDO);
+        }
+
+        companhia.setNomeFantasia(resultSet.getString("nome_fantasia"));
+        companhia.setIdCompanhia(resultSet.getInt("id_companhia"));
+        comprador.setIdComprador(resultSet.getInt("id_comprador"));
+        trecho.setIdTrecho(resultSet.getInt("id_trecho"));
+        trecho.setOrigem(resultSet.getString("origem"));
+        trecho.setDestino(resultSet.getString("destino"));
+        passagem.setCodigo(resultSet.getString("codigo"));
+        passagem.setDataPartida((resultSet.getTimestamp("data_partida").toLocalDateTime()));
+        passagem.setDataChegada((resultSet.getTimestamp("data_chegada").toLocalDateTime()));
+        passagem.setValor((resultSet.getBigDecimal("valor")));
+        passagem.setIdPassagem(resultSet.getInt("id_passagem"));
+        trecho.setCompanhia(companhia);
+        passagem.setTrecho(trecho);
+        venda.setCompanhia(companhia);
+        venda.setComprador(comprador);
+        venda.setPassagem(passagem);
+
+        return venda;
     }
 }
