@@ -513,12 +513,14 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
             Statement statement = connection.createStatement();
 
             // Seleciona as 5 últimas passagens adicionadas
-            String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
+            String sql = "SELECT *\n" +
+                    "FROM (SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "t.id_trecho, t.origem, t.destino,\n" +
                     "c.id_companhia, c.nome_fantasia\n" +
-                    "FROM (SELECT * FROM PASSAGEM ORDER BY id_passagem DESC) p\n" +
+                    "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
-                    "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
+                    "INNER JOIN COMPANHIA c ON c.id_companhia = t.id_companhia\n" +
+                    "ORDER BY ID_PASSAGEM DESC) tables\n" +
                     "WHERE ROWNUM <= 5";
 
             // Executa-se a consulta
