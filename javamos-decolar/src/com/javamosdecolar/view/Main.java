@@ -53,16 +53,12 @@ public class Main {
                         if (usuarioLogado.getTipoUsuario().getTipo() == 1) { // talvez essa comparação esteja errada
                             exibeMenuDeUsuarioCompanhia(scanner, FORMATACAO_DATA, companhiaService, usuarioLogado,
                                     passagemService, trechoService);
-
-                        } else if (usuarioLogado.getTipoUsuario().getTipo() == 2) {
+                        } else {
                             exibeMenuDeUsuarioComprador(scanner, passagemService, usuarioLogado, vendaService,
                                     compradorService, FORMATACAO_DATA);
-                            break;
-
-                        } else {
-                            break;
                         }
 
+                        break;
                     case 0:
                         opcao = 0;
                         break;
