@@ -182,7 +182,7 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
                     "c.id_companhia, c.nome_fantasia\n" +
                     "FROM TRECHO t\n" +
                     "INNER JOIN COMPANHIA c ON t.id_companhia = c.id_companhia\n" +
-                    "WHERE origem = ? AND destino = ? AND id_companhia = ?";
+                    "WHERE t.origem = ? AND t.destino = ? AND t.id_companhia = ?";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -193,7 +193,7 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
             // Executa-se a consulta
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            if(resultSet.first()) {
+            if(resultSet.next()) {
                 Trecho trecho = getTrechoPorResultSet(resultSet);
                 return Optional.of(trecho);
             } else {
@@ -201,6 +201,7 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
             }
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {
@@ -233,7 +234,7 @@ public class TrechoRepository implements Repository<Trecho, Integer> {
             // Executa-se a consulta
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            if(resultSet.first()) {
+            if(resultSet.next()) {
                 Trecho trecho = getTrechoPorResultSet(resultSet);
                 return Optional.of(trecho);
             } else {
