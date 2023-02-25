@@ -121,6 +121,7 @@ public class CompanhiaRepository {
                 companhiaPesquisa.setNomeFantasia(resultSet.getString("nome_fantasia"));
                 companhiaPesquisa.setIdUsuario(resultSet.getInt("id_usuario"));
                 return Optional.of(companhiaPesquisa);
+
             } else {
                 return Optional.empty();
             }
@@ -128,6 +129,7 @@ public class CompanhiaRepository {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DatabaseException(e.getCause());
+
         } finally {
             try {
                 if (conexao != null) {

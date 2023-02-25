@@ -2,10 +2,7 @@ package javamos_decolar.com.javamosdecolar.service;
 
 import javamos_decolar.com.javamosdecolar.exceptions.DatabaseException;
 import javamos_decolar.com.javamosdecolar.exceptions.RegraDeNegocioException;
-import javamos_decolar.com.javamosdecolar.model.Companhia;
-import javamos_decolar.com.javamosdecolar.model.Passagem;
-import javamos_decolar.com.javamosdecolar.model.Usuario;
-import javamos_decolar.com.javamosdecolar.model.Venda;
+import javamos_decolar.com.javamosdecolar.model.*;
 import javamos_decolar.com.javamosdecolar.repository.CompanhiaRepository;
 import javamos_decolar.com.javamosdecolar.repository.PassagemRepository;
 import javamos_decolar.com.javamosdecolar.repository.TrechoRepository;
@@ -36,8 +33,14 @@ public class CompanhiaService {
                 throw new RegraDeNegocioException("Companhia não pode ser encontrada!");
             }
 
-            trechoRepository.getTrechosPorCompanhia(companhia.get().getIdCompanhia())
-                    .stream().forEach(System.out::println);
+            List<Trecho> trechosPorCompanhia = trechoRepository.getTrechosPorCompanhia(companhia.get()
+                    .getIdCompanhia());
+
+            if(trechosPorCompanhia.isEmpty()) {
+                System.out.println("Não há trechos cadastrados!");
+            } else {
+                trechosPorCompanhia.stream().forEach(System.out::println);
+            }
 
         } catch (DatabaseException e) {
             e.printStackTrace();
@@ -80,7 +83,7 @@ public class CompanhiaService {
                     .getPassagemPorCompanhia(companhia.get().getIdCompanhia());
 
             if(passagemPorCompanhia.isEmpty()) {
-                System.out.println("Não há passagens a serem listadas!");
+                System.out.println("Não há passagens cadastradas!");
             } else {
                 passagemPorCompanhia.stream().forEach(System.out::println);
             }
