@@ -329,7 +329,6 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {
@@ -394,7 +393,7 @@ public class PassagemRepository implements Repository<Passagem, Integer> {
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "t.id_trecho, t.origem, t.destino,\n" +
-                    "c.id_companhia, LOWER(c.nome_fantasia)\n" +
+                    "c.id_companhia, c.nome_fantasia\n" +
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia = t.id_companhia\n" +
