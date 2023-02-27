@@ -46,7 +46,7 @@ vendas da companhia, todos os trechos e também todas as passagens que foram cad
 
 ## 6. Fluxograma de classes
 
-<a href="https://lucid.app/lucidchart/4c69e8e0-7622-456d-af34-4524033bb477/edit?viewport_loc=-1489%2C-1252%2C3189%2C1755%2C0_0&invitationId=inv_df65617b-c3b2-4b66-804a-ef7de31656b8">Clique aqui para acessar o fluxograma de classes desenvolvido no LucidChart</a>.
+<a href="https://lucid.app/lucidchart/c10394eb-a0f2-4b05-9e75-5cb85d04c3f6/edit?invitationId=inv_54e1a245-0a8b-44db-83f0-d9482bac787a">Clique aqui para acessar o fluxograma de classes desenvolvido no LucidChart</a>.
 
 ## 7. Diagrama ER
 
