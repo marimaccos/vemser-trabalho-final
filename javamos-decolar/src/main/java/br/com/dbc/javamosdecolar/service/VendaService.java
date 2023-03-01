@@ -1,5 +1,7 @@
 package br.com.dbc.javamosdecolar.service;
 
+import br.com.dbc.javamosdecolar.exception.DatabaseException;
+import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.Status;
 import br.com.dbc.javamosdecolar.model.Venda;
 import br.com.dbc.javamosdecolar.model.dto.CreateVendaDTO;
@@ -23,25 +25,27 @@ public class VendaService {
         this.compradorService = compradorService;
     }
 
-    public Venda efetuarVenda(CreateVendaDTO vendaDTO) throws RegraDeNegocioException, Exception {
+    public Venda efetuarVenda(CreateVendaDTO vendaDTO) throws RegraDeNegocioException {
 
         try {
             UUID codigo = UUID.randomUUID();
 
-            Optional<Passagem> passagem = passagemService.getPassagemById(vendaDTO.getIdPassagem());
+            Optional<Passagem> passagemOptional = passagemService.getPassagemById(vendaDTO.getIdPassagem());
 
             if(passagem.isEmpty()) {
-                throw new Exception("Passagem inexistente.");
+                throw new RegraDeNegocioException("Passagem inexistente.");
             }
 
-            Optional<Companhia> companhia = compradorService.getCompanhiaById(vendaDTO.getIdPassagem());
+            final Passagem PASSAGEM = passagemOptional.get();
+
+            Optional<Comprador> comprador = compradorService.getCompradorById(vendaDTO.getIdComprador());
 
             if(companhia.isEmpty()) {
-                throw new Exception("Passagem inexistente.");
+                throw new RegraDeNegocioException("Companhia inexistente.");
             }
 
-            Venda vendaAtual = new Venda(codigo.toString(), passagem, comprador.get().getIdComprador(),
-                    passagem.get().getTrecho().getCompanhia(), LocalDateTime.now(), Status.CONCLUIDO);
+            Venda vendaAtual = new Venda(codigo.toString(), PASSAGEM, comprador.get(),
+                    PASSAGEM.getTrecho().getCompanhia(), LocalDateTime.now(), Status.CONCLUIDO);
 
             Venda vendaCriada = vendaRepository.adicionar(vendaAtual);
             boolean conseguiuEditar = passagemService.editarDisponibilidadeDaPassagem(false, vendaDTO.getIdPassagem());
@@ -58,10 +62,10 @@ public class VendaService {
         }
     }
 
-    public void cancelarVenda(Integer idVenda) throws RegraDeNegocioException {
+    public boolean cancelarVenda(Integer idVenda) throws RegraDeNegocioException {
 
         try {
-            Optional<Venda> venda = vendaRepository.getVendaPorCodigo(codigo);
+            Optional<Venda> venda = vendaRepository.getVendaPorId(idVenda);
 
             if(venda.isEmpty()) {
                 throw new RegraDeNegocioException("Venda não encontrada!");
@@ -72,32 +76,25 @@ public class VendaService {
             }
 
             final int ID_VENDA = venda.get().getIdVenda();
-            boolean vendaFoiCancelada = vendaRepository.cancelarVenda(ID_VENDA);
 
-            System.out.println("Venda foi cancelada? " + vendaFoiCancelada + " | id = " + ID_VENDA);
+            return vendaRepository.cancelarVenda(ID_VENDA);
 
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante o cancelamento.");
         }
     }
 
-    public void getHistoricoVendasComprador(Integer idUsuario) throws RegraDeNegocioException {
+    public List<Venda> getHistoricoVendasComprador(Integer idComprador) throws RegraDeNegocioException {
         try {
-            Optional<Comprador> comprador = compradorService.acharCompradorPorIdUsuario(idUsuario);
+            Optional<Comprador> comprador = compradorService.getCompradorById(idComprador);
 
             if(comprador.isEmpty()) {
                 throw new RegraDeNegocioException("Comprador inexistente");
             }
 
-            List<Venda> vendasPorComprador = vendaRepository.getVendasPorComprador(comprador.get().getIdComprador());
+            return vendaRepository.getVendasPorComprador(idComprador);
 
-            if (vendasPorComprador.isEmpty()) {
-                System.out.println("Não há Histórico!");
-            } else {
-                vendasPorComprador.stream().forEach(System.out::println);
-            }
-
-        } catch (DatabaseException e) {
+         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
     }
