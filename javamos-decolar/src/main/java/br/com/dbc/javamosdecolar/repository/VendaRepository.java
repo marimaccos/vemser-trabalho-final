@@ -1,8 +1,10 @@
 package br.com.dbc.javamosdecolar.repository;
 
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
+import br.com.dbc.javamosdecolar.model.Passagem;
 import br.com.dbc.javamosdecolar.model.Status;
 import br.com.dbc.javamosdecolar.model.Venda;
+import oracle.net.aso.v;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -343,6 +345,55 @@ public class VendaRepository implements Repository<Venda, Integer>{
         }
     }
 
+    public Optional<Venda> getVendaPorId(Integer idVenda) throws DatabaseException {
+        Connection connection = null;
+
+        try {
+            connection = ConexaoBancoDeDados.getConnection();
+
+            String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor, " +
+                    "p.id_passagem,\n" +
+                    "v.id_venda, v.codigo as codigo_venda, v.status, v.data_venda,\n" +
+                    "c.id_companhia, c.nome_fantasia,\n" +
+                    "t.id_trecho, t.origem, t.destino,\n" +
+                    "cd.id_comprador\n" +
+                    "FROM VENDA v\n" +
+                    "INNER JOIN COMPRADOR cd ON cd.id_comprador = v.id_comprador\n" +
+                    "INNER JOIN PASSAGEM p ON p.id_venda = v.id_venda \n" +
+                    "INNER JOIN COMPANHIA c ON c.id_companhia = v.id_companhia\n" +
+                    "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
+                    "WHERE v.id_venda = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, idVenda);
+
+            // Executa-se a consulta
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()) {
+                Venda venda = getVendaPorResultSet(resultSet);
+                return Optional.of(venda);
+
+            } else {
+                return Optional.empty();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DatabaseException(e.getCause());
+
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private Venda getVendaPorResultSet(ResultSet resultSet) throws SQLException {
 
         Venda venda = new Venda();
@@ -381,7 +432,4 @@ public class VendaRepository implements Repository<Venda, Integer>{
         return venda;
     }
 
-    public Optional<Venda> getVendaPorId(Integer idVenda) {
-        return null;
-    }
 }
