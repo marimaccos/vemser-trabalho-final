@@ -69,13 +69,11 @@ public class VendaService {
                 throw new RegraDeNegocioException("Venda não encontrada!");
             }
 
-            if(venda.get().getStatus().getTipo() == 3) {
+            if(venda.get().getStatus().getTipo() == 2) {
                 throw new RegraDeNegocioException("Venda já cancelada!");
             }
 
-            final int ID_VENDA = venda.get().getIdVenda();
-
-            return vendaRepository.cancelarVenda(ID_VENDA);
+            return vendaRepository.cancelarVenda(idVenda);
 
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante o cancelamento.");
