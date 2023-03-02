@@ -38,7 +38,7 @@ public class PassagemService {
                 throw new RegraDeNegocioException("Companhia inválida!");
             }
 
-            Optional<Trecho> trechoOptional = trechoService.getTrechoById(passagemDTO.getTrechoId());
+            Optional<Trecho> trechoOptional = trechoService.getTrechoById(passagemDTO.getIdTrecho());
 
             if(trechoOptional.isEmpty()) {
                 throw new RegraDeNegocioException("Trecho inválido!");
@@ -127,7 +127,7 @@ public class PassagemService {
         }
 
         if(passagemDTO.getTrechoId() != null) {
-            Optional<Trecho> trechoOptional = trechoService.getTrechoById(passagemDTO.getTrechoId());
+            Optional<Trecho> trechoOptional = trechoService.getTrechoById(passagemDTO.getIdTrecho());
             if(trechoOptional.isEmpty()) {
                 throw new RegraDeNegocioException("Trecho inválido!");
             }
