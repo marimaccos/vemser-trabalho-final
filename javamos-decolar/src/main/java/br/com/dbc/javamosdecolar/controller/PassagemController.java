@@ -33,13 +33,19 @@ public class PassagemController {
         return this.passagemService.listarUltimasPassagens();
     }
 
+    @GetMapping("/{idPassagem}")
+    public Passagem getPassagemById(@RequestParam("idPassagem") Integer id) {
+        return this.passagemService.getPassagemById(id);
+    }
+
     @PostMapping()
-    public Passagem create(CreatePassagemDTO passagemDTO) throws RegraDeNegocioException {
+    public Passagem create(@RequestBody CreatePassagemDTO passagemDTO) throws RegraDeNegocioException {
         return this.passagemService.cadastrarPassagem(passagemDTO);
     }
 
     @PutMapping("/{idPassagem}")
-    public void update(@PathVariable("idPassagem") Integer id, UpdatePassagemDTO passagemDTO)
+    public void update(@PathVariable("idPassagem") Integer id,
+                       @RequestBody UpdatePassagemDTO passagemDTO)
             throws RegraDeNegocioException {
         this.passagemService.editarPassagem(id, passagemDTO);
     }

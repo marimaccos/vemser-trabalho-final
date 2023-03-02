@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -37,20 +36,10 @@ public class PassagemService {
 
             UUID codigo = UUID.randomUUID();
 
-            Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
-
-            if(companhia.isEmpty()) {
-                throw new RegraDeNegocioException("Companhia inválida!");
-            }
-
-            Optional<Trecho> trechoOptional = trechoService.getTrechoById(passagemDTO.getIdTrecho());
-
-            if(trechoOptional.isEmpty()) {
-                throw new RegraDeNegocioException("Trecho inválido!");
-            }
+            Trecho trecho = trechoService.getTrechoById(passagemDTO.getIdTrecho());
 
             Passagem passagem = new Passagem(codigo.toString(), dataPartida, dataChegada,
-                    trechoOptional.get(), true, passagemDTO.getValor());
+                    trecho, true, passagemDTO.getValor());
 
             return passagemRepository.adicionar(passagem);
 
@@ -93,13 +82,10 @@ public class PassagemService {
 
     public void editarPassagem(Integer passagemId, UpdatePassagemDTO passagemDTO) throws RegraDeNegocioException {
         try {
-            Optional<Passagem> passagemOptional = passagemRepository.getPassagemPeloId(passagemId);
+            Passagem passagemEncontrada = passagemRepository.getPassagemPeloId(passagemId)
+                    .orElseThrow(() -> new RegraDeNegocioException("Passagem inválida!"));
 
-            if(passagemOptional.isEmpty()) {
-                throw new RegraDeNegocioException("Passagem inválida!");
-            }
-
-            Passagem passagem = mapUpdatePassagemDTOtoPassagem(passagemDTO, passagemOptional.get());
+            Passagem passagem = mapUpdatePassagemDTOtoPassagem(passagemDTO, passagemEncontrada);
 
             final boolean DIA_ANTERIOR = passagem.getDataChegada().isBefore(passagem.getDataPartida());
 
@@ -138,11 +124,8 @@ public class PassagemService {
         }
 
         if(passagemDTO.getIdTrecho() != null) {
-            Optional<Trecho> trechoOptional = trechoService.getTrechoById(passagemDTO.getIdTrecho());
-            if(trechoOptional.isEmpty()) {
-                throw new RegraDeNegocioException("Trecho inválido!");
-            }
-            passagem.setTrecho(trechoOptional.get());
+            Trecho trecho = trechoService.getTrechoById(passagemDTO.getIdTrecho());
+            passagem.setTrecho(trecho);
         }
 
         return passagem;
@@ -179,18 +162,21 @@ public class PassagemService {
 
     private List<Passagem> listarPassagemPorCompanhia(String nomeCompanhia) throws RegraDeNegocioException {
         try {
-            Optional<Companhia> companhiaEncontrada = companhiaService.buscaCompanhiaPorNome(nomeCompanhia);
-
-            if(companhiaEncontrada.isEmpty()) {
-                throw new RegraDeNegocioException("Companhia não encontrada!");
-            }
-
+            Companhia companhia = companhiaService.buscaCompanhiaPorNome(nomeCompanhia);
             return passagemRepository
-                    .getPassagemPorCompanhia(companhiaEncontrada.get().getIdCompanhia());
+                    .getPassagemPorCompanhia(companhia.getIdCompanhia());
 
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
     }
 
+    public Passagem getPassagemById(Integer id) throws RegraDeNegocioException {
+        try {
+            return passagemRepository.getPassagemPeloId(id)
+                    .orElseThrow(() -> new RegraDeNegocioException("Passagem não encontrada!"));
+        } catch (DatabaseException e) {
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
+        }
+    }
 }

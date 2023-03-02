@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -27,28 +26,18 @@ public class VendaService {
         try {
             UUID codigo = UUID.randomUUID();
 
-            Optional<Passagem> passagemOptional = passagemService.getPassagemById(vendaDTO.getIdPassagem());
+            Passagem passagem = passagemService.getPassagemById(vendaDTO.getIdPassagem());
 
-            if(passagem.isEmpty()) {
-                throw new RegraDeNegocioException("Passagem inexistente.");
-            }
+            Comprador comprador = compradorService.getCompradorById(vendaDTO.getIdComprador());
 
-            final Passagem PASSAGEM = passagemOptional.get();
-
-            Optional<Comprador> comprador = compradorService.getCompradorById(vendaDTO.getIdComprador());
-
-            if(companhia.isEmpty()) {
-                throw new RegraDeNegocioException("Companhia inexistente.");
-            }
-
-            Venda vendaEfetuada = vendaRepository.adicionar(new Venda(codigo.toString(), PASSAGEM, comprador.get(),
-                    PASSAGEM.getTrecho().getCompanhia(), LocalDateTime.now(), Status.CONCLUIDO));
+            Venda vendaEfetuada = vendaRepository.adicionar(new Venda(codigo.toString(), passagem, comprador,
+                    passagem.getTrecho().getCompanhia(), LocalDateTime.now(), Status.CONCLUIDO));
 
             if(vendaEfetuada.equals(null)) {
                 throw new RegraDeNegocioException("Não foi possível concluir a venda.");
             }
 
-            boolean conseguiuEditar = passagemService.editarPassagemVendida(PASSAGEM);
+            boolean conseguiuEditar = passagemService.editarPassagemVendida(passagem);
 
             if(!conseguiuEditar) {
                 throw new RegraDeNegocioException("Não foi possível concluir a venda.");
@@ -63,13 +52,10 @@ public class VendaService {
     public boolean cancelarVenda(Integer idVenda) throws RegraDeNegocioException {
 
         try {
-            Optional<Venda> venda = vendaRepository.getVendaPorId(idVenda);
+            Venda venda = vendaRepository.getVendaPorId(idVenda)
+                    .orElseThrow(() -> new RegraDeNegocioException("Venda não encontrada!"));
 
-            if(venda.isEmpty()) {
-                throw new RegraDeNegocioException("Venda não encontrada!");
-            }
-
-            if(venda.get().getStatus().getTipo() == 2) {
+            if(venda.getStatus().getTipo() == 2) {
                 throw new RegraDeNegocioException("Venda já cancelada!");
             }
 
@@ -82,12 +68,7 @@ public class VendaService {
 
     public List<Venda> getHistoricoComprasComprador(Integer idComprador) throws RegraDeNegocioException {
         try {
-            Optional<Comprador> comprador = compradorService.getCompradorById(idComprador);
-
-            if(comprador.isEmpty()) {
-                throw new RegraDeNegocioException("Comprador inexistente");
-            }
-
+            compradorService.getCompradorById(idComprador);
             return vendaRepository.getVendasPorComprador(idComprador);
 
          } catch (DatabaseException e) {
@@ -105,12 +86,7 @@ public class VendaService {
 
     public List<Venda> getHistoricoVendasCompanhia(Integer id) throws RegraDeNegocioException {
         try {
-            Optional<Companhia> companhia = compradorService.getCompanhiaById(idCompanhia);
-
-            if(companhia.isEmpty()) {
-                throw new RegraDeNegocioException("Comprador inexistente");
-            }
-
+            compradorService.getCompanhiaById(id);
             return vendaRepository.getVendasPorCompanhia(id);
 
         } catch (DatabaseException e) {
