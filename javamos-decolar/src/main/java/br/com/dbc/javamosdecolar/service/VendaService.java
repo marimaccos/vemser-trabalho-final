@@ -20,6 +20,7 @@ public class VendaService {
     private final VendaRepository vendaRepository;
     private final PassagemService passagemService;
     private final CompradorService compradorService;
+    private final CompanhiaService companhiaService;
 
     public Venda efetuarVenda(CreateVendaDTO vendaDTO) throws RegraDeNegocioException {
 
@@ -86,7 +87,7 @@ public class VendaService {
 
     public List<Venda> getHistoricoVendasCompanhia(Integer id) throws RegraDeNegocioException {
         try {
-            compradorService.getCompanhiaById(id);
+            companhiaService.getCompanhiaById(id);
             return vendaRepository.getVendasPorCompanhia(id);
 
         } catch (DatabaseException e) {
