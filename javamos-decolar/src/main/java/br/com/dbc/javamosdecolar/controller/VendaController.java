@@ -17,8 +17,15 @@ public class VendaController {
     private final VendaService vendaService;
 
     @GetMapping("/{idComprador}")
-    public List<Venda> listaHistoricoVendasComprador(@PathVariable("idComprador") Integer id) throws RegraDeNegocioException {
+    public List<Venda> listaHistoricoVendasComprador(@PathVariable("idComprador") Integer id)
+            throws RegraDeNegocioException {
         return vendaService.getHistoricoVendasComprador(id);
+    }
+
+    @GetMapping()
+    public Venda getVendaPorCodigo(@RequestParam(name = "codigo", required = true) String uuid)
+            throws RegraDeNegocioException {
+        return vendaService.getVendaPorCodigo(uuid);
     }
 
     @PostMapping

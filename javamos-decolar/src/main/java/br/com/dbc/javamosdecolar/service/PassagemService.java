@@ -3,7 +3,6 @@ package br.com.dbc.javamosdecolar.service;
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.Passagem;
-import br.com.dbc.javamosdecolar.model.Venda;
 import br.com.dbc.javamosdecolar.model.dto.CreatePassagemDTO;
 import br.com.dbc.javamosdecolar.model.dto.UpdatePassagemDTO;
 import br.com.dbc.javamosdecolar.repository.PassagemRepository;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,7 +25,11 @@ public class PassagemService {
 
     public Passagem cadastrarPassagem(CreatePassagemDTO passagemDTO) throws RegraDeNegocioException {
         try {
-            final boolean DIA_ANTERIOR = passagemDTO.getDataChegada().isBefore(passagemDTO.getDataPartida());
+
+            LocalDateTime dataPartida = transformaStringEmLocalDateTime(passagemDTO.getDataPartida());
+            LocalDateTime dataChegada = transformaStringEmLocalDateTime(passagemDTO.getDataChegada());
+
+            final boolean DIA_ANTERIOR = dataChegada.isBefore(dataPartida);
 
             if(DIA_ANTERIOR) {
                 throw new RegraDeNegocioException("Data inválida!");
@@ -45,7 +49,7 @@ public class PassagemService {
                 throw new RegraDeNegocioException("Trecho inválido!");
             }
 
-            Passagem passagem = new Passagem(codigo.toString(), passagemDTO.getDataPartida(), passagemDTO.getDataChegada(),
+            Passagem passagem = new Passagem(codigo.toString(), dataPartida, dataChegada,
                     trechoOptional.get(), true, passagemDTO.getValor());
 
             return passagemRepository.adicionar(passagem);
@@ -56,14 +60,18 @@ public class PassagemService {
     }
 
     public List<Passagem> listarPassagens(String companhia,
-                                          LocalDateTime dataChegada, LocalDateTime dataPartida, BigDecimal valor)
+                                          String dataChegada, String dataPartida, BigDecimal valor)
             throws RegraDeNegocioException {
+
+        final Integer DATA_PARTIDA = 1;
+        final Integer DATA_CHEGADA = 2;
+
         if(!companhia.isBlank()) {
             return this.listarPassagemPorCompanhia(companhia);
+        } else if (!dataPartida.equals(null)) {
+            return this.listarPassagemPorData(transformaStringEmLocalDateTime(dataPartida), DATA_PARTIDA);
         } else if (!dataChegada.equals(null)) {
-            return this.listarPassagemPorData(dataPartida, 1);
-        } else if (!dataChegada.equals(null)) {
-            return this.listarPassagemPorData(dataChegada, 2);
+            return this.listarPassagemPorData(transformaStringEmLocalDateTime(dataChegada), DATA_CHEGADA);
         } else if (!valor.equals(null)) {
             return this.listarPassagemPorValorMaximo(valor);
         } else {
@@ -91,9 +99,7 @@ public class PassagemService {
                 throw new RegraDeNegocioException("Passagem inválida!");
             }
 
-            final Passagem PASSAGEM_EXISTENTE = passagemOptional.get();
-
-            Passagem passagem = mapUpdatePassagemDTOtoPassagem(passagemDTO, PASSAGEM_EXISTENTE);
+            Passagem passagem = mapUpdatePassagemDTOtoPassagem(passagemDTO, passagemOptional.get());
 
             final boolean DIA_ANTERIOR = passagem.getDataChegada().isBefore(passagem.getDataPartida());
 
@@ -120,19 +126,18 @@ public class PassagemService {
     private Passagem mapUpdatePassagemDTOtoPassagem(UpdatePassagemDTO passagemDTO,
                                                     Passagem passagem) throws RegraDeNegocioException {
         if(!passagemDTO.getDataChegada().equals(null)) {
-            passagem.setDataChegada(passagemDTO.getDataChegada());
+            passagem.setDataChegada(transformaStringEmLocalDateTime(passagemDTO.getDataChegada()));
         }
 
         if(!passagemDTO.getDataPartida().equals(null)) {
-            passagem.setDataPartida(passagemDTO.getDataPartida());
+            passagem.setDataPartida(transformaStringEmLocalDateTime(passagemDTO.getDataPartida()));
         }
 
         if(!passagemDTO.getValor().equals(null)) {
             passagem.setValor(passagemDTO.getValor());
-
         }
 
-        if(passagemDTO.getTrechoId() != null) {
+        if(passagemDTO.getIdTrecho() != null) {
             Optional<Trecho> trechoOptional = trechoService.getTrechoById(passagemDTO.getIdTrecho());
             if(trechoOptional.isEmpty()) {
                 throw new RegraDeNegocioException("Trecho inválido!");
@@ -143,13 +148,21 @@ public class PassagemService {
         return passagem;
     }
 
-    private List<Passagem> listarPassagemPorData(LocalDateTime data, int tipoDeData) throws RegraDeNegocioException {
-        try {
-            if(tipoDeData == 1) {
-                return passagemRepository.getPassagemPorDataPartida(data);
+    private LocalDateTime transformaStringEmLocalDateTime(String data) {
+        return LocalDateTime.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    }
 
-            } else {
+    private List<Passagem> listarPassagemPorData(LocalDateTime data, int tipoDeData) throws RegraDeNegocioException {
+        final Integer DATA_PARTIDA = 1;
+        final Integer DATA_CHEGADA = 2;
+
+        try {
+            if(tipoDeData == DATA_PARTIDA) {
+                return passagemRepository.getPassagemPorDataPartida(data);
+            } else if(tipoDeData == DATA_CHEGADA){
                 return passagemRepository.getPassagemPorDataChegada(data);
+            } else {
+                return null;
             }
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
@@ -176,7 +189,6 @@ public class PassagemService {
                     .getPassagemPorCompanhia(companhiaEncontrada.get().getIdCompanhia());
 
         } catch (DatabaseException e) {
-            e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
     }

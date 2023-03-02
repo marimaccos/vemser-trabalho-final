@@ -21,8 +21,8 @@ public class PassagemController {
 
     @GetMapping
     public List<Passagem> listar(@RequestParam(name="companhia", required = false) String companhia,
-                                 @RequestParam(name="dataChegada", required = false) LocalDateTime dataChegada,
-                                 @RequestParam(name="dataPartida", required = false) LocalDateTime dataPartida,
+                                 @RequestParam(name="dataChegada", required = false) String dataChegada,
+                                 @RequestParam(name="dataPartida", required = false) String dataPartida,
                                  @RequestParam(name="valor", required = false) BigDecimal valor)
             throws RegraDeNegocioException {
         return this.passagemService.listarPassagens(companhia, dataChegada, dataPartida, valor);

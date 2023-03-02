@@ -94,4 +94,12 @@ public class VendaService {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
     }
+
+    public Venda getVendaPorCodigo(String uuid) throws RegraDeNegocioException {
+        try {
+            vendaRepository.getVendaPorCodigo(uuid);
+        } catch (DatabaseException e) {
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a recuperação da venda.");
+        }
+    }
 }
