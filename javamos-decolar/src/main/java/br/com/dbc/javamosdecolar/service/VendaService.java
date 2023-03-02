@@ -80,7 +80,7 @@ public class VendaService {
         }
     }
 
-    public List<Venda> getHistoricoVendasComprador(Integer idComprador) throws RegraDeNegocioException {
+    public List<Venda> getHistoricoComprasComprador(Integer idComprador) throws RegraDeNegocioException {
         try {
             Optional<Comprador> comprador = compradorService.getCompradorById(idComprador);
 
@@ -100,6 +100,21 @@ public class VendaService {
             vendaRepository.getVendaPorCodigo(uuid);
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a recuperação da venda.");
+        }
+    }
+
+    public List<Venda> getHistoricoVendasCompanhia(Integer id) throws RegraDeNegocioException {
+        try {
+            Optional<Companhia> companhia = compradorService.getCompanhiaById(idCompanhia);
+
+            if(companhia.isEmpty()) {
+                throw new RegraDeNegocioException("Comprador inexistente");
+            }
+
+            return vendaRepository.getVendasPorCompanhia(id);
+
+        } catch (DatabaseException e) {
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
     }
 }

@@ -16,10 +16,16 @@ public class VendaController {
 
     private final VendaService vendaService;
 
-    @GetMapping("/{idComprador}")
-    public List<Venda> listaHistoricoVendasComprador(@PathVariable("idComprador") Integer id)
+    @GetMapping("/{idComprador}/comprador")
+    public List<Venda> listaHistoricoComprasComprador(@PathVariable("idComprador") Integer id)
             throws RegraDeNegocioException {
-        return vendaService.getHistoricoVendasComprador(id);
+        return vendaService.getHistoricoComprasComprador(id);
+    }
+
+    @GetMapping("/{idCompanhia}/companhia")
+    public List<Venda> listaHistoricoVendasCompanhia(@PathVariable("idCompanhia") Integer id)
+            throws RegraDeNegocioException {
+        return vendaService.getHistoricoVendasCompanhia(id);
     }
 
     @GetMapping()
