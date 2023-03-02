@@ -19,8 +19,8 @@ import java.util.List;
 public class PassagemController {
     private final PassagemService passagemService;
 
-    @GetMapping
-    public List<Passagem> listar(@RequestParam(name="companhia", required = false) String companhia,
+    @GetMapping("/q")
+    public List<Passagem> listarPorParametros(@RequestParam(name="companhia", required = false) String companhia,
                                  @RequestParam(name="dataChegada", required = false) String dataChegada,
                                  @RequestParam(name="dataPartida", required = false) String dataPartida,
                                  @RequestParam(name="valor", required = false) BigDecimal valor)
@@ -28,7 +28,7 @@ public class PassagemController {
         return this.passagemService.listarPassagens(companhia, dataChegada, dataPartida, valor);
     }
 
-    @GetMapping("/novas")
+    @GetMapping("/new")
     public List<Passagem> listUltimasPassagens() throws RegraDeNegocioException {
         return this.passagemService.listarUltimasPassagens();
     }
