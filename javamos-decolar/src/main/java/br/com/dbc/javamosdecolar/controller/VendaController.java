@@ -5,11 +5,14 @@ import br.com.dbc.javamosdecolar.model.Venda;
 import br.com.dbc.javamosdecolar.model.dto.CreateVendaDTO;
 import br.com.dbc.javamosdecolar.service.VendaService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.*;
 
 @Validated
 @RestController
@@ -20,31 +23,32 @@ public class VendaController {
     private final VendaService vendaService;
 
     @GetMapping("/{idComprador}/comprador")
-    public List<Venda> listaHistoricoComprasComprador(@PathVariable("idComprador") Integer id)
+    public ResponseEntity<List<Venda>> listaHistoricoComprasComprador(@PathVariable("idComprador") Integer id)
             throws RegraDeNegocioException {
-        return vendaService.getHistoricoComprasComprador(id);
+        return new ResponseEntity<>(vendaService.getHistoricoComprasComprador(id), OK);
     }
 
     @GetMapping("/{idCompanhia}/companhia")
-    public List<Venda> listaHistoricoVendasCompanhia(@PathVariable("idCompanhia") Integer id)
+    public ResponseEntity<List<Venda>> listaHistoricoVendasCompanhia(@PathVariable("idCompanhia") Integer id)
             throws RegraDeNegocioException {
-        return vendaService.getHistoricoVendasCompanhia(id);
+        return new ResponseEntity<>(vendaService.getHistoricoVendasCompanhia(id), OK);
     }
 
     @GetMapping()
-    public Venda getVendaPorCodigo(@RequestParam(name = "codigo", required = true) String uuid)
+    public ResponseEntity<Venda> getVendaPorCodigo(@RequestParam(name = "codigo", required = true) String uuid)
             throws RegraDeNegocioException {
-        return vendaService.getVendaPorCodigo(uuid);
+        return new ResponseEntity<>(vendaService.getVendaPorCodigo(uuid), OK);
     }
 
     @PostMapping
-    public Venda criar(@RequestBody @Valid CreateVendaDTO vendaDTO) throws RegraDeNegocioException {
-        return vendaService.efetuarVenda(vendaDTO);
+    public ResponseEntity<Venda> criar(@RequestBody @Valid CreateVendaDTO vendaDTO) throws RegraDeNegocioException {
+        return new ResponseEntity<>(vendaService.efetuarVenda(vendaDTO), CREATED);
     }
 
     @PutMapping("/{idVenda}/cancelar")
-    public void cancelar(@PathVariable("idVenda") Integer idVenda) throws RegraDeNegocioException {
+    public ResponseEntity<Venda> cancelar(@PathVariable("idVenda") Integer idVenda) throws RegraDeNegocioException {
         vendaService.cancelarVenda(idVenda);
+        return new ResponseEntity<>(NO_CONTENT);
     }
 
 }
