@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,9 +59,11 @@ public class PassagemService {
         if(!companhia.isBlank()) {
             return this.listarPassagemPorCompanhia(companhia);
         } else if (!dataPartida.equals(null)) {
-            return this.listarPassagemPorData(transformaStringEmLocalDateTime(dataPartida), DATA_PARTIDA);
+            return this.listarPassagemPorData(transformaStringEmLocalDateTime(dataPartida
+                    .replace("-", " ")), DATA_PARTIDA);
         } else if (!dataChegada.equals(null)) {
-            return this.listarPassagemPorData(transformaStringEmLocalDateTime(dataChegada), DATA_CHEGADA);
+            return this.listarPassagemPorData(transformaStringEmLocalDateTime(dataChegada
+                    .replace("-", " ")), DATA_CHEGADA);
         } else if (!valor.equals(null)) {
             return this.listarPassagemPorValorMaximo(valor);
         } else {
@@ -131,8 +134,12 @@ public class PassagemService {
         return passagem;
     }
 
-    private LocalDateTime transformaStringEmLocalDateTime(String data) {
-        return LocalDateTime.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    private LocalDateTime transformaStringEmLocalDateTime(String data) throws RegraDeNegocioException {
+        try {
+            return LocalDateTime.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+        } catch (DateTimeParseException e) {
+            throw new RegraDeNegocioException("Data inserida no formato incorreto!");
+        }
     }
 
     private List<Passagem> listarPassagemPorData(LocalDateTime data, int tipoDeData) throws RegraDeNegocioException {
