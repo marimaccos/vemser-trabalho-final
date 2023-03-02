@@ -34,7 +34,7 @@ public class PassagemController {
     }
 
     @GetMapping("/{idPassagem}")
-    public Passagem getPassagemById(@RequestParam("idPassagem") Integer id) {
+    public Passagem getPassagemById(@RequestParam("idPassagem") Integer id) throws RegraDeNegocioException {
         return this.passagemService.getPassagemById(id);
     }
 
