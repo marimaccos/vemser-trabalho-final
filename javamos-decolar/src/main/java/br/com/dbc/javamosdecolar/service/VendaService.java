@@ -2,28 +2,25 @@ package br.com.dbc.javamosdecolar.service;
 
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
+import br.com.dbc.javamosdecolar.model.Passagem;
 import br.com.dbc.javamosdecolar.model.Status;
 import br.com.dbc.javamosdecolar.model.Venda;
 import br.com.dbc.javamosdecolar.model.dto.CreateVendaDTO;
 import br.com.dbc.javamosdecolar.repository.VendaRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Service
+@AllArgsConstructor
 public class VendaService {
     private final VendaRepository vendaRepository;
     private final PassagemService passagemService;
     private final CompradorService compradorService;
-
-    public VendaService(VendaRepository vendaRepository,
-                        PassagemService passagemService,
-                        CompradorService compradorService) {
-        this.vendaRepository = vendaRepository;
-        this.passagemService = passagemService;
-        this.compradorService = compradorService;
-    }
 
     public Venda efetuarVenda(CreateVendaDTO vendaDTO) throws RegraDeNegocioException {
 

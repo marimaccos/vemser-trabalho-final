@@ -2,7 +2,7 @@ package br.com.dbc.javamosdecolar.repository;
 
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.model.Passagem;
-import br.com.dbc.javamosdecolar.model.Venda;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PassagemRepository implements Repository<Passagem, Integer>{
+@Repository
+public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         try {

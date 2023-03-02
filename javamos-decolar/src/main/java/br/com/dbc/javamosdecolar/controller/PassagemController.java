@@ -6,6 +6,7 @@ import br.com.dbc.javamosdecolar.model.Passagem;
 import br.com.dbc.javamosdecolar.model.dto.CreatePassagemDTO;
 import br.com.dbc.javamosdecolar.model.dto.UpdatePassagemDTO;
 import br.com.dbc.javamosdecolar.service.PassagemService;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -14,18 +15,16 @@ import java.util.List;
 
 @RestController()
 @RequestMapping("/passagem")
+@AllArgsConstructor
 public class PassagemController {
     private final PassagemService passagemService;
-
-    public PassagemController(PassagemService passagemService) {
-        this.passagemService = passagemService;
-    }
 
     @GetMapping
     public List<Passagem> listar(@RequestParam(name="companhia", required = false) String companhia,
                                  @RequestParam(name="dataChegada", required = false) LocalDateTime dataChegada,
                                  @RequestParam(name="dataPartida", required = false) LocalDateTime dataPartida,
-                                 @RequestParam(name="valor", required = false) BigDecimal valor) {
+                                 @RequestParam(name="valor", required = false) BigDecimal valor)
+            throws RegraDeNegocioException {
         return this.passagemService.listarPassagens(companhia, dataChegada, dataPartida, valor);
     }
 

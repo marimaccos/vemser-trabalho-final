@@ -6,6 +6,8 @@ import br.com.dbc.javamosdecolar.model.Passagem;
 import br.com.dbc.javamosdecolar.model.dto.CreatePassagemDTO;
 import br.com.dbc.javamosdecolar.model.dto.UpdatePassagemDTO;
 import br.com.dbc.javamosdecolar.repository.PassagemRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -13,18 +15,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Service
+@AllArgsConstructor
 public class PassagemService {
-    private PassagemRepository passagemRepository;
-    private TrechoService trechoService;
-    private CompanhiaService companhiaService;
-
-    public PassagemService(PassagemRepository passagemRepository,
-                           TrechoService trechoService,
-                           CompanhiaService companhiaService) {
-        this.passagemRepository = passagemRepository;
-        this.trechoService = trechoService;
-        this.companhiaService = companhiaService;
-    }
+    private final PassagemRepository passagemRepository;
+    private final TrechoService trechoService;
+    private final CompanhiaService companhiaService;
 
     public Passagem cadastrarPassagem(CreatePassagemDTO passagemDTO) throws RegraDeNegocioException {
         try {

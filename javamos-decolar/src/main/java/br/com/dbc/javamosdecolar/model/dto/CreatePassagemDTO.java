@@ -1,46 +1,19 @@
 package br.com.dbc.javamosdecolar.model.dto;
 
+import lombok.Data;
+
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Data
 public class CreatePassagemDTO {
+    @NotNull(message = "O campo dataPartida não pode estar nulo!")
     private LocalDateTime dataPartida;
+    @NotNull(message = "O campo dataChegada não pode estar nulo!")
     private LocalDateTime dataChegada;
+    @NotNull(message = "O campo valor não pode estar nulo!")
     private BigDecimal valor;
-    private Integer trechoId;
-
-    public CreatePassagemDTO() {
-    }
-
-    public LocalDateTime getDataPartida() {
-        return dataPartida;
-    }
-
-    public void setDataPartida(LocalDateTime dataPartida) {
-        this.dataPartida = dataPartida;
-    }
-
-    public LocalDateTime getDataChegada() {
-        return dataChegada;
-    }
-
-    public void setDataChegada(LocalDateTime dataChegada) {
-        this.dataChegada = dataChegada;
-    }
-
-    public BigDecimal getValor() {
-        return valor;
-    }
-
-    public void setValor(BigDecimal valor) {
-        this.valor = valor;
-    }
-
-    public Integer getTrechoId() {
-        return trechoId;
-    }
-
-    public void setTrechoId(Integer trechoId) {
-        this.trechoId = trechoId;
-    }
+    @NotNull(message = "O campo idTrecho não pode estar nulo!")
+    private Integer idTrecho;
 }

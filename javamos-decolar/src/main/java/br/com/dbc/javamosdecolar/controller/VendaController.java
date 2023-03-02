@@ -4,19 +4,17 @@ import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.Venda;
 import br.com.dbc.javamosdecolar.model.dto.CreateVendaDTO;
 import br.com.dbc.javamosdecolar.service.VendaService;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/venda")
+@AllArgsConstructor
 public class VendaController {
 
     private final VendaService vendaService;
-
-    public VendaController(VendaService vendaService) {
-        this.vendaService = vendaService;
-    }
 
     @GetMapping("/{idComprador}")
     public List<Venda> listaHistoricoVendasComprador(@PathVariable("idComprador") Integer id) throws RegraDeNegocioException {

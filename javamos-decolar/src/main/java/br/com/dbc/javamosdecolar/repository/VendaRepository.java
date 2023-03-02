@@ -4,7 +4,7 @@ import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.model.Passagem;
 import br.com.dbc.javamosdecolar.model.Status;
 import br.com.dbc.javamosdecolar.model.Venda;
-import oracle.net.aso.v;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class VendaRepository implements Repository<Venda, Integer>{
+@Repository
+public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         try {
