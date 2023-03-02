@@ -7,12 +7,15 @@ import br.com.dbc.javamosdecolar.model.dto.CreatePassagemDTO;
 import br.com.dbc.javamosdecolar.model.dto.UpdatePassagemDTO;
 import br.com.dbc.javamosdecolar.service.PassagemService;
 import lombok.AllArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Validated
 @RestController()
 @RequestMapping("/passagem")
 @AllArgsConstructor
@@ -39,13 +42,13 @@ public class PassagemController {
     }
 
     @PostMapping()
-    public Passagem create(@RequestBody CreatePassagemDTO passagemDTO) throws RegraDeNegocioException {
+    public Passagem create(@RequestBody @Valid CreatePassagemDTO passagemDTO) throws RegraDeNegocioException {
         return this.passagemService.cadastrarPassagem(passagemDTO);
     }
 
     @PutMapping("/{idPassagem}")
     public void update(@PathVariable("idPassagem") Integer id,
-                       @RequestBody UpdatePassagemDTO passagemDTO)
+                       @RequestBody @Valid UpdatePassagemDTO passagemDTO)
             throws RegraDeNegocioException {
         this.passagemService.editarPassagem(id, passagemDTO);
     }

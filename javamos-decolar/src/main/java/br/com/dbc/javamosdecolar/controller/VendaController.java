@@ -5,10 +5,13 @@ import br.com.dbc.javamosdecolar.model.Venda;
 import br.com.dbc.javamosdecolar.model.dto.CreateVendaDTO;
 import br.com.dbc.javamosdecolar.service.VendaService;
 import lombok.AllArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/venda")
 @AllArgsConstructor
@@ -35,7 +38,7 @@ public class VendaController {
     }
 
     @PostMapping
-    public Venda criar(@RequestBody CreateVendaDTO vendaDTO) throws RegraDeNegocioException {
+    public Venda criar(@RequestBody @Valid CreateVendaDTO vendaDTO) throws RegraDeNegocioException {
         return vendaService.efetuarVenda(vendaDTO);
     }
 
