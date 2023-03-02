@@ -1,8 +1,13 @@
 package br.com.dbc.javamosdecolar.model;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
+@Data
 public class Passagem {
     private int idPassagem;
     private String codigo;
@@ -11,9 +16,6 @@ public class Passagem {
     private boolean disponivel;
     private BigDecimal valor;
     private Trecho trecho;
-
-    public Passagem() {
-    }
 
     public Passagem(String codigo, LocalDateTime dataPartida, LocalDateTime dataChegada,
                     Trecho trecho, boolean disponivel, BigDecimal valor) {
@@ -39,61 +41,5 @@ public class Passagem {
         this.dataChegada = dataChegada;
         this.disponivel = disponivel;
         this.valor = valor;
-    }
-
-    public int getIdPassagem() {
-        return idPassagem;
-    }
-
-    public void setIdPassagem(int idPassagem) {
-        this.idPassagem = idPassagem;
-    }
-
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
-    public LocalDateTime getDataPartida() {
-        return dataPartida;
-    }
-
-    public void setDataPartida(LocalDateTime dataPartida) {
-        this.dataPartida = dataPartida;
-    }
-
-    public LocalDateTime getDataChegada() {
-        return dataChegada;
-    }
-
-    public void setDataChegada(LocalDateTime dataChegada) {
-        this.dataChegada = dataChegada;
-    }
-
-    public boolean isDisponivel() {
-        return disponivel;
-    }
-
-    public void setDisponivel(boolean disponivel) {
-        this.disponivel = disponivel;
-    }
-
-    public BigDecimal getValor() {
-        return valor;
-    }
-
-    public void setValor(BigDecimal valor) {
-        this.valor = valor;
-    }
-
-    public Trecho getTrecho() {
-        return trecho;
-    }
-
-    public void setTrecho(Trecho trecho) {
-        this.trecho = trecho;
     }
 }

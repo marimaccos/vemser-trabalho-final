@@ -6,8 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface Repository<T, K> {
-
+public interface RepositoryCRUD<T, K> {
     Integer getProximoId(Connection connection) throws SQLException;
     T adicionar(T t) throws DatabaseException;
     List<T> listar() throws DatabaseException;
