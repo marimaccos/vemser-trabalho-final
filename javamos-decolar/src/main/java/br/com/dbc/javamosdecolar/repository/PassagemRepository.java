@@ -54,7 +54,7 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
             preparedStatement.setBigDecimal(6, passagem.getValor());
             preparedStatement.setInt(7, passagem.getTrecho().getIdTrecho());
 
-            int res = preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
             return passagem;
 
         } catch (SQLException e) {
@@ -252,7 +252,6 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {
@@ -506,7 +505,6 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
             return passagens;
 
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {

@@ -58,7 +58,6 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
             return venda;
 
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new DatabaseException(e.getCause());
         } finally {
             try{
@@ -162,7 +161,6 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
 
         } catch (SQLException e) {
             throw new DatabaseException(e.getCause());
-
         } finally {
             try {
                 if (conexao != null) {
@@ -209,7 +207,6 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {
@@ -332,7 +329,6 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
             return vendas;
 
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {
@@ -381,7 +377,6 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {
