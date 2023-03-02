@@ -41,19 +41,20 @@ public class VendaService {
                 throw new RegraDeNegocioException("Companhia inexistente.");
             }
 
-            Venda vendaAtual = new Venda(codigo.toString(), PASSAGEM, comprador.get(),
-                    PASSAGEM.getTrecho().getCompanhia(), LocalDateTime.now(), Status.CONCLUIDO);
+            Venda vendaEfetuada = vendaRepository.adicionar(new Venda(codigo.toString(), PASSAGEM, comprador.get(),
+                    PASSAGEM.getTrecho().getCompanhia(), LocalDateTime.now(), Status.CONCLUIDO));
 
-            Venda vendaCriada = vendaRepository.adicionar(vendaAtual);
-            boolean conseguiuEditar = passagemService.editarDisponibilidadeDaPassagem(false, vendaDTO.getIdPassagem());
-
-            if(conseguiuEditar) {
-                vendaAtual.getPassagem().setDisponivel(false);
+            if(vendaEfetuada.equals(null)) {
+                throw new RegraDeNegocioException("Não foi possível concluir a venda.");
             }
 
-            passagemService.inserirIdVenda(idPassagem, vendaCriada);
+            boolean conseguiuEditar = passagemService.editarPassagemVendida(PASSAGEM);
 
-            return vendaAtual;
+            if(!conseguiuEditar) {
+                throw new RegraDeNegocioException("Não foi possível concluir a venda.");
+            }
+
+            return vendaEfetuada;
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a compra.");
         }

@@ -3,6 +3,7 @@ package br.com.dbc.javamosdecolar.service;
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.Passagem;
+import br.com.dbc.javamosdecolar.model.Venda;
 import br.com.dbc.javamosdecolar.model.dto.CreatePassagemDTO;
 import br.com.dbc.javamosdecolar.model.dto.UpdatePassagemDTO;
 import br.com.dbc.javamosdecolar.repository.PassagemRepository;
@@ -109,6 +110,11 @@ public class PassagemService {
 
     public void deletarPassagem(Integer passagemId) throws DatabaseException {
         passagemRepository.remover(passagemId);
+    }
+
+    public boolean editarPassagemVendida(Passagem passagem) throws DatabaseException {
+        passagem.setDisponivel(false);
+        return passagemRepository.editar(passagem.getIdPassagem(), passagem);
     }
 
     private Passagem mapUpdatePassagemDTOtoPassagem(UpdatePassagemDTO passagemDTO,
