@@ -17,8 +17,13 @@
 		<java.version>17</java.version>
 		<validation.version>3.0.3</validation.version>
 		<lombok.version>1.18.26</lombok.version>
+		<objectMapper.version>2.14.2</objectMapper.version>
+		<spring-devtools.version>3.0.3</spring-devtools.version>
 	</properties>
 	<dependencies>
+
+		<!-- Spring Dependencies -->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -36,12 +41,29 @@
 			<version>${validation.version}</version>
 		</dependency>
 
+		<!--Hot Reload-->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<version>${spring-devtools.version}</version>
+		</dependency>
+
+		<!-- External Dependencies -->
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${objectMapper.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
