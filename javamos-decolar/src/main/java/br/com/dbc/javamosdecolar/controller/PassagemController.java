@@ -50,16 +50,16 @@ public class PassagemController {
     }
 
     @PutMapping("/{idPassagem}")
-    public ResponseEntity<Passagem> update(@PathVariable("idPassagem") Integer id,
+    public ResponseEntity<Void> update(@PathVariable("idPassagem") Integer id,
                        @RequestBody @Valid UpdatePassagemDTO passagemDTO)
             throws RegraDeNegocioException {
         this.passagemService.editarPassagem(id, passagemDTO);
-        return new ResponseEntity<>(NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{idPassagem}")
-    public ResponseEntity<Passagem> delete(@PathVariable("idPassagem") Integer id) throws DatabaseException {
+    public ResponseEntity<Void> delete(@PathVariable("idPassagem") Integer id) throws DatabaseException {
         this.passagemService.deletarPassagem(id);
-        return new ResponseEntity<>(NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }
