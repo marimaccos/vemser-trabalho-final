@@ -1,40 +1,17 @@
 package br.com.dbc.javamosdecolar.model.dto;
 
+import lombok.Data;
+
+import javax.validation.constraints.NotNull;
+
+@Data
 public class CreateVendaDTO {
+    @NotNull(message = "O campo idVenda não pode estar nulo!")
     private Integer idVenda;
+    @NotNull(message = "O campo idComprador não pode estar nulo!")
     private Integer idComprador;
+    @NotNull(message = "O campo idCompanhia não pode estar nulo!")
     private Integer idCompanhia;
+    @NotNull(message = "O campo idPassagem não pode estar nulo!")
     private Integer idPassagem;
-
-    public Integer getIdVenda() {
-        return idVenda;
-    }
-
-    public void setIdVenda(Integer idVenda) {
-        this.idVenda = idVenda;
-    }
-
-    public Integer getIdComprador() {
-        return idComprador;
-    }
-
-    public void setIdComprador(Integer idComprador) {
-        this.idComprador = idComprador;
-    }
-
-    public Integer getIdCompanhia() {
-        return idCompanhia;
-    }
-
-    public void setIdCompanhia(Integer idCompanhia) {
-        this.idCompanhia = idCompanhia;
-    }
-
-    public Integer getIdPassagem() {
-        return idPassagem;
-    }
-
-    public void setIdPassagem(Integer idPassagem) {
-        this.idPassagem = idPassagem;
-    }
 }
