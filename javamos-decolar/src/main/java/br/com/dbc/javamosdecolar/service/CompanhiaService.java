@@ -49,17 +49,19 @@ public class CompanhiaService {
         }
     }
 
-    public void getCompanhiaById(Integer id) throws RegraDeNegocioException {
+    public Companhia getCompanhiaById(Integer id) throws RegraDeNegocioException {
         try {
-            companhiaRepository.buscaCompanhiaPorIdUsuario(id);
+            return companhiaRepository.buscaCompanhiaPorIdUsuario(id)
+                    .orElseThrow(() -> new RegraDeNegocioException("Companhia não encontrada"));
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a recuperação da companhia.");
         }
     }
 
-    public void getCompanhiaBtNome(String nome) throws RegraDeNegocioException {
+    public Companhia getCompanhiaByNome(String nome) throws RegraDeNegocioException {
         try {
-            companhiaRepository.buscaCompanhiaPorNome(nome);
+            return companhiaRepository.buscaCompanhiaPorNome(nome)
+                            .orElseThrow(() -> new RegraDeNegocioException("Companhia não Encontrada"));
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a recuperação da companhia.");
         }
