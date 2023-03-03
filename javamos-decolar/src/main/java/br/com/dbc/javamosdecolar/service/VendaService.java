@@ -3,13 +3,13 @@ package br.com.dbc.javamosdecolar.service;
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.Comprador;
-import br.com.dbc.javamosdecolar.model.Passagem;
 import br.com.dbc.javamosdecolar.model.Status;
 import br.com.dbc.javamosdecolar.model.Venda;
 import br.com.dbc.javamosdecolar.model.dto.CreateVendaDTO;
+import br.com.dbc.javamosdecolar.model.dto.PassagemDTO;
 import br.com.dbc.javamosdecolar.model.dto.VendaDTO;
 import br.com.dbc.javamosdecolar.repository.VendaRepository;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,13 +24,14 @@ public class VendaService {
     private final PassagemService passagemService;
     private final CompradorService compradorService;
     private final CompanhiaService companhiaService;
+    private final ObjectMapper mapper;
 
     public VendaDTO efetuarVenda(CreateVendaDTO vendaDTO) throws RegraDeNegocioException {
 
         try {
             UUID codigo = UUID.randomUUID();
 
-            Passagem passagem = passagemService.getPassagemById(vendaDTO.getIdPassagem());
+            PassagemDTO passagem = passagemService.getPassagemById(vendaDTO.getIdPassagem());
 
             Comprador comprador = compradorService.getCompradorById(vendaDTO.getIdComprador());
 
@@ -47,7 +48,7 @@ public class VendaService {
                 throw new RegraDeNegocioException("Não foi possível concluir a venda.");
             }
 
-            return vendaEfetuada;
+            return mapper.convertValue(vendaEfetuada, VendaDTO.class);
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a compra.");
         }
@@ -73,7 +74,8 @@ public class VendaService {
     public List<VendaDTO> getHistoricoComprasComprador(Integer idComprador) throws RegraDeNegocioException {
         try {
             compradorService.getCompradorById(idComprador);
-            return vendaRepository.getVendasPorComprador(idComprador);
+            return vendaRepository.getVendasPorComprador(idComprador).stream()
+                    .map(venda -> mapper.convertValue(venda, VendaDTO.class)).toList();
 
          } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
@@ -91,7 +93,8 @@ public class VendaService {
     public List<VendaDTO> getHistoricoVendasCompanhia(Integer id) throws RegraDeNegocioException {
         try {
             companhiaService.getCompanhiaById(id);
-            return vendaRepository.getVendasPorCompanhia(id);
+            return vendaRepository.getVendasPorCompanhia(id).stream()
+                    .map(venda -> mapper.convertValue(venda, VendaDTO.class)).toList();
 
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
