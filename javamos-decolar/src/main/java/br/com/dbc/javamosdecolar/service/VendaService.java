@@ -9,6 +9,7 @@ import br.com.dbc.javamosdecolar.model.Venda;
 import br.com.dbc.javamosdecolar.model.dto.CreateVendaDTO;
 import br.com.dbc.javamosdecolar.repository.VendaRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class VendaService {
     private final VendaRepository vendaRepository;
     private final PassagemService passagemService;

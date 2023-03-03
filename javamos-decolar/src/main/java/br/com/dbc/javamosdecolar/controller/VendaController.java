@@ -5,6 +5,7 @@ import br.com.dbc.javamosdecolar.model.Venda;
 import br.com.dbc.javamosdecolar.model.dto.CreateVendaDTO;
 import br.com.dbc.javamosdecolar.service.VendaService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ import static org.springframework.http.HttpStatus.*;
 @Validated
 @RestController
 @RequestMapping("/venda")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class VendaController {
 
     private final VendaService vendaService;

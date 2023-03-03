@@ -7,6 +7,7 @@ import br.com.dbc.javamosdecolar.model.dto.CreatePassagemDTO;
 import br.com.dbc.javamosdecolar.model.dto.UpdatePassagemDTO;
 import br.com.dbc.javamosdecolar.service.PassagemService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,7 +22,7 @@ import static org.springframework.http.HttpStatus.*;
 @Validated
 @RestController()
 @RequestMapping("/passagem")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PassagemController {
     private final PassagemService passagemService;
 

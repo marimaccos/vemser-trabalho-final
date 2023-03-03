@@ -7,7 +7,7 @@ import br.com.dbc.javamosdecolar.model.Passagem;
 import br.com.dbc.javamosdecolar.model.dto.CreatePassagemDTO;
 import br.com.dbc.javamosdecolar.model.dto.UpdatePassagemDTO;
 import br.com.dbc.javamosdecolar.repository.PassagemRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PassagemService {
     private final PassagemRepository passagemRepository;
     private final TrechoService trechoService;
