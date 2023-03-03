@@ -1,6 +1,7 @@
 package br.com.dbc.javamosdecolar.repository;
 
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
+import br.com.dbc.javamosdecolar.model.Comprador;
 import br.com.dbc.javamosdecolar.model.Passagem;
 import br.com.dbc.javamosdecolar.model.Status;
 import br.com.dbc.javamosdecolar.model.Venda;
