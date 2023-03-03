@@ -2,6 +2,7 @@ package br.com.dbc.javamosdecolar.service;
 
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
+import br.com.dbc.javamosdecolar.model.Companhia;
 import br.com.dbc.javamosdecolar.model.Passagem;
 import br.com.dbc.javamosdecolar.model.dto.CreatePassagemDTO;
 import br.com.dbc.javamosdecolar.model.dto.UpdatePassagemDTO;
@@ -169,7 +170,7 @@ public class PassagemService {
 
     private List<Passagem> listarPassagemPorCompanhia(String nomeCompanhia) throws RegraDeNegocioException {
         try {
-            Companhia companhia = companhiaService.buscaCompanhiaPorNome(nomeCompanhia);
+            Companhia companhia = companhiaService.getCompanhiaByNome(nomeCompanhia);
             return passagemRepository
                     .getPassagemPorCompanhia(companhia.getIdCompanhia());
 
