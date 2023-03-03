@@ -5,10 +5,9 @@ import lombok.Data;
 
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.Pattern;
-import java.math.BigDecimal;
 
 @Data
-public class UpdatePassagemDTO {
+public class UpdatePassagemDTO extends CreatePassagemDTO{
     @Pattern(message = "O campo dataChegada deve ser no formato dd/MM/yyyy hh:mm!",
             regexp = CustomRegex.DATE_REGEX_PATTERN)
     @FutureOrPresent(message = "O campo dataPartida deve ser atual ou futuro!")
@@ -17,6 +16,4 @@ public class UpdatePassagemDTO {
             regexp = CustomRegex.DATE_REGEX_PATTERN)
     @FutureOrPresent(message = "O campo dataChegada deve ser atual ou futuro!")
     private String dataChegada;
-    private BigDecimal valor;
-    private Integer idTrecho;
 }

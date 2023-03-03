@@ -7,6 +7,7 @@ import br.com.dbc.javamosdecolar.model.Passagem;
 import br.com.dbc.javamosdecolar.model.Status;
 import br.com.dbc.javamosdecolar.model.Venda;
 import br.com.dbc.javamosdecolar.model.dto.CreateVendaDTO;
+import br.com.dbc.javamosdecolar.model.dto.VendaDTO;
 import br.com.dbc.javamosdecolar.repository.VendaRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class VendaService {
     private final CompradorService compradorService;
     private final CompanhiaService companhiaService;
 
-    public Venda efetuarVenda(CreateVendaDTO vendaDTO) throws RegraDeNegocioException {
+    public VendaDTO efetuarVenda(CreateVendaDTO vendaDTO) throws RegraDeNegocioException {
 
         try {
             UUID codigo = UUID.randomUUID();
@@ -69,7 +70,7 @@ public class VendaService {
         }
     }
 
-    public List<Venda> getHistoricoComprasComprador(Integer idComprador) throws RegraDeNegocioException {
+    public List<VendaDTO> getHistoricoComprasComprador(Integer idComprador) throws RegraDeNegocioException {
         try {
             compradorService.getCompradorById(idComprador);
             return vendaRepository.getVendasPorComprador(idComprador);
@@ -79,7 +80,7 @@ public class VendaService {
         }
     }
 
-    public Venda getVendaPorCodigo(String uuid) throws RegraDeNegocioException {
+    public VendaDTO getVendaPorCodigo(String uuid) throws RegraDeNegocioException {
         try {
             vendaRepository.getVendaPorCodigo(uuid);
         } catch (DatabaseException e) {
@@ -87,7 +88,7 @@ public class VendaService {
         }
     }
 
-    public List<Venda> getHistoricoVendasCompanhia(Integer id) throws RegraDeNegocioException {
+    public List<VendaDTO> getHistoricoVendasCompanhia(Integer id) throws RegraDeNegocioException {
         try {
             companhiaService.getCompanhiaById(id);
             return vendaRepository.getVendasPorCompanhia(id);
