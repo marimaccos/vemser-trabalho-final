@@ -45,7 +45,7 @@ public class VendaController {
         return new ResponseEntity<>(vendaService.efetuarVenda(vendaDTO), CREATED);
     }
 
-    @PutMapping("/{idVenda}/cancelar")
+    @DeleteMapping("/{idVenda}/cancelar")
     public ResponseEntity<Void> cancelar(@PathVariable("idVenda") Integer idVenda) throws RegraDeNegocioException {
         vendaService.cancelarVenda(idVenda);
         return ResponseEntity.noContent().build();
