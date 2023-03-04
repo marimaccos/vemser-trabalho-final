@@ -2,7 +2,6 @@ package br.com.dbc.javamosdecolar.service;
 
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
-import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.Companhia;
 import br.com.dbc.javamosdecolar.model.Comprador;
 import br.com.dbc.javamosdecolar.model.Usuario;
@@ -61,7 +60,7 @@ public class UsuarioService {
             Comprador comprador = new Comprador(usuarioCriado.getIdUsuario(), usuarioCriado.getLogin(),
                     usuarioCriado.getNome(), usuarioCriado.getSenha(), usuarioCriado.getTipoUsuario(),
                     cpf);
-            Comprador compradorAdicionado = compradorRepository.adicionar(comprador);
+            Comprador compradorAdicionado = compradorRepository.criarComprador(comprador);
             System.out.println("Comprador adicinado com sucesso! " + compradorAdicionado);
 
         } catch (DatabaseException e) {
