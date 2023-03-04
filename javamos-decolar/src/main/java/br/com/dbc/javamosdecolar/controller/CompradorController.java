@@ -1,6 +1,9 @@
 package br.com.dbc.javamosdecolar.controller;
 
+import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.Comprador;
+import br.com.dbc.javamosdecolar.model.dto.CompradorDTO;
+import br.com.dbc.javamosdecolar.model.dto.CompradorCreateDTO;
 import br.com.dbc.javamosdecolar.service.CompradorService;
 import br.com.dbc.javamosdecolar.service.PassagemService;
 import br.com.dbc.javamosdecolar.service.VendaService;
@@ -9,10 +12,13 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/comprador")
 @AllArgsConstructor
@@ -24,20 +30,21 @@ public class CompradorController {
 
     // GET ALL
     @GetMapping
-    public ResponseEntity<List<Comprador>> list() {
-        return new ResponseEntity<>(compradorService.list(), HttpStatus.OK);
+    public ResponseEntity<List<CompradorDTO>> listaCompradores() throws RegraDeNegocioException {
+        return new ResponseEntity<>(compradorService.listaCompradores(), HttpStatus.OK);
     }
 
     // GET ONE
     @GetMapping("/${idComprador}")
-    public ResponseEntity<Comprador> getCompradorByID(@PathVariable("idComprador") Integer idComprador) {
-        return new ResponseEntity<>(compradorService.getCompradorByID(idComprador), HttpStatus.OK);
+    public ResponseEntity<CompradorDTO> getCompradorByID(@PathVariable("idComprador") Integer idComprador)
+            throws RegraDeNegocioException {
+        return new ResponseEntity<>(compradorService.getCompradorPorID(idComprador), HttpStatus.OK);
     }
 
     // POST CREATE
     @PostMapping
-    public ResponseEntity<Comprador> create(@RequestBody Comprador comprador) {
-        return new ResponseEntity<>(compradorService.create(), HttpStatus.OK);
+    public ResponseEntity<CompradorDTO> cadastrar(@Valid @RequestBody CompradorCreateDTO comprador) {
+        return new ResponseEntity<>(compradorService.cadastrar(comprador), HttpStatus.OK);
     }
 
     // PUT UPDATE
