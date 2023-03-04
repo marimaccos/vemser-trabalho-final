@@ -6,9 +6,7 @@ import br.com.dbc.javamosdecolar.model.Comprador;
 import br.com.dbc.javamosdecolar.model.Passagem;
 import br.com.dbc.javamosdecolar.model.Status;
 import br.com.dbc.javamosdecolar.model.Venda;
-import br.com.dbc.javamosdecolar.model.dto.CompradorDTO;
 import br.com.dbc.javamosdecolar.model.dto.CreateVendaDTO;
-import br.com.dbc.javamosdecolar.model.dto.PassagemDTO;
 import br.com.dbc.javamosdecolar.model.dto.VendaDTO;
 import br.com.dbc.javamosdecolar.repository.VendaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,8 +34,11 @@ public class VendaService {
             Passagem passagem = mapper
                     .convertValue(passagemService.getPassagemById(vendaDTO.getIdPassagem()), Passagem.class);
 
-            Comprador comprador = mapper
-                    .convertValue(compradorService.getCompradorPorID(vendaDTO.getIdComprador()), Comprador.class);
+            if(!passagem.isDisponivel()) {
+                throw new RegraDeNegocioException("Passagem indisponível.");
+            }
+
+            Comprador comprador = compradorService.getCompradorPorID(vendaDTO.getIdComprador());
 
             Venda vendaEfetuada = vendaRepository.adicionar(new Venda(codigo.toString(), passagem, comprador,
                     passagem.getTrecho().getCompanhia(), LocalDateTime.now(), Status.CONCLUIDO));
@@ -52,8 +53,14 @@ public class VendaService {
                 throw new RegraDeNegocioException("Não foi possível concluir a venda.");
             }
 
-            return mapper.convertValue(vendaEfetuada, VendaDTO.class);
+            VendaDTO vendaEfetuadaDTO = mapper.convertValue(vendaEfetuada, VendaDTO.class);
+            vendaEfetuadaDTO.setIdCompanhia(vendaEfetuada.getCompanhia().getIdCompanhia());
+            vendaEfetuadaDTO.setIdPassagem(vendaEfetuada.getPassagem().getIdPassagem());
+            vendaEfetuadaDTO.setIdComprador(vendaEfetuada.getComprador().getIdComprador());
+
+            return vendaEfetuadaDTO;
         } catch (DatabaseException e) {
+            e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a compra.");
         }
     }
@@ -79,16 +86,32 @@ public class VendaService {
         try {
             compradorService.getCompradorPorID(idComprador);
             return vendaRepository.getVendasPorComprador(idComprador).stream()
-                    .map(venda -> mapper.convertValue(venda, VendaDTO.class)).toList();
+                    .map(venda -> {
+                        VendaDTO vendaDTO = mapper.convertValue(venda, VendaDTO.class);
+                        vendaDTO.setIdComprador(venda.getComprador().getIdComprador());
+                        vendaDTO.setIdPassagem(venda.getPassagem().getIdPassagem());
+                        vendaDTO.setIdCompanhia(venda.getPassagem().getTrecho().getCompanhia().getIdCompanhia());
 
-         } catch (DatabaseException e) {
+                        return vendaDTO;
+                    }).toList();
+
+        } catch (DatabaseException e) {
+            e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
     }
 
     public VendaDTO getVendaPorCodigo(String uuid) throws RegraDeNegocioException {
         try {
-            vendaRepository.getVendaPorCodigo(uuid);
+            Venda venda = vendaRepository.getVendaPorCodigo(uuid)
+                    .orElseThrow(() -> new RegraDeNegocioException("Venda não pode ser localizada."));
+
+            VendaDTO vendaDTO = mapper.convertValue(venda, VendaDTO.class);
+            vendaDTO.setIdComprador(venda.getComprador().getIdComprador());
+            vendaDTO.setIdPassagem(venda.getPassagem().getIdPassagem());
+            vendaDTO.setIdCompanhia(venda.getPassagem().getTrecho().getCompanhia().getIdCompanhia());
+
+            return vendaDTO;
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a recuperação da venda.");
         }
@@ -98,7 +121,14 @@ public class VendaService {
         try {
             companhiaService.getCompanhiaById(id);
             return vendaRepository.getVendasPorCompanhia(id).stream()
-                    .map(venda -> mapper.convertValue(venda, VendaDTO.class)).toList();
+                    .map(venda -> {
+                        VendaDTO vendaDTO = mapper.convertValue(venda, VendaDTO.class);
+                        vendaDTO.setIdComprador(venda.getComprador().getIdComprador());
+                        vendaDTO.setIdPassagem(venda.getPassagem().getIdPassagem());
+                        vendaDTO.setIdCompanhia(venda.getPassagem().getTrecho().getCompanhia().getIdCompanhia());
+
+                        return vendaDTO;
+                    }).toList();
 
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");

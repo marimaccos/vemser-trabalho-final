@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class PassagemDTO extends CreatePassagemDTO {
     private int idPassagem;
     private String codigo;
+    private boolean disponivel;
 }

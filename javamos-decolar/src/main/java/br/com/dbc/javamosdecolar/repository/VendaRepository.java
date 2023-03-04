@@ -1,10 +1,7 @@
 package br.com.dbc.javamosdecolar.repository;
 
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
-import br.com.dbc.javamosdecolar.model.Comprador;
-import br.com.dbc.javamosdecolar.model.Passagem;
-import br.com.dbc.javamosdecolar.model.Status;
-import br.com.dbc.javamosdecolar.model.Venda;
+import br.com.dbc.javamosdecolar.model.*;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -402,6 +399,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
         venda.setIdVenda(resultSet.getInt("id_venda"));
         venda.setCodigo(resultSet.getString("codigo_venda"));
         venda.setData((resultSet.getTimestamp("data_venda").toLocalDateTime()));
+
 
         if (resultSet.getString("status").equals(Status.CANCELADO.name())) {
             venda.setStatus(Status.CANCELADO);
