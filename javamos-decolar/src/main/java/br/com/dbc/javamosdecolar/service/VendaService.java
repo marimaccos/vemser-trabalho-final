@@ -3,8 +3,10 @@ package br.com.dbc.javamosdecolar.service;
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.Comprador;
+import br.com.dbc.javamosdecolar.model.Passagem;
 import br.com.dbc.javamosdecolar.model.Status;
 import br.com.dbc.javamosdecolar.model.Venda;
+import br.com.dbc.javamosdecolar.model.dto.CompradorDTO;
 import br.com.dbc.javamosdecolar.model.dto.CreateVendaDTO;
 import br.com.dbc.javamosdecolar.model.dto.PassagemDTO;
 import br.com.dbc.javamosdecolar.model.dto.VendaDTO;
@@ -31,9 +33,11 @@ public class VendaService {
         try {
             UUID codigo = UUID.randomUUID();
 
-            PassagemDTO passagem = passagemService.getPassagemById(vendaDTO.getIdPassagem());
+            Passagem passagem = mapper
+                    .convertValue(passagemService.getPassagemById(vendaDTO.getIdPassagem()), Passagem.class);
 
-            Comprador comprador = compradorService.getCompradorById(vendaDTO.getIdComprador());
+            Comprador comprador = mapper
+                    .convertValue(compradorService.getCompradorPorID(vendaDTO.getIdComprador()), Comprador.class);
 
             Venda vendaEfetuada = vendaRepository.adicionar(new Venda(codigo.toString(), passagem, comprador,
                     passagem.getTrecho().getCompanhia(), LocalDateTime.now(), Status.CONCLUIDO));
@@ -73,7 +77,7 @@ public class VendaService {
 
     public List<VendaDTO> getHistoricoComprasComprador(Integer idComprador) throws RegraDeNegocioException {
         try {
-            compradorService.getCompradorById(idComprador);
+            compradorService.getCompradorPorID(idComprador);
             return vendaRepository.getVendasPorComprador(idComprador).stream()
                     .map(venda -> mapper.convertValue(venda, VendaDTO.class)).toList();
 
