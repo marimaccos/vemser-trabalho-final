@@ -1,11 +1,13 @@
 package br.com.dbc.javamosdecolar.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
+@NoArgsConstructor
 public final class Companhia extends Usuario {
 
     private Integer idCompanhia;
@@ -16,10 +18,6 @@ public final class Companhia extends Usuario {
     @NotBlank
     @Size(min=3, max=40)
     private String nomeFantasia;
-
-    public Companhia() {
-
-    }
     public Companhia(Integer idUsuario, String login, String senha, String nome,
                      TipoUsuario tipoUsuario, String cnpj, Integer idComprador, String nomeFantasia) {
         super(idUsuario, login, senha, nome, tipoUsuario);

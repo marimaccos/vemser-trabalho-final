@@ -7,24 +7,19 @@ import br.com.dbc.javamosdecolar.repository.CompanhiaRepository;
 import br.com.dbc.javamosdecolar.repository.PassagemRepository;
 import br.com.dbc.javamosdecolar.repository.TrechoRepository;
 import br.com.dbc.javamosdecolar.repository.VendaRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 @Service
+@RequiredArgsConstructor
 public class CompanhiaService {
 
     private CompanhiaRepository companhiaRepository;
     private VendaRepository vendaRepository;
     private PassagemRepository passagemRepository;
     private TrechoRepository trechoRepository;
-
-    public CompanhiaService(CompanhiaRepository companhiaRepository, VendaRepository vendaRepository, PassagemRepository passagemRepository, TrechoRepository trechoRepository) {
-        this.companhiaRepository = companhiaRepository;
-        this.vendaRepository = vendaRepository;
-        this.passagemRepository = passagemRepository;
-        this.trechoRepository = trechoRepository;
-    }
 
     public void imprimirTrechosDaCompanhia(Usuario usuario) throws RegraDeNegocioException {
         try {
