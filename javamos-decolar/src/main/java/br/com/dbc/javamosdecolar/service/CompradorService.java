@@ -20,23 +20,45 @@ public class CompradorService {
 
     private final CompradorRepository compradorRepository;
     private final UsuarioService usuarioService;
-    private final PassagemService passagemService;
-    private final VendaService vendaService;
     private final ObjectMapper objectMapper;
 
-    public CompradorDTO cadastrar(CompradorCreateDTO comprador) throws RegraDeNegocioException {
+    public Comprador getCompradorPorID(Integer idComprador) throws RegraDeNegocioException{
+        try {
+            Comprador compradorEncontrado = compradorRepository.getCompradorPorID(idComprador)
+                    .orElseThrow(() -> new RegraDeNegocioException("Comprador não encontrado!"));
+
+            return compradorEncontrado;
+
+        } catch (DatabaseException e) {
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
+        }
+    }
+
+    public CompradorDTO criarComprador(CompradorCreateDTO comprador) throws RegraDeNegocioException {
         try {
             Usuario usuarioNovo = new Usuario(comprador.getLogin(), comprador.getSenha(), comprador.getNome(), TipoUsuario.COMPRADOR);
             Usuario usuarioCriado = usuarioService.criarUsuario(usuarioNovo);
 
             Comprador compradorNovo = objectMapper.convertValue(comprador, Comprador.class);
             compradorNovo.setIdUsuario(usuarioCriado.getIdUsuario());
-            Comprador compradorCriado = compradorRepository.adicionar(compradorNovo);
+            compradorNovo = compradorRepository.criarComprador(compradorNovo);
 
-            return objectMapper.convertValue(compradorCriado, CompradorDTO.class);
+            return objectMapper.convertValue(compradorNovo, CompradorDTO.class);
 
         } catch (DatabaseException e) {
-            throw new RegraDeNegocioException("Aconteceu algum problema durante o cadastro.");
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a criação.");
+        }
+    }
+
+    public CompradorDTO update(Integer idComprador, CompradorCreateDTO comprador) throws RegraDeNegocioException{
+        try {
+            Comprador compradorEncontrado = getCompradorPorID(idComprador);
+            
+
+
+
+        } catch (DatabaseException e) {
+            throw new RegraDeNegocioException("Aconteceu algum problema durante o update.");
         }
     }
 
@@ -47,18 +69,6 @@ public class CompradorService {
                     .toList();
 
             return listaCompradores;
-
-        } catch (DatabaseException e) {
-            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
-        }
-    }
-
-    public CompradorDTO getCompradorPorID(Integer idComprador) throws RegraDeNegocioException{
-        try {
-            Comprador compradorEncontrado = compradorRepository.getCompradorPorID(idComprador)
-                    .orElseThrow(() -> new RegraDeNegocioException("Comprador não encontrado!"));
-
-            return objectMapper.convertValue(compradorEncontrado, CompradorDTO.class);
 
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");

@@ -1,7 +1,6 @@
 package br.com.dbc.javamosdecolar.controller;
 
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
-import br.com.dbc.javamosdecolar.model.Comprador;
 import br.com.dbc.javamosdecolar.model.dto.CompradorDTO;
 import br.com.dbc.javamosdecolar.model.dto.CompradorCreateDTO;
 import br.com.dbc.javamosdecolar.service.CompradorService;
@@ -30,7 +29,7 @@ public class CompradorController {
 
     // GET ALL
     @GetMapping
-    public ResponseEntity<List<CompradorDTO>> listaCompradores() throws RegraDeNegocioException {
+    public ResponseEntity<List<CompradorDTO>> list() throws RegraDeNegocioException {
         return new ResponseEntity<>(compradorService.listaCompradores(), HttpStatus.OK);
     }
 
@@ -43,13 +42,14 @@ public class CompradorController {
 
     // POST CREATE
     @PostMapping
-    public ResponseEntity<CompradorDTO> cadastrar(@Valid @RequestBody CompradorCreateDTO comprador) {
-        return new ResponseEntity<>(compradorService.cadastrar(comprador), HttpStatus.OK);
+    public ResponseEntity<CompradorDTO> create(@Valid @RequestBody CompradorCreateDTO comprador) {
+        return new ResponseEntity<>(compradorService.criarComprador(comprador), HttpStatus.OK);
     }
 
     // PUT UPDATE
     @PutMapping("/idComprador")
-    public ResponseEntity<Comprador> update(Integer idComprador, @RequestBody Comprador comprador) {
+    public ResponseEntity<CompradorDTO> update(Integer idComprador,
+                                               @Valid @RequestBody CompradorCreateDTO comprador) {
         return new ResponseEntity<>(compradorService.update(idComprador, comprador), HttpStatus.OK);
     }
 

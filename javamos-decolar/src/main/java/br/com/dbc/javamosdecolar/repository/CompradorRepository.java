@@ -28,7 +28,52 @@ public class CompradorRepository {
         }
     }
 
-    public Comprador adicionar(Comprador comprador) throws DatabaseException {
+    private Comprador getCompradorPorResultSet(ResultSet resultSet) throws SQLException {
+        Comprador comprador = new Comprador();
+
+        comprador.setIdComprador(resultSet.getInt("idComprador"));
+        comprador.setCpf(resultSet.getString("cpf"));
+
+        return comprador;
+    }
+
+    public Optional<Comprador> getCompradorPorID(Integer idComprador) throws DatabaseException {
+        Connection connection = null;
+
+        try {
+            connection = ConexaoBancoDeDados.getConnection();
+
+            String sql = "SELECT *\n" +
+                    "FROM COMPRADOR\n" +
+                    "WHERE idComprador = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, idComprador);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                Comprador compradorEncontrado = getCompradorPorResultSet(resultSet);
+                return Optional.of(compradorEncontrado);
+            } else {
+                return Optional.empty();
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getCause());
+
+        } finally {
+            try{
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public Comprador criarComprador(Comprador comprador) throws DatabaseException {
         Connection connection = null;
         try {
             connection = ConexaoBancoDeDados.getConnection();
@@ -97,42 +142,6 @@ public class CompradorRepository {
         }
     }
 
-    public Optional<Comprador> getCompradorPorID(Integer idComprador) throws DatabaseException {
-        Connection connection = null;
-
-        try {
-            connection = ConexaoBancoDeDados.getConnection();
-
-            String sql = "SELECT *\n" +
-                    "FROM COMPRADOR\n" +
-                    "WHERE idComprador = ?";
-
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, idComprador);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                Comprador compradorEncontrado = getCompradorPorResultSet(resultSet);
-                return Optional.of(compradorEncontrado);
-            } else {
-                return Optional.empty();
-            }
-
-        } catch (SQLException e) {
-            throw new DatabaseException(e.getCause());
-
-        } finally {
-            try{
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     /*public Optional<Comprador> acharCompradorPorIdUsuario(Integer idUsuario) throws DatabaseException {
         Comprador compradorPesquisa = new Comprador();
         Connection connection = null;
@@ -171,13 +180,4 @@ public class CompradorRepository {
             }
         }
     }*/
-
-    private Comprador getCompradorPorResultSet(ResultSet resultSet) throws SQLException {
-        Comprador comprador = new Comprador();
-
-        comprador.setIdComprador(resultSet.getInt("idComprador"));
-        comprador.setCpf(resultSet.getString("cpf"));
-
-        return comprador;
-    }
 }
