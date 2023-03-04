@@ -3,8 +3,8 @@ package br.com.dbc.javamosdecolar.service;
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.Comprador;
-import br.com.dbc.javamosdecolar.model.Passagem;
-import br.com.dbc.javamosdecolar.model.Venda;
+import br.com.dbc.javamosdecolar.model.TipoUsuario;
+import br.com.dbc.javamosdecolar.model.Usuario;
 import br.com.dbc.javamosdecolar.model.dto.CompradorCreateDTO;
 import br.com.dbc.javamosdecolar.model.dto.CompradorDTO;
 import br.com.dbc.javamosdecolar.repository.CompradorRepository;
@@ -13,23 +13,27 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class CompradorService {
 
     private final CompradorRepository compradorRepository;
+    private final UsuarioService usuarioService;
     private final PassagemService passagemService;
     private final VendaService vendaService;
     private final ObjectMapper objectMapper;
 
-    public CompradorDTO cadastrar(CompradorCreateDTO comprador) {
+    public CompradorDTO cadastrar(CompradorCreateDTO comprador) throws RegraDeNegocioException {
         try {
-            Comprador compradorEntity = objectMapper.convertValue(comprador, Comprador.class);
+            Usuario usuarioNovo = new Usuario(comprador.getLogin(), comprador.getSenha(), comprador.getNome(), TipoUsuario.COMPRADOR);
+            Usuario usuarioCriado = usuarioService.criarUsuario(usuarioNovo);
 
+            Comprador compradorNovo = objectMapper.convertValue(comprador, Comprador.class);
+            compradorNovo.setIdUsuario(usuarioCriado.getIdUsuario());
+            Comprador compradorCriado = compradorRepository.adicionar(compradorNovo);
 
-            return objectMapper.convertValue(/*comprador*/, CompradorDTO.class);
+            return objectMapper.convertValue(compradorCriado, CompradorDTO.class);
 
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante o cadastro.");
@@ -58,35 +62,6 @@ public class CompradorService {
 
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
-        }
-    }
-
-    // Ainda permanece?
-    public void comprarPassagem(String codigoPassagem, Usuario usuario) throws RegraDeNegocioException {
-        try {
-            Optional<Comprador> comprador = compradorRepository
-                    .acharCompradorPorIdUsuario(usuario.getIdUsuario());
-
-            if(comprador.isEmpty()) {
-                throw new RegraDeNegocioException("Comprador não existe!");
-            }
-
-            Optional<Passagem> passagem = passagemService.getPassagemPorCodigo(codigoPassagem);
-
-            if(passagem.isEmpty()) {
-                throw new RegraDeNegocioException("Passagem não existe!");
-            }
-
-            if(!passagem.get().isDisponivel()) {
-                throw new RegraDeNegocioException("Passagem indisponível!");
-            }
-
-            Venda venda = vendaService.efetuarVenda(passagem.get(), comprador.get());
-
-            System.out.println("Venda criada com sucesso! " + venda);
-
-        } catch (DatabaseException e) {
-            throw new RegraDeNegocioException("Aconteceu algum problema durante a compra.");
         }
     }
 }

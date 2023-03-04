@@ -133,7 +133,7 @@ public class CompradorRepository {
         }
     }
 
-    public Optional<Comprador> acharCompradorPorIdUsuario(Integer idUsuario) throws DatabaseException {
+    /*public Optional<Comprador> acharCompradorPorIdUsuario(Integer idUsuario) throws DatabaseException {
         Comprador compradorPesquisa = new Comprador();
         Connection connection = null;
         try{
@@ -170,7 +170,7 @@ public class CompradorRepository {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
     private Comprador getCompradorPorResultSet(ResultSet resultSet) throws SQLException {
         Comprador comprador = new Comprador();

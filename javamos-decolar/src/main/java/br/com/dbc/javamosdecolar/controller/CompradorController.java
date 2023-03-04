@@ -43,9 +43,8 @@ public class CompradorController {
 
     // POST CREATE
     @PostMapping
-    public ResponseEntity<CompradorDTO> cadastrar(@Valid @RequestBody CompradorCreateDTO comprador,
-                                                  @Valid @RequestBody UsuarioCreateDTO usuario) {
-        return new ResponseEntity<>(compradorService.cadastrar(comprador, usuario), HttpStatus.OK);
+    public ResponseEntity<CompradorDTO> cadastrar(@Valid @RequestBody CompradorCreateDTO comprador) {
+        return new ResponseEntity<>(compradorService.cadastrar(comprador), HttpStatus.OK);
     }
 
     // PUT UPDATE
