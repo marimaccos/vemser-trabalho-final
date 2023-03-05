@@ -31,6 +31,16 @@ public class UsuarioService {
         }
     }
 
+    public Usuario buscarUsuarioById(Integer idUsuario) throws RegraDeNegocioException {
+        try {
+            Usuario usuarioBusca = usuarioRepository.buscarUsuarioById(idUsuario)
+                    .orElseThrow(() -> new RegraDeNegocioException("Usuário não encontrado!"));
+            return usuarioBusca;
+        } catch (DatabaseException e) {
+            throw new RegraDeNegocioException("Ocorreu um problema durante a consulta.");
+        }
+    }
+
     public Usuario editarUsuario(Usuario usuario) throws RegraDeNegocioException {
         try {
             Usuario usuarioBusca = usuarioRepository.buscarUsuarioById(usuario.getIdUsuario())
@@ -38,8 +48,6 @@ public class UsuarioService {
             
             usuarioRepository.editarUsuario(usuario.getIdUsuario(), usuario);
             return usuario;
-//          throw new RegraDeNegocioException("Usuário não encontrado!");
-
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Ocorreu um problema durante a edição do cadastro.");
         }
