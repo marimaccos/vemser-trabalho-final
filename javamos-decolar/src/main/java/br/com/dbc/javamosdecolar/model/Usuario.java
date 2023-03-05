@@ -3,11 +3,13 @@ package br.com.dbc.javamosdecolar.model;
 import br.com.dbc.javamosdecolar.model.TipoUsuario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class Usuario {
 
@@ -34,7 +36,5 @@ public class Usuario {
         this.nome = nome;
         this.tipoUsuario = tipoUsuario;
     }
-
-    public Usuario() {}
 
 }
