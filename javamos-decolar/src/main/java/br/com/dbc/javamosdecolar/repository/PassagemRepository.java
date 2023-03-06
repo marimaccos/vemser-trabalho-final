@@ -1,6 +1,7 @@
 package br.com.dbc.javamosdecolar.repository;
 
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
+import br.com.dbc.javamosdecolar.model.Companhia;
 import br.com.dbc.javamosdecolar.model.Passagem;
 import org.springframework.stereotype.Repository;
 
@@ -252,6 +253,7 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
             }
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {

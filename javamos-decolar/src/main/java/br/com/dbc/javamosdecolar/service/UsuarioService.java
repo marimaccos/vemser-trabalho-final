@@ -1,8 +1,8 @@
 package br.com.dbc.javamosdecolar.service;
 
-import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
-import br.com.dbc.javamosdecolar.model.Comprador;
+
+import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.Usuario;
 import br.com.dbc.javamosdecolar.repository.CompanhiaRepository;
 import br.com.dbc.javamosdecolar.repository.CompradorRepository;
