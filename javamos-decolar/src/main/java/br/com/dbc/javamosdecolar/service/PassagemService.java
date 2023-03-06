@@ -4,6 +4,7 @@ import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.Companhia;
 import br.com.dbc.javamosdecolar.model.Passagem;
+import br.com.dbc.javamosdecolar.model.Trecho;
 import br.com.dbc.javamosdecolar.model.dto.CreatePassagemDTO;
 import br.com.dbc.javamosdecolar.model.dto.PassagemDTO;
 import br.com.dbc.javamosdecolar.repository.PassagemRepository;

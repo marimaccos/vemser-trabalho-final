@@ -24,6 +24,7 @@ public class VendaService {
     private final PassagemService passagemService;
     private final CompradorService compradorService;
     private final CompanhiaService companhiaService;
+    private final EmailService emailService;
     private final ObjectMapper mapper;
 
     public VendaDTO efetuarVenda(CreateVendaDTO vendaDTO) throws RegraDeNegocioException {
@@ -38,7 +39,8 @@ public class VendaService {
                 throw new RegraDeNegocioException("Passagem indisponível.");
             }
 
-            Comprador comprador = compradorService.getCompradorPorID(vendaDTO.getIdComprador());
+            Comprador comprador = mapper.convertValue(compradorService.getCompradorPorID(vendaDTO.getIdComprador()),
+                    Comprador.class);
 
             Venda vendaEfetuada = vendaRepository.adicionar(new Venda(codigo.toString(), passagem, comprador,
                     passagem.getTrecho().getCompanhia(), LocalDateTime.now(), Status.CONCLUIDO));
@@ -58,6 +60,8 @@ public class VendaService {
             vendaEfetuadaDTO.setIdPassagem(vendaEfetuada.getPassagem().getIdPassagem());
             vendaEfetuadaDTO.setIdComprador(vendaEfetuada.getComprador().getIdComprador());
 
+            emailService.sendEmail(emailService.getVendaTemplate(vendaEfetuada, 1));
+
             return vendaEfetuadaDTO;
         } catch (DatabaseException e) {
             e.printStackTrace();
@@ -74,6 +78,8 @@ public class VendaService {
             if(venda.getStatus().getTipo() == 2) {
                 throw new RegraDeNegocioException("Venda já cancelada!");
             }
+
+            emailService.sendEmail(emailService.getVendaTemplate(venda, 2));
 
             return vendaRepository.cancelarVenda(idVenda);
 
