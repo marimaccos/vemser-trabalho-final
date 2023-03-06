@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public class CompradorRepository {
 
-    public Integer getProximoId(Connection connection) throws SQLException {
+    public Integer getProximoId(Connection connection) throws DatabaseException {
         try {
             String sql = "SELECT seq_comprador.nextval mysequence from DUAL";
             Statement statement = connection.createStatement();
@@ -141,6 +141,39 @@ public class CompradorRepository {
             }
         }
     }
+
+    /*public Comprador editarComprador(Integer idComprador, Comprador comprador) throws DatabaseException {
+        Connection connection = null;
+
+        try {
+            connection = ConexaoBancoDeDados.getConnection();
+
+            String sql = "UPDATE COMPRADOR\n" +
+                    "SET cpf = ?\n" +
+                    "WHERE idComprador = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, comprador.getCpf());
+            preparedStatement.setInt(2, idComprador);
+
+            preparedStatement.executeUpdate();
+
+            return comprador;
+
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getCause());
+
+        } finally {
+            try{
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }*/
 
     /*public Optional<Comprador> acharCompradorPorIdUsuario(Integer idUsuario) throws DatabaseException {
         Comprador compradorPesquisa = new Comprador();
