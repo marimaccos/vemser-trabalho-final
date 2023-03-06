@@ -42,21 +42,23 @@ public class CompradorController {
 
     // POST CREATE
     @PostMapping
-    public ResponseEntity<CompradorDTO> create(@Valid @RequestBody CompradorCreateDTO comprador) {
+    public ResponseEntity<CompradorDTO> create(@Valid @RequestBody CompradorCreateDTO comprador)
+                                                throws RegraDeNegocioException{
         return new ResponseEntity<>(compradorService.criarComprador(comprador), HttpStatus.OK);
     }
 
     // PUT UPDATE
     @PutMapping("/idComprador")
     public ResponseEntity<CompradorDTO> update(Integer idComprador,
-                                               @Valid @RequestBody CompradorCreateDTO comprador) {
-        return new ResponseEntity<>(compradorService.update(idComprador, comprador), HttpStatus.OK);
+                                               @Valid @RequestBody CompradorCreateDTO comprador)
+                                                throws RegraDeNegocioException {
+        return new ResponseEntity<>(compradorService.editarComprador(idComprador, comprador), HttpStatus.OK);
     }
 
     // DELETE
     @DeleteMapping("/{idComprador}")
     public ResponseEntity<Void> delete(@PathVariable("idComprador") Integer idComprador)  {
-        compradorService.delete(idComprador);
+        compradorService.deletarComprador(idComprador);
         return ResponseEntity.ok().build();
     }
 
