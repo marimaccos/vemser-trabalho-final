@@ -31,8 +31,9 @@ public class CompradorRepository {
     private Comprador getCompradorPorResultSet(ResultSet resultSet) throws SQLException {
         Comprador comprador = new Comprador();
 
-        comprador.setIdComprador(resultSet.getInt("idComprador"));
+        comprador.setIdComprador(resultSet.getInt("id_comprador"));
         comprador.setCpf(resultSet.getString("cpf"));
+        comprador.setIdUsuario(resultSet.getInt("id_usuario"));
 
         return comprador;
     }
@@ -43,9 +44,7 @@ public class CompradorRepository {
         try {
             connection = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT *\n" +
-                    "FROM COMPRADOR\n" +
-                    "WHERE idComprador = ?";
+            String sql = "SELECT c.id_usuario, c.id_comprador, c.cpf FROM COMPRADOR c WHERE c.ID_COMPRADOR = ?";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, idComprador);
@@ -60,6 +59,7 @@ public class CompradorRepository {
             }
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {

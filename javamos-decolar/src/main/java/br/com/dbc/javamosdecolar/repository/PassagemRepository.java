@@ -1,7 +1,9 @@
 package br.com.dbc.javamosdecolar.repository;
 
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
+import br.com.dbc.javamosdecolar.model.Companhia;
 import br.com.dbc.javamosdecolar.model.Passagem;
+import br.com.dbc.javamosdecolar.model.Trecho;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -183,46 +185,6 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
         }
     }
 
-    public boolean editarDisponibilidadeDaPassagem(boolean disponivel, Passagem passagem) throws DatabaseException {
-
-        Connection connection = null;
-
-        Integer boolOracle = 0;
-
-        if(disponivel) {
-            boolOracle = 1;
-        }
-
-        try {
-            connection = ConexaoBancoDeDados.getConnection();
-
-            String sql = "UPDATE PASSAGEM SET " +
-                    " disponivel = ? " +
-                    " WHERE ID_PASSAGEM = ?";
-
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-            preparedStatement.setInt(1, boolOracle);
-            preparedStatement.setInt(2, passagem.getIdPassagem());
-
-            // Executa-se a consulta
-            int res = preparedStatement.executeUpdate();
-
-            return res > 0;
-        } catch (SQLException e) {
-            throw new DatabaseException(e.getCause());
-
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public Optional<Passagem> getPassagemPeloId(Integer id) throws DatabaseException {
         Connection connection = null;
 
@@ -252,6 +214,7 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
             }
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {

@@ -4,11 +4,13 @@ import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.TipoUsuario;
 import br.com.dbc.javamosdecolar.model.Usuario;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.Optional;
 @Repository
+@Slf4j
 public class UsuarioRepository{
     public Integer getProximoId(Connection connection) throws SQLException {
         try {
@@ -24,7 +26,7 @@ public class UsuarioRepository{
             throw new DatabaseException(e.getCause());
         }
     }
-    public Usuario createComprador(Usuario usuario, String cpf) throws RegraDeNegocioException { return null;}
+
     public Usuario adicionar(Usuario usuario) throws DatabaseException {
         Connection conexao = null;
         try {
@@ -34,8 +36,8 @@ public class UsuarioRepository{
             usuario.setIdUsuario(proximoId);
 
             String sql = "INSERT INTO USUARIO \n" +
-                    "(ID_USUARIO, LOGIN, SENHA, NOME, TIPO)\n" +
-                    "VALUES(?, LOWER(?), ?, LOWER(?), ?)";
+                    "(ID_USUARIO, LOGIN, SENHA, NOME, TIPO, ATIVO)\n" +
+                    "VALUES(?, LOWER(?), ?, LOWER(?), ?, ?)";
 
             PreparedStatement preparedStatement = conexao.prepareStatement(sql);
 
@@ -44,6 +46,7 @@ public class UsuarioRepository{
             preparedStatement.setString(3, usuario.getSenha());
             preparedStatement.setString(4, usuario.getNome());
             preparedStatement.setInt(5, usuario.getTipoUsuario().getTipo());
+            preparedStatement.setInt(6, 1);
 
             preparedStatement.executeUpdate();
             return usuario;
@@ -119,6 +122,14 @@ public class UsuarioRepository{
                 } else if (tipo.equals("2")) {
                     usuarioPesquisa.setTipoUsuario(TipoUsuario.COMPRADOR);
                 }
+
+                int ativo = resultSet.getInt("ativo");
+                if (ativo == 1) {
+                    usuarioPesquisa.setAtivo(true);
+                } else {
+                    usuarioPesquisa.setAtivo(false);
+                }
+
                 return Optional.of(usuarioPesquisa);
 
             } else {
@@ -140,14 +151,14 @@ public class UsuarioRepository{
     }
 
     public Optional<Usuario> buscarUsuarioById (Integer idUsuario) throws DatabaseException {
+        log.info(String.valueOf(idUsuario));
         Usuario usuarioPesquisa = new Usuario();
         Connection conexao = null;
         try{
             conexao = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT ID_USUARIO, LOGIN, SENHA, NOME, TIPO_USUARIO FROM USUARIO u \n" +
+            String sql = "SELECT ID_USUARIO, LOGIN, SENHA, NOME, TIPO, ATIVO FROM USUARIO u \n" +
                     "WHERE u.ID_USUARIO = ?";
-
             PreparedStatement statement = conexao.prepareStatement(sql);
 
             statement.setInt(1, idUsuario);
@@ -159,17 +170,55 @@ public class UsuarioRepository{
                 usuarioPesquisa.setLogin(resultSet.getString("login"));
                 usuarioPesquisa.setSenha(resultSet.getString("senha"));
                 usuarioPesquisa.setNome(resultSet.getString("nome"));
-                int tipo = resultSet.getInt("tipo_usuario");
+
+                int tipo = resultSet.getInt("tipo");
                 if (tipo == 1) {
                     usuarioPesquisa.setTipoUsuario(TipoUsuario.COMPANHIA);
                 } else {
                     usuarioPesquisa.setTipoUsuario(TipoUsuario.COMPRADOR);
                 }
+
+                int ativo = resultSet.getInt("ativo");
+                if (ativo == 1) {
+                    usuarioPesquisa.setAtivo(true);
+                } else {
+                    usuarioPesquisa.setAtivo(false);
+                }
+
                 return Optional.of(usuarioPesquisa);
             } else {
                 return Optional.empty();
             }
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DatabaseException(e.getCause());
+        } finally {
+            try {
+                if (conexao != null) {
+                    conexao.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean desativarUsuario(Integer id) throws DatabaseException {
+        Connection conexao = null;
+        try{
+            conexao = ConexaoBancoDeDados.getConnection();
+
+            StringBuilder sql = new StringBuilder();
+            sql.append("UPDATE USUARIO SET ");
+            sql.append("ativo = 0");
+            sql.append("WHERE id_usuario = ?");
+
+            PreparedStatement statement = conexao.prepareStatement(sql.toString());
+            statement.setInt(1, id);
+
+            int res = statement.executeUpdate();
+            return res  > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DatabaseException(e.getCause());

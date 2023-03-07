@@ -3,7 +3,7 @@ package br.com.dbc.javamosdecolar.service;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.Trecho;
 import br.com.dbc.javamosdecolar.model.Usuario;
-import br.com.dbc.javamosdecolar.model.dto.TrechoDTO;
+import br.com.dbc.javamosdecolar.dto.TrechoDTO;
 import br.com.dbc.javamosdecolar.repository.TrechoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -2,11 +2,14 @@ package br.com.dbc.javamosdecolar.service;
 
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
+import br.com.dbc.javamosdecolar.model.Companhia;
 import br.com.dbc.javamosdecolar.model.Passagem;
-import br.com.dbc.javamosdecolar.model.dto.CreatePassagemDTO;
-import br.com.dbc.javamosdecolar.model.dto.UpdatePassagemDTO;
+import br.com.dbc.javamosdecolar.model.Trecho;
+import br.com.dbc.javamosdecolar.dto.CreatePassagemDTO;
+import br.com.dbc.javamosdecolar.dto.PassagemDTO;
 import br.com.dbc.javamosdecolar.repository.PassagemRepository;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,85 +20,78 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PassagemService {
     private final PassagemRepository passagemRepository;
-    private final TrechoService trechoService;
+    //private final TrechoService trechoService;
     private final CompanhiaService companhiaService;
+    private final ObjectMapper mapper;
 
-    public Passagem cadastrarPassagem(CreatePassagemDTO passagemDTO) throws RegraDeNegocioException {
+    public PassagemDTO cadastrarPassagem(CreatePassagemDTO passagemDTO) throws RegraDeNegocioException {
         try {
 
-            LocalDateTime dataPartida = transformaStringEmLocalDateTime(passagemDTO.getDataPartida());
-            LocalDateTime dataChegada = transformaStringEmLocalDateTime(passagemDTO.getDataChegada());
+            LocalDateTime dataPartida = passagemDTO.getDataPartida();
+            LocalDateTime dataChegada = passagemDTO.getDataChegada();
 
             final boolean DIA_ANTERIOR = dataChegada.isBefore(dataPartida);
 
-            if(DIA_ANTERIOR) {
+            if (DIA_ANTERIOR) {
                 throw new RegraDeNegocioException("Data inválida!");
             }
 
             UUID codigo = UUID.randomUUID();
 
+            //Mocks, remover depois de completo:
+
+//            Companhia companhia = mapper.convertValue(companhiaService.getCompanhiaById(1), Companhia.class);
+//            Trecho trecho = new Trecho(1, "BEL", "CWB", companhia);
+
+            //fim dos mocks
+
             Trecho trecho = trechoService.getTrechoById(passagemDTO.getIdTrecho());
 
-            Passagem passagem = new Passagem(codigo.toString(), dataPartida, dataChegada,
+            Passagem passagem = new Passagem(codigo.toString(), dataPartida, dataPartida,
                     trecho, true, passagemDTO.getValor());
 
-            return passagemRepository.adicionar(passagem);
+            Passagem passagemCriada = passagemRepository.adicionar(passagem);
 
+            PassagemDTO passagemCriadaDTO = mapper.convertValue(passagemCriada, PassagemDTO.class);
+            passagemCriadaDTO.setIdTrecho(trecho.getIdTrecho());
+
+            return passagemCriadaDTO;
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante o cadastro.");
         }
     }
 
-    public List<Passagem> listarPassagens(String companhia,
-                                          String dataChegada, String dataPartida, BigDecimal valor)
-            throws RegraDeNegocioException {
-
-        final Integer DATA_PARTIDA = 1;
-        final Integer DATA_CHEGADA = 2;
-
-        if(!companhia.isBlank()) {
-            return this.listarPassagemPorCompanhia(companhia);
-        } else if (!dataPartida.equals(null)) {
-            return this.listarPassagemPorData(transformaStringEmLocalDateTime(dataPartida
-                    .replace("-", " ")), DATA_PARTIDA);
-        } else if (!dataChegada.equals(null)) {
-            return this.listarPassagemPorData(transformaStringEmLocalDateTime(dataChegada
-                    .replace("-", " ")), DATA_CHEGADA);
-        } else if (!valor.equals(null)) {
-            return this.listarPassagemPorValorMaximo(valor);
-        } else {
-            try {
-                return this.passagemRepository.listar();
-            } catch (DatabaseException e) {
-                throw new RegraDeNegocioException("Aconteceu algum problema durante o cadastro.");
-            }
-        }
-    }
-
-    public List<Passagem> listarUltimasPassagens() throws RegraDeNegocioException {
+    public List<PassagemDTO> listarUltimasPassagens() throws RegraDeNegocioException {
         try {
-            return passagemRepository.getUltimasPassagens();
+            return passagemRepository.getUltimasPassagens()
+                    .stream()
+                    .map(passagem -> {
+                        PassagemDTO passagemDTO = mapper.convertValue(passagem, PassagemDTO.class);
+                        passagemDTO.setIdTrecho(passagem.getTrecho().getIdTrecho());
+                        return passagemDTO;
+                    })
+                    .toList();
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
     }
 
-    public void editarPassagem(Integer passagemId, UpdatePassagemDTO passagemDTO) throws RegraDeNegocioException {
+    public void editarPassagem(Integer passagemId, CreatePassagemDTO passagemDTO) throws RegraDeNegocioException {
         try {
-            Passagem passagemEncontrada = passagemRepository.getPassagemPeloId(passagemId)
+            passagemRepository.getPassagemPeloId(passagemId)
                     .orElseThrow(() -> new RegraDeNegocioException("Passagem inválida!"));
 
-            Passagem passagem = mapUpdatePassagemDTOtoPassagem(passagemDTO, passagemEncontrada);
+            Passagem passagem = mapper.convertValue(passagemDTO, Passagem.class);
 
             final boolean DIA_ANTERIOR = passagem.getDataChegada().isBefore(passagem.getDataPartida());
 
             if(DIA_ANTERIOR) {
                 throw new RegraDeNegocioException("Data inválida!");
             }
-
+            passagem.setDisponivel(true);
             passagemRepository.editar(passagemId, passagem);
 
         } catch (DatabaseException e) {
@@ -112,78 +108,85 @@ public class PassagemService {
         return passagemRepository.editar(passagem.getIdPassagem(), passagem);
     }
 
-    private Passagem mapUpdatePassagemDTOtoPassagem(UpdatePassagemDTO passagemDTO,
-                                                    Passagem passagem) throws RegraDeNegocioException {
-        if(!passagemDTO.getDataChegada().equals(null)) {
-            passagem.setDataChegada(transformaStringEmLocalDateTime(passagemDTO.getDataChegada()));
-        }
-
-        if(!passagemDTO.getDataPartida().equals(null)) {
-            passagem.setDataPartida(transformaStringEmLocalDateTime(passagemDTO.getDataPartida()));
-        }
-
-        if(!passagemDTO.getValor().equals(null)) {
-            passagem.setValor(passagemDTO.getValor());
-        }
-
-        if(passagemDTO.getIdTrecho() != null) {
-            Trecho trecho = trechoService.getTrechoById(passagemDTO.getIdTrecho());
-            passagem.setTrecho(trecho);
-        }
-
-        return passagem;
-    }
-
-    private LocalDateTime transformaStringEmLocalDateTime(String data) throws RegraDeNegocioException {
+    public List<PassagemDTO> listarPassagemPorData(String dataChegada, String dataPartida) throws RegraDeNegocioException {
         try {
-            return LocalDateTime.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-        } catch (DateTimeParseException e) {
-            throw new RegraDeNegocioException("Data inserida no formato incorreto!");
-        }
-    }
+            if(dataPartida != null) {
+                return passagemRepository.getPassagemPorDataPartida(transformaStringEmLocalDateTime(dataPartida))
+                        .stream()
+                        .map(passagem -> {
+                            PassagemDTO passagemDTO = mapper.convertValue(passagem, PassagemDTO.class);
+                            passagemDTO.setIdTrecho(passagem.getTrecho().getIdTrecho());
+                            return passagemDTO;
+                        }).toList();
+            } else if(dataChegada != null){
+                dataChegada = dataChegada.replace("-", "/");
 
-    private List<Passagem> listarPassagemPorData(LocalDateTime data, int tipoDeData) throws RegraDeNegocioException {
-        final Integer DATA_PARTIDA = 1;
-        final Integer DATA_CHEGADA = 2;
-
-        try {
-            if(tipoDeData == DATA_PARTIDA) {
-                return passagemRepository.getPassagemPorDataPartida(data);
-            } else if(tipoDeData == DATA_CHEGADA){
-                return passagemRepository.getPassagemPorDataChegada(data);
+                return passagemRepository.getPassagemPorDataChegada(transformaStringEmLocalDateTime(dataChegada))
+                        .stream()
+                        .map(passagem -> {
+                            PassagemDTO passagemDTO = mapper.convertValue(passagem, PassagemDTO.class);
+                            passagemDTO.setIdTrecho(passagem.getTrecho().getIdTrecho());
+                            return passagemDTO;
+                        }).toList();
             } else {
-                return null;
+                throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
             }
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
     }
 
-    private List<Passagem> listarPassagemPorValorMaximo(BigDecimal valorMaximo) throws RegraDeNegocioException {
+    public List<PassagemDTO> listarPassagemPorValorMaximo(BigDecimal valorMaximo) throws RegraDeNegocioException {
         try {
-            return passagemRepository.getPassagemPorValor(valorMaximo);
+            return passagemRepository.getPassagemPorValor(valorMaximo).stream()
+                    .map(passagem -> {
+                        PassagemDTO passagemDTO = mapper.convertValue(passagem, PassagemDTO.class);
+                        passagemDTO.setIdTrecho(passagem.getTrecho().getIdTrecho());
+                        return passagemDTO;
+                    }).toList();
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
     }
 
-    private List<Passagem> listarPassagemPorCompanhia(String nomeCompanhia) throws RegraDeNegocioException {
+    public List<PassagemDTO> listarPassagemPorCompanhia(String nomeCompanhia) throws RegraDeNegocioException {
         try {
-            Companhia companhia = companhiaService.buscaCompanhiaPorNome(nomeCompanhia);
+            Companhia companhia = companhiaService.getCompanhiaByNome(nomeCompanhia);
             return passagemRepository
-                    .getPassagemPorCompanhia(companhia.getIdCompanhia());
+                    .getPassagemPorCompanhia(companhia.getIdCompanhia()).stream()
+                    .map(passagem -> {
+                        PassagemDTO passagemDTO = mapper.convertValue(passagem, PassagemDTO.class);
+                        passagemDTO.setIdTrecho(passagem.getTrecho().getIdTrecho());
+                        return passagemDTO;
+                    }).toList();
 
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
+        }
+    }
+
+    public PassagemDTO getPassagemById(Integer id) throws RegraDeNegocioException {
+        try {
+            Passagem passagem = passagemRepository.getPassagemPeloId(id)
+                    .orElseThrow(() -> new RegraDeNegocioException("Passagem não encontrada!"));
+            PassagemDTO passagemDTO = mapper.convertValue(passagem, PassagemDTO.class);
+            passagemDTO.setIdTrecho(passagem.getTrecho().getIdTrecho());
+
+            return passagemDTO;
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
     }
 
-    public Passagem getPassagemById(Integer id) throws RegraDeNegocioException {
+    private LocalDateTime transformaStringEmLocalDateTime(String data) throws RegraDeNegocioException {
         try {
-            return passagemRepository.getPassagemPeloId(id)
-                    .orElseThrow(() -> new RegraDeNegocioException("Passagem não encontrada!"));
-        } catch (DatabaseException e) {
-            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
+            char[] dataChars = data.replace("-", "/").toCharArray();
+            dataChars[10] = ' ';
+            data = String.valueOf(dataChars);
+            return LocalDateTime.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+        } catch (DateTimeParseException e) {
+            throw new RegraDeNegocioException("Data inserida no formato incorreto!");
         }
     }
 }

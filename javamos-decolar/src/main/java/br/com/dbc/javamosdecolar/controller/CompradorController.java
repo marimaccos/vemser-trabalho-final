@@ -1,8 +1,8 @@
 package br.com.dbc.javamosdecolar.controller;
 
+import br.com.dbc.javamosdecolar.dto.CompradorCreateDTO;
+import br.com.dbc.javamosdecolar.dto.CompradorDTO;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
-import br.com.dbc.javamosdecolar.model.dto.CompradorDTO;
-import br.com.dbc.javamosdecolar.model.dto.CompradorCreateDTO;
 import br.com.dbc.javamosdecolar.service.CompradorService;
 import br.com.dbc.javamosdecolar.service.PassagemService;
 import br.com.dbc.javamosdecolar.service.VendaService;

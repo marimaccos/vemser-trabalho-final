@@ -1,4 +1,4 @@
-package br.com.dbc.javamosdecolar.model.dto;
+package br.com.dbc.javamosdecolar.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;

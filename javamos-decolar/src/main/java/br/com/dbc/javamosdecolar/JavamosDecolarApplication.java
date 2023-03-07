@@ -7,7 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class JavamosDecolarApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(JavamosDecolarApplication.class, args);
+		try {
+			SpringApplication.run(JavamosDecolarApplication.class, args);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

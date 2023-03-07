@@ -41,15 +41,25 @@
 			<version>${validation.version}</version>
 		</dependency>
 
-		<!--Hot Reload-->
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<version>${spring-devtools.version}</version>
+			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
+		<!--Hot Reload-->
+
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-devtools</artifactId>-->
+<!--		</dependency>-->
+
 		<!-- External Dependencies -->
+
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>2.3.31</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>

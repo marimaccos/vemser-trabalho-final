@@ -1,8 +1,7 @@
 package br.com.dbc.javamosdecolar.controller;
 
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
-import br.com.dbc.javamosdecolar.model.Trecho;
-import br.com.dbc.javamosdecolar.model.dto.TrechoDTO;
+import br.com.dbc.javamosdecolar.dto.TrechoDTO;
 import br.com.dbc.javamosdecolar.service.TrechoService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
