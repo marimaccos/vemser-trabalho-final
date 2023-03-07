@@ -96,6 +96,7 @@ public class CompanhiaService {
                     .orElseThrow(() -> new RegraDeNegocioException("Companhia não existe."));
 
             Usuario usuario = new Usuario(
+                    companhia.getIdUsuario(),
                     companhiaDTO.getLogin(),
                     companhiaDTO.getSenha(),
                     companhiaDTO.getNome(),

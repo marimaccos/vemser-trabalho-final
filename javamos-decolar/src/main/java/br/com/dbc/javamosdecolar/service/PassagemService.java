@@ -23,7 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PassagemService {
     private final PassagemRepository passagemRepository;
-    //private final TrechoService trechoService;
+    private final TrechoService trechoService;
     private final CompanhiaService companhiaService;
     private final ObjectMapper mapper;
 
@@ -41,14 +41,8 @@ public class PassagemService {
 
             UUID codigo = UUID.randomUUID();
 
-            //Mocks, remover depois de completo:
-
-//            Companhia companhia = mapper.convertValue(companhiaService.getCompanhiaById(1), Companhia.class);
-//            Trecho trecho = new Trecho(1, "BEL", "CWB", companhia);
-
-            //fim dos mocks
-
-            Trecho trecho = trechoService.getTrechoById(passagemDTO.getIdTrecho());
+            Trecho trecho = mapper.convertValue(trechoService.getTrechoById(passagemDTO.getIdTrecho()),
+                    Trecho.class);
 
             Passagem passagem = new Passagem(codigo.toString(), dataPartida, dataPartida,
                     trecho, true, passagemDTO.getValor());

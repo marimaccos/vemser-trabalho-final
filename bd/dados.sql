@@ -43,7 +43,7 @@ INSERT INTO AVIACAO.COMPANHIA (id_companhia, cnpj, nome_fantasia, id_usuario)
 -- compradores --
 
 INSERT INTO AVIACAO.COMPRADOR (id_comprador, cpf, id_usuario)
-	VALUES (AVIACAO.seq_comprador.nextval, '11958516007', 2);
+	VALUES (AVIACAO.seq_comprador.nextval, '11958516007', 6);
 INSERT INTO AVIACAO.COMPRADOR (id_comprador, cpf, id_usuario)
 	VALUES (AVIACAO.seq_comprador.nextval, '84825855091', 7);
 INSERT INTO AVIACAO.COMPRADOR (id_comprador, cpf, id_usuario)

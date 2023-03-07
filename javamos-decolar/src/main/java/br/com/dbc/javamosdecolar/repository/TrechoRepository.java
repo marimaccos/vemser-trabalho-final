@@ -3,12 +3,14 @@ package br.com.dbc.javamosdecolar.repository;
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.model.Companhia;
 import br.com.dbc.javamosdecolar.model.Trecho;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
 
     @Override

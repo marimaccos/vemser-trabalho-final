@@ -149,7 +149,8 @@ public class CompanhiaRepository {
                     "u.LOGIN, u.SENHA, u.NOME \n" +
                     "FROM COMPANHIA c \n" +
                     "INNER JOIN USUARIO u \n" +
-                    "ON c.ID_USUARIO = u.ID_USUARIO";
+                    "ON c.ID_USUARIO = u.ID_USUARIO\n" +
+                    "WHERE c.ID_COMPANHIA = ?";
 
             ResultSet resultSet = statement.executeQuery(sql);
 

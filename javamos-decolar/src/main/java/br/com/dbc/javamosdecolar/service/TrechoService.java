@@ -3,18 +3,21 @@ package br.com.dbc.javamosdecolar.service;
 import br.com.dbc.javamosdecolar.dto.TrechoCreateDTO;
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
+import br.com.dbc.javamosdecolar.model.Companhia;
 import br.com.dbc.javamosdecolar.model.Trecho;
 import br.com.dbc.javamosdecolar.model.Usuario;
 import br.com.dbc.javamosdecolar.dto.TrechoDTO;
 import br.com.dbc.javamosdecolar.repository.TrechoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TrechoService {
 
     private final TrechoRepository trechoRepository;
@@ -61,35 +64,6 @@ public class TrechoService {
 
     }
 
-    public void deletarTrecho(Integer idTrecho, Usuario usuario) throws RegraDeNegocioException {
-        try {
-            Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
-
-            if(companhia.isEmpty()) {
-                throw new RegraDeNegocioException("Companhia não pode ser encontrada!");
-            }
-
-            Optional<Trecho> trecho = trechoRepository.getTrechoPorId(idTrecho);
-
-            if(trecho.isEmpty()) {
-                throw new RegraDeNegocioException("Trecho não pode ser encontrado!");
-            }
-
-            boolean trechoEhDaMesmaCompanhia =
-                    trecho.get().getCompanhia().getIdCompanhia() == companhia.get().getIdCompanhia();
-
-            if(!trechoEhDaMesmaCompanhia) {
-                throw new RegraDeNegocioException("Trecho não pode ser deletado!");
-            }
-
-            boolean conseguiuRemover = trechoRepository.remover(idTrecho);
-            System.out.println("removido? " + conseguiuRemover + "| com id=" + idTrecho);
-
-        } catch (DatabaseException e) {
-            throw new RegraDeNegocioException("Trecho não pode ser deletado!");
-        }
-    }
-
     public List<TrechoDTO> listaTrechos() throws RegraDeNegocioException {
         try {
             List<TrechoDTO> listaTrechos = trechoRepository.listar().stream()
@@ -103,27 +77,17 @@ public class TrechoService {
         }
     }
 
-    public void imprimirTrechosDaCompanhia(Usuario usuario) throws RegraDeNegocioException {
-        try {
-            Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
-
-            if(companhia.isEmpty()) {
-                throw new RegraDeNegocioException("Companhia não pode ser encontrada!");
-            }
-
-            List<Trecho> trechosPorCompanhia = trechoRepository.getTrechosPorCompanhia(companhia.get()
-                    .getIdCompanhia());
-
-            if(trechosPorCompanhia.isEmpty()) {
-                System.out.println("Não há trechos cadastrados!");
-            } else {
-                trechosPorCompanhia.stream().forEach(System.out::println);
-            }
-
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
-        }
+    public void deletarTrecho(Integer idTrecho, Usuario usuario) throws RegraDeNegocioException {
+        //TO-DO implementar
     }
 
+    public TrechoDTO getTrechoById(Integer idTrecho) throws RegraDeNegocioException {
+        try {
+            Trecho trecho = trechoRepository.getTrechoPorId(idTrecho)
+                    .orElseThrow(() -> new RegraDeNegocioException("Aconteceu algum problema durante a listagem."));
+            return objectMapper.convertValue(trecho, TrechoDTO.class);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

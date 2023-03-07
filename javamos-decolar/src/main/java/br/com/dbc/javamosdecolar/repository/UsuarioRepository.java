@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.Optional;
 @Repository
-@Slf4j
 public class UsuarioRepository{
     public Integer getProximoId(Connection connection) throws SQLException {
         try {
@@ -52,6 +51,7 @@ public class UsuarioRepository{
             return usuario;
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
         } finally {
             try{
@@ -151,7 +151,6 @@ public class UsuarioRepository{
     }
 
     public Optional<Usuario> buscarUsuarioById (Integer idUsuario) throws DatabaseException {
-        log.info(String.valueOf(idUsuario));
         Usuario usuarioPesquisa = new Usuario();
         Connection conexao = null;
         try{
