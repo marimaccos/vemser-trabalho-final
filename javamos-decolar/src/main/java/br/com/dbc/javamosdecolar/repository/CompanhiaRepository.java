@@ -1,9 +1,11 @@
 package br.com.dbc.javamosdecolar.repository;
 
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
+import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.Companhia;
 import br.com.dbc.javamosdecolar.model.Comprador;
 import br.com.dbc.javamosdecolar.model.TipoUsuario;
+import br.com.dbc.javamosdecolar.model.dto.CompanhiaDTO;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -133,6 +135,95 @@ public class CompanhiaRepository {
 
         } finally {
             try {
+                if (conexao != null) {
+                    conexao.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private Companhia getCompanhiaPorResultSet(ResultSet resultSet) throws SQLException {
+        Companhia companhia = new Companhia();
+
+        companhia.setIdCompanhia(resultSet.getInt("idComprador"));
+        companhia.setCnpj(resultSet.getString("cpf"));
+        companhia.setNomeFantasia(resultSet.getString("nome_fantasia"));
+
+        return companhia;
+    }
+
+    public List<Companhia> listaCompanhias() throws DatabaseException {
+        List<Companhia> companhias = new ArrayList<>();
+        Connection conexao = null;
+
+        try {
+            conexao = ConexaoBancoDeDados.getConnection();
+            Statement statement = conexao.createStatement();
+
+            String sql = "SELECT * FROM COMPANHIA";
+
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                Companhia companhia = getCompanhiaPorResultSet(resultSet);
+                companhias.add(companhia);
+            }
+
+            return companhias;
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getCause());
+
+        } finally {
+            try{
+                if (conexao != null) {
+                    conexao.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean editarCompanhia(Integer idCompanhia, Companhia companhia) throws DatabaseException {
+        Connection conexao = null;
+        try {
+            conexao = ConexaoBancoDeDados.getConnection();
+
+            StringBuilder sql2 = new StringBuilder();
+
+            sql2.append("UPDATE COMPANHIA SET ");
+            sql2.append("nome_fantasia = ? ");
+            sql2.append("WHERE ID_COMPANHIA = ?");
+
+            PreparedStatement statement = conexao.prepareStatement(sql2.toString());
+
+            statement.setString(1, companhia.getNomeFantasia());
+            statement.setInt(2, idCompanhia);
+
+            StringBuilder sql3 = new StringBuilder();
+
+            sql3.append("UPDATE USUARIO SET");
+            sql3.append("senha = ?, ")  ;
+            sql3.append("nome = ? ");
+            sql3.append("WHERE id_usuario = ?");
+
+            PreparedStatement statement2 = conexao.prepareStatement(sql3.toString());
+
+            statement2.setString(1, companhia.getSenha());
+            statement2.setString(2, companhia.getNome());
+            statement2.setInt(3, companhia.getIdUsuario());
+
+            int result = statement.executeUpdate();
+            int result2 = statement2.executeUpdate();
+
+            return result > 0 && result2 > 0;
+
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getCause());
+        } finally {
+            try{
                 if (conexao != null) {
                     conexao.close();
                 }
