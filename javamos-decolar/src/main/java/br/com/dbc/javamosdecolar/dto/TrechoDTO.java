@@ -1,6 +1,5 @@
 package br.com.dbc.javamosdecolar.dto;
 
-import br.com.dbc.javamosdecolar.model.Companhia;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

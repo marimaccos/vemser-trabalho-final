@@ -37,7 +37,8 @@ public class CompradorService {
 
     public CompradorDTO criarComprador(CompradorCreateDTO comprador) throws RegraDeNegocioException {
         try {
-            Usuario usuarioNovo = new Usuario(comprador.getLogin(), comprador.getSenha(), comprador.getNome(), TipoUsuario.COMPRADOR);
+            Usuario usuarioNovo = new Usuario(comprador.getLogin(), comprador.getSenha(), comprador.getNome(),
+                    TipoUsuario.COMPRADOR, true);
             Usuario usuarioCriado = usuarioService.criarUsuario(usuarioNovo);
 
             Comprador compradorNovo = objectMapper.convertValue(comprador, Comprador.class);
@@ -51,7 +52,8 @@ public class CompradorService {
         }
     }
 
-    public CompradorDTO editarComprador(Integer idComprador, CompradorCreateDTO comprador) throws RegraDeNegocioException{
+    public CompradorDTO editarComprador(Integer idComprador, CompradorCreateDTO comprador)
+            throws RegraDeNegocioException{
         try {
             // Retorna o comprador existente
             Comprador compradorEncontrado = compradorRepository.getCompradorPorID(idComprador)

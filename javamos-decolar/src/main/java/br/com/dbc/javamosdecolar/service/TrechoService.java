@@ -1,10 +1,13 @@
 package br.com.dbc.javamosdecolar.service;
 
+import br.com.dbc.javamosdecolar.dto.TrechoCreateDTO;
+import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.Trecho;
 import br.com.dbc.javamosdecolar.model.Usuario;
 import br.com.dbc.javamosdecolar.dto.TrechoDTO;
 import br.com.dbc.javamosdecolar.repository.TrechoRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,29 +18,17 @@ import java.util.List;
 public class TrechoService {
 
     private final TrechoRepository trechoRepository;
+    private final CompanhiaService companhiaService;
+    private final ObjectMapper objectMapper;
 
-    public void criarTrecho(Trecho novoTrecho, Usuario usuario) throws RegraDeNegocioException {
+    public TrechoDTO criarTrecho(TrechoCreateDTO trecho) throws RegraDeNegocioException {
         try {
-            Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
+            companhiaService.getCompanhiaById(trecho.getIdCompanhia());
 
-            if(companhia.isEmpty()) {
-                throw new RegraDeNegocioException("Companhia não pode ser encontrada!");
-            }
+            Trecho trechoNovo = objectMapper.convertValue(trecho, Trecho.class);
+            Trecho trechoCriado = trechoRepository.adicionar(trechoNovo);
 
-            if(novoTrecho.getOrigem().length() > 3 || novoTrecho.getDestino().length() > 3) {
-                throw new RegraDeNegocioException("Origem e Destino só podem ter três caracteres!");
-            }
-
-            Optional<Trecho> trechoJaCadastrado = trechoRepository.getTrecho(novoTrecho.getOrigem(),
-                    novoTrecho.getDestino(), companhia.get());
-
-            if(trechoJaCadastrado.isPresent()) {
-                throw new RegraDeNegocioException("Trecho já existente!");
-            }
-
-            novoTrecho.setCompanhia(companhia.get());
-            Trecho trechoAdicionado = trechoRepository.adicionar(novoTrecho);
-            System.out.println("Trecho adicinado com sucesso! " + trechoAdicionado);
+            return objectMapper.convertValue(trechoCriado, TrechoDTO.class);
 
         } catch (DatabaseException e) {
             e.printStackTrace();
@@ -45,35 +36,23 @@ public class TrechoService {
         }
     }
 
-    public void editarTrecho(Integer idTrecho, Trecho novoTrecho, Usuario usuario) throws RegraDeNegocioException {
+    public TrechoDTO editarTrecho(Integer idTrecho, TrechoCreateDTO trecho) throws RegraDeNegocioException {
         try {
-            if(novoTrecho.getOrigem().length() > 3 || novoTrecho.getDestino().length() > 3) {
-                throw new RegraDeNegocioException("Origem e Destino só podem ter três caracteres!");
+            companhiaService.getCompanhiaById(trecho.getIdCompanhia());
+
+            Trecho trechoEncontrado = trechoRepository.getTrechoPorId(idTrecho)
+                    .orElseThrow(() -> new RegraDeNegocioException("Trecho não encontrado!"));
+
+            if (trechoEncontrado.getCompanhia().getIdCompanhia().equals(trecho.getIdCompanhia())) {
+                Trecho trechoNovo = objectMapper.convertValue(trecho, Trecho.class);
+
+                trechoRepository.editar(idTrecho, trechoNovo);
+
+                return objectMapper.convertValue(trechoEncontrado, TrechoDTO.class);
+
+            } else {
+                throw new RegraDeNegocioException("Trecho não é da companhia!");
             }
-
-            Optional<Companhia> companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(usuario.getIdUsuario());
-
-            if(companhia.isEmpty()) {
-                throw new RegraDeNegocioException("Companhia não pode ser encontrada!");
-            }
-
-            Optional<Trecho> trecho = trechoRepository.getTrechoPorId(idTrecho);
-
-            if(trecho.isEmpty()) {
-                throw new RegraDeNegocioException("Trecho não pode ser encontrado!");
-            }
-
-            boolean trechoEhDaMesmaCompanhia =
-                    trecho.get().getCompanhia().getIdCompanhia() == companhia.get().getIdCompanhia();
-
-            if(!trechoEhDaMesmaCompanhia) {
-                throw new RegraDeNegocioException("Permissão negada! Trecho não pode ser editado!");
-            }
-
-            novoTrecho.setCompanhia(companhia.get());
-
-            boolean conseguiuEditar = trechoRepository.editar(idTrecho, novoTrecho);
-            System.out.println("Conseguiu Editar? " + conseguiuEditar + "| com id=" + idTrecho);
 
         } catch (DatabaseException e) {
             e.printStackTrace();
@@ -111,8 +90,17 @@ public class TrechoService {
         }
     }
 
-    public List<TrechoDTO> listaTrechos() {
+    public List<TrechoDTO> listaTrechos() throws RegraDeNegocioException {
+        try {
+            List<TrechoDTO> listaTrechos = trechoRepository.listar().stream()
+                    .map(trecho -> objectMapper.convertValue(trecho, TrechoDTO.class))
+                    .toList();
 
+            return listaTrechos;
+
+        } catch (DatabaseException e) {
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
+        }
     }
 
     public void imprimirTrechosDaCompanhia(Usuario usuario) throws RegraDeNegocioException {
