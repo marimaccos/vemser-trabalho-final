@@ -375,6 +375,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
             }
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {

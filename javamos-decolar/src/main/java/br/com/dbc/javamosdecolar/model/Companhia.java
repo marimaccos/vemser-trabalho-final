@@ -11,38 +11,23 @@ import javax.validation.constraints.Size;
 public final class Companhia extends Usuario {
 
     private Integer idCompanhia;
-    @NotBlank
-    @Size(min=14, max=14)
     private String cnpj;
-
-    @NotBlank
-    @Size(min=3, max=40)
     private String nomeFantasia;
+
     public Companhia(Integer idUsuario, String login, String senha, String nome,
-                     TipoUsuario tipoUsuario, String cnpj, Integer idComprador, String nomeFantasia) {
-        super(idUsuario, login, senha, nome, tipoUsuario);
-        this.idCompanhia = idComprador;
+                     TipoUsuario tipoUsuario, boolean ativo,
+                     Integer idCompanhia, String cnpj, String nomeFantasia) {
+        super(idUsuario, login, senha, nome, tipoUsuario, ativo);
+        this.idCompanhia = idCompanhia;
         this.cnpj = cnpj;
         this.nomeFantasia = nomeFantasia;
     }
 
-    public Companhia(Integer idUsuario, String login, String senha, String nome, TipoUsuario tipoUsuario, String cnpj,
-                     String nomeFantasia) {
-        super(idUsuario, login, senha, nome, tipoUsuario);
+    public Companhia(Integer idUsuario, String login, String senha, String nome,
+                     TipoUsuario tipoUsuario, boolean ativo, String cnpj, String nomeFantasia) {
+        super(idUsuario, login, senha, nome, tipoUsuario, ativo);
         this.cnpj = cnpj;
         this.nomeFantasia = nomeFantasia;
-    }
-
-    @Override
-    public String toString() {
-        return "Companhia{" +
-                ", idCompanhia=" + idCompanhia +
-                ", idUsuario='" + this.getIdUsuario() + '\'' +
-                ", login='" + this.getLogin() + '\'' +
-                ", nome='" + this.getNome() + '\'' +
-                ", cnpj='" + cnpj + '\'' +
-                ", nomeFantasia='" + nomeFantasia + '\'' +
-                '}';
     }
 }
 

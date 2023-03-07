@@ -2,12 +2,9 @@ package br.com.dbc.javamosdecolar.service;
 
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
-import br.com.dbc.javamosdecolar.model.Comprador;
-import br.com.dbc.javamosdecolar.model.Passagem;
-import br.com.dbc.javamosdecolar.model.Status;
-import br.com.dbc.javamosdecolar.model.Venda;
-import br.com.dbc.javamosdecolar.model.dto.CreateVendaDTO;
-import br.com.dbc.javamosdecolar.model.dto.VendaDTO;
+import br.com.dbc.javamosdecolar.model.*;
+import br.com.dbc.javamosdecolar.dto.CreateVendaDTO;
+import br.com.dbc.javamosdecolar.dto.VendaDTO;
 import br.com.dbc.javamosdecolar.repository.VendaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +39,14 @@ public class VendaService {
             Comprador comprador = mapper.convertValue(compradorService.getCompradorPorID(vendaDTO.getIdComprador()),
                     Comprador.class);
 
+            //mock data
+//            Companhia companhia = mapper.convertValue(companhiaService.getCompanhiaById(1), Companhia.class);
+//
+//            Venda vendaEfetuada = vendaRepository.adicionar(new Venda(codigo.toString(), passagem, comprador,
+//                    companhia, LocalDateTime.now(), Status.CONCLUIDO));
+
+            //fim do mock
+
             Venda vendaEfetuada = vendaRepository.adicionar(new Venda(codigo.toString(), passagem, comprador,
                     passagem.getTrecho().getCompanhia(), LocalDateTime.now(), Status.CONCLUIDO));
 
@@ -60,7 +65,8 @@ public class VendaService {
             vendaEfetuadaDTO.setIdPassagem(vendaEfetuada.getPassagem().getIdPassagem());
             vendaEfetuadaDTO.setIdComprador(vendaEfetuada.getComprador().getIdComprador());
 
-            emailService.sendEmail(emailService.getVendaTemplate(vendaEfetuada, 1));
+            //descomentar quando o comprador estiver implementado
+            //emailService.sendEmail(emailService.getVendaTemplate(vendaEfetuada, 1));
 
             return vendaEfetuadaDTO;
         } catch (DatabaseException e) {
@@ -79,7 +85,8 @@ public class VendaService {
                 throw new RegraDeNegocioException("Venda já cancelada!");
             }
 
-            emailService.sendEmail(emailService.getVendaTemplate(venda, 2));
+            //descomentar quando o comprador estiver implementado
+            //emailService.sendEmail(emailService.getVendaTemplate(venda, 2));
 
             return vendaRepository.cancelarVenda(idVenda);
 
