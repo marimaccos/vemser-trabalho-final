@@ -38,8 +38,11 @@ public class TrechoController {
         return new ResponseEntity<>(trechoService.editarTrecho(idTrecho, trecho), HttpStatus.OK);
     }
 
-
-
-
+    @DeleteMapping("/{idTrecho}")
+    public ResponseEntity<TrechoDTO> delete(@PathVariable("idTrecho") Integer idTrecho)
+            throws RegraDeNegocioException {
+        trechoService.deletarTrecho(idTrecho);
+        return ResponseEntity.noContent().build();
+    }
 
 }

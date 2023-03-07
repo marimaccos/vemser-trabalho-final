@@ -39,22 +39,17 @@ public class VendaService {
             Comprador comprador = mapper.convertValue(compradorService.getCompradorPorID(vendaDTO.getIdComprador()),
                     Comprador.class);
 
-            //mock data
-//            Companhia companhia = mapper.convertValue(companhiaService.getCompanhiaById(1), Companhia.class);
-//
-//            Venda vendaEfetuada = vendaRepository.adicionar(new Venda(codigo.toString(), passagem, comprador,
-//                    companhia, LocalDateTime.now(), Status.CONCLUIDO));
-
-            //fim do mock
+            Companhia companhia = mapper.convertValue(companhiaService.getCompanhiaById(vendaDTO.getIdCompanhia()),
+                    Companhia.class);
 
             Venda vendaEfetuada = vendaRepository.adicionar(new Venda(codigo.toString(), passagem, comprador,
-                    passagem.getTrecho().getCompanhia(), LocalDateTime.now(), Status.CONCLUIDO));
+                    companhia, LocalDateTime.now(), Status.CONCLUIDO));
 
             if(vendaEfetuada.equals(null)) {
                 throw new RegraDeNegocioException("Não foi possível concluir a venda.");
             }
 
-            boolean conseguiuEditar = passagemService.editarPassagemVendida(passagem);
+            boolean conseguiuEditar = passagemService.editarPassagemVendida(passagem, vendaEfetuada.getIdVenda());
 
             if(!conseguiuEditar) {
                 throw new RegraDeNegocioException("Não foi possível concluir a venda.");
@@ -65,8 +60,7 @@ public class VendaService {
             vendaEfetuadaDTO.setIdPassagem(vendaEfetuada.getPassagem().getIdPassagem());
             vendaEfetuadaDTO.setIdComprador(vendaEfetuada.getComprador().getIdComprador());
 
-            //descomentar quando o comprador estiver implementado
-            //emailService.sendEmail(emailService.getVendaTemplate(vendaEfetuada, 1));
+            emailService.sendEmail(vendaEfetuada, "CRIAR", comprador);
 
             return vendaEfetuadaDTO;
         } catch (DatabaseException e) {
@@ -81,12 +75,16 @@ public class VendaService {
             Venda venda = vendaRepository.getVendaPorId(idVenda)
                     .orElseThrow(() -> new RegraDeNegocioException("Venda não encontrada!"));
 
+            //tirar isso quando implementar o springdata
+            Comprador comprador = mapper
+                    .convertValue(compradorService.getCompradorPorID(venda.getComprador().getIdComprador()),
+                    Comprador.class);
+
             if(venda.getStatus().getTipo() == 2) {
                 throw new RegraDeNegocioException("Venda já cancelada!");
             }
 
-            //descomentar quando o comprador estiver implementado
-            //emailService.sendEmail(emailService.getVendaTemplate(venda, 2));
+            emailService.sendEmail(venda, "DELETAR", comprador);
 
             return vendaRepository.cancelarVenda(idVenda);
 
@@ -109,7 +107,6 @@ public class VendaService {
                     }).toList();
 
         } catch (DatabaseException e) {
-            e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
     }

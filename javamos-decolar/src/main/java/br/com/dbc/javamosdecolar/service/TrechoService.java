@@ -1,5 +1,6 @@
 package br.com.dbc.javamosdecolar.service;
 
+import br.com.dbc.javamosdecolar.dto.CompanhiaDTO;
 import br.com.dbc.javamosdecolar.dto.TrechoCreateDTO;
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
@@ -24,50 +25,70 @@ public class TrechoService {
     private final CompanhiaService companhiaService;
     private final ObjectMapper objectMapper;
 
-    public TrechoDTO criarTrecho(TrechoCreateDTO trecho) throws RegraDeNegocioException {
+    public TrechoDTO criarTrecho(TrechoCreateDTO trechoDTO) throws RegraDeNegocioException {
         try {
-            companhiaService.getCompanhiaById(trecho.getIdCompanhia());
+            Companhia companhia = objectMapper
+                    .convertValue(companhiaService.getCompanhiaById(trechoDTO.getIdCompanhia()),
+                            Companhia.class);
 
-            Trecho trechoNovo = objectMapper.convertValue(trecho, Trecho.class);
-            Trecho trechoCriado = trechoRepository.adicionar(trechoNovo);
+            //checa se a companhia já cadastrou esse trecho
+            if(trechoRepository.getTrecho(trechoDTO.getOrigem().toUpperCase(),
+                    trechoDTO.getDestino().toUpperCase(), companhia).isPresent()) {
+                throw new RegraDeNegocioException("Trecho já existe!");
+            }
+            Trecho trecho = objectMapper.convertValue(trechoDTO, Trecho.class);
 
-            return objectMapper.convertValue(trechoCriado, TrechoDTO.class);
+            trecho.setCompanhia(companhia);
+
+            TrechoDTO trechoNovo = objectMapper
+                    .convertValue(trechoRepository.adicionar(trecho), TrechoDTO.class);
+
+            trechoNovo.setIdCompanhia(companhia.getIdCompanhia());
+
+            return trechoNovo;
 
         } catch (DatabaseException e) {
-            e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a criação.");
         }
     }
 
-    public TrechoDTO editarTrecho(Integer idTrecho, TrechoCreateDTO trecho) throws RegraDeNegocioException {
+    public TrechoDTO editarTrecho(Integer idTrecho, TrechoCreateDTO trechoDTO) throws RegraDeNegocioException {
         try {
-            companhiaService.getCompanhiaById(trecho.getIdCompanhia());
-
-            Trecho trechoEncontrado = trechoRepository.getTrechoPorId(idTrecho)
+            trechoRepository.getTrechoPorId(idTrecho)
                     .orElseThrow(() -> new RegraDeNegocioException("Trecho não encontrado!"));
 
-            if (trechoEncontrado.getCompanhia().getIdCompanhia().equals(trecho.getIdCompanhia())) {
-                Trecho trechoNovo = objectMapper.convertValue(trecho, Trecho.class);
+            Companhia companhia = objectMapper
+                    .convertValue(companhiaService.getCompanhiaById(trechoDTO.getIdCompanhia()), Companhia.class);
 
-                trechoRepository.editar(idTrecho, trechoNovo);
-
-                return objectMapper.convertValue(trechoEncontrado, TrechoDTO.class);
-
-            } else {
-                throw new RegraDeNegocioException("Trecho não é da companhia!");
+            if(trechoRepository.getTrecho(trechoDTO.getOrigem().toUpperCase(),
+                    trechoDTO.getDestino().toUpperCase(), companhia).isPresent()) {
+                throw new RegraDeNegocioException("Trecho já existe!");
             }
 
+            Trecho trechoEditado = objectMapper.convertValue(trechoDTO, Trecho.class);
+            trechoEditado.setIdTrecho(idTrecho);
+
+            if(trechoRepository.editar(idTrecho, trechoEditado)){
+                TrechoDTO trechoEditadoDTO = objectMapper.convertValue(trechoEditado, TrechoDTO.class);
+                trechoEditadoDTO.setIdCompanhia(companhia.getIdCompanhia());
+                return trechoEditadoDTO;
+            } else {
+                throw new RegraDeNegocioException("Não foi possível completar a edição.");
+            }
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a edição.");
         }
-
     }
 
     public List<TrechoDTO> listaTrechos() throws RegraDeNegocioException {
         try {
             List<TrechoDTO> listaTrechos = trechoRepository.listar().stream()
-                    .map(trecho -> objectMapper.convertValue(trecho, TrechoDTO.class))
+                    .map(trecho -> {
+                        TrechoDTO trechoDTO = objectMapper.convertValue(trecho, TrechoDTO.class);
+                        trechoDTO.setIdCompanhia(trecho.getCompanhia().getIdCompanhia());
+                        return trechoDTO;
+                    })
                     .toList();
 
             return listaTrechos;
@@ -77,7 +98,7 @@ public class TrechoService {
         }
     }
 
-    public void deletarTrecho(Integer idTrecho, Usuario usuario) throws RegraDeNegocioException {
+    public void deletarTrecho(Integer idTrecho) throws RegraDeNegocioException {
         //TO-DO implementar
     }
 
@@ -85,7 +106,9 @@ public class TrechoService {
         try {
             Trecho trecho = trechoRepository.getTrechoPorId(idTrecho)
                     .orElseThrow(() -> new RegraDeNegocioException("Aconteceu algum problema durante a listagem."));
-            return objectMapper.convertValue(trecho, TrechoDTO.class);
+            TrechoDTO trechoDTO = objectMapper.convertValue(trecho, TrechoDTO.class);
+            trechoDTO.setIdCompanhia(trecho.getCompanhia().getIdCompanhia());
+            return trechoDTO;
         } catch (DatabaseException e) {
             throw new RuntimeException(e);
         }

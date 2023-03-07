@@ -86,7 +86,7 @@ public class PassagemService {
                 throw new RegraDeNegocioException("Data inválida!");
             }
             passagem.setDisponivel(true);
-            passagemRepository.editar(passagemId, passagem);
+            passagemRepository.editar(passagemId, passagem, 0);
 
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
@@ -97,9 +97,9 @@ public class PassagemService {
         passagemRepository.remover(passagemId);
     }
 
-    public boolean editarPassagemVendida(Passagem passagem) throws DatabaseException {
+    public boolean editarPassagemVendida(Passagem passagem, Integer idVenda) throws DatabaseException {
         passagem.setDisponivel(false);
-        return passagemRepository.editar(passagem.getIdPassagem(), passagem);
+        return passagemRepository.editar(passagem.getIdPassagem(), passagem, idVenda);
     }
 
     public List<PassagemDTO> listarPassagemPorData(String dataChegada, String dataPartida) throws RegraDeNegocioException {

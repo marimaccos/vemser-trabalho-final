@@ -14,8 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
-    @Override
+public class PassagemRepository {
     public Integer getProximoId(Connection connection) throws SQLException {
         try {
             String sql = "SELECT seq_passagem.nextval mysequence from DUAL";
@@ -32,7 +31,6 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
         }
     }
 
-    @Override
     public Passagem adicionar(Passagem passagem) throws DatabaseException {
         Connection connection = null;
 
@@ -73,7 +71,6 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
         }
     }
 
-    @Override
     public List<Passagem> listar() throws DatabaseException {
         List<Passagem> passagens = new ArrayList<>();
         Connection connection = null;
@@ -112,8 +109,7 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
         }
     }
 
-    @Override
-    public boolean editar(Integer id, Passagem passagem) throws DatabaseException {
+    public boolean editar(Integer id, Passagem passagem, Integer vendaId) throws DatabaseException {
         Connection connection = null;
 
         try {
@@ -124,8 +120,9 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
             sql.append(" data_partida = ?,");
             sql.append(" data_chegada = ?,");
             sql.append(" disponivel = ?,");
-            sql.append(" valor = ?\n");
-            sql.append(" WHERE id_passagem = ? ");
+            sql.append(" valor = ?,\n");
+            sql.append(" id_venda = ?\n");
+            sql.append(" WHERE id_passagem = ?");
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql.toString());
 
@@ -133,13 +130,15 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
             preparedStatement.setTimestamp(2, java.sql.Timestamp.valueOf(passagem.getDataChegada()));
             preparedStatement.setBoolean(3, passagem.isDisponivel());
             preparedStatement.setBigDecimal(4, passagem.getValor());
-            preparedStatement.setInt(5, id);
+            preparedStatement.setInt(5, vendaId);
+            preparedStatement.setInt(6, id);
 
             // Executa-se a consulta
             int res = preparedStatement.executeUpdate();
             return res > 0;
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {
@@ -153,7 +152,6 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
         }
     }
 
-    @Override
     public boolean remover(Integer id) throws DatabaseException {
         Connection connection = null;
 
