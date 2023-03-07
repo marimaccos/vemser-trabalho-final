@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TrechoDTO extends TrechoCreateDTO{
     private int idTrecho;
-    private Companhia companhia;
 }

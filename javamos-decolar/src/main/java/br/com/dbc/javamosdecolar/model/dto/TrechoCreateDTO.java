@@ -18,4 +18,6 @@ public class TrechoCreateDTO {
     @NotNull
     @Size(min = 3, max = 3, message = "Campo DESTINO deve ser no formato XXX!")
     private String destino;
+    @NotNull
+    private Integer idCompanhia;
 }

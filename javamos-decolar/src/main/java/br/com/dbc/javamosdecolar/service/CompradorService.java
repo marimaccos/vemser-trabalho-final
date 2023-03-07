@@ -25,7 +25,8 @@ public class CompradorService {
 
     public CompradorDTO getCompradorPorID(Integer idComprador) throws RegraDeNegocioException{
         try {
-            Optional<Comprador> compradorEncontrado = compradorRepository.getCompradorPorID(idComprador);
+            Comprador compradorEncontrado = compradorRepository.getCompradorPorID(idComprador)
+                    .orElseThrow(() -> new RegraDeNegocioException("Comprador não encontrado!"));
 
             return objectMapper.convertValue(compradorEncontrado, CompradorDTO.class);
 
@@ -53,16 +54,16 @@ public class CompradorService {
     public CompradorDTO editarComprador(Integer idComprador, CompradorCreateDTO comprador) throws RegraDeNegocioException{
         try {
             // Retorna o comprador existente
-            Optional<Comprador> compradorEncontrado = compradorRepository.getCompradorPorID(idComprador);
-            // Converte o Optional para Comprador para pegar o idUsuario
-            Comprador compradorConvertido = objectMapper.convertValue(compradorEncontrado, Comprador.class);
+            Comprador compradorEncontrado = compradorRepository.getCompradorPorID(idComprador)
+                    .orElseThrow(() -> new RegraDeNegocioException("Comprador não encontrado!"));
+
             // Cria usuario e passa os dados para edição
-            Usuario usuarioEncontrado = usuarioService.buscarUsuarioById(compradorConvertido.getIdUsuario());
+            Usuario usuarioEncontrado = usuarioService.buscarUsuarioById(compradorEncontrado.getIdUsuario());
             usuarioEncontrado.setNome(comprador.getNome());
             usuarioEncontrado.setSenha(comprador.getSenha());
             usuarioService.editarUsuario(usuarioEncontrado);
 
-            return getCompradorPorID(idComprador);
+            return objectMapper.convertValue(compradorEncontrado, CompradorDTO.class);
 
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a edição.");

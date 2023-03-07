@@ -44,7 +44,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
         return trecho;
     }
 
-   /* public Optional<Trecho> getTrechoPorId(Integer idTrecho) throws DatabaseException {
+    public Optional<Trecho> getTrechoPorId(Integer idTrecho) throws DatabaseException {
         Connection connection = null;
 
         try {
@@ -82,7 +82,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
                 e.printStackTrace();
             }
         }
-    }*/
+    }
 
     public Optional<Trecho> getTrecho(String origem, String destino, Companhia companhia) throws DatabaseException {
         Connection connection = null;
