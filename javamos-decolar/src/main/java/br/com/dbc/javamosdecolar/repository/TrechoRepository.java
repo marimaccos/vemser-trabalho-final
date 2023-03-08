@@ -208,8 +208,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
             return res > 0;
 
         } catch (SQLException e) {
-            System.out.println("Trecho conectado com outras entidades!");
-            throw new DatabaseException(e.getCause());
+            throw new DatabaseException("Trecho conectado com outras entidades não poed ser deletado!");
 
         } finally {
             try {
