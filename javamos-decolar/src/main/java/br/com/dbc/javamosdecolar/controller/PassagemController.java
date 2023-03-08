@@ -2,8 +2,8 @@ package br.com.dbc.javamosdecolar.controller;
 
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
-import br.com.dbc.javamosdecolar.model.dto.CreatePassagemDTO;
-import br.com.dbc.javamosdecolar.model.dto.PassagemDTO;
+import br.com.dbc.javamosdecolar.dto.CreatePassagemDTO;
+import br.com.dbc.javamosdecolar.dto.PassagemDTO;
 import br.com.dbc.javamosdecolar.service.PassagemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

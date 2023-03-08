@@ -1,11 +1,9 @@
 package br.com.dbc.javamosdecolar.controller;
 
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
-import br.com.dbc.javamosdecolar.model.Venda;
-import br.com.dbc.javamosdecolar.model.dto.CreateVendaDTO;
-import br.com.dbc.javamosdecolar.model.dto.VendaDTO;
+import br.com.dbc.javamosdecolar.dto.CreateVendaDTO;
+import br.com.dbc.javamosdecolar.dto.VendaDTO;
 import br.com.dbc.javamosdecolar.service.VendaService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

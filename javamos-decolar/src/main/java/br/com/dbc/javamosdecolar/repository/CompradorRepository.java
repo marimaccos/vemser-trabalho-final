@@ -1,8 +1,13 @@
 package br.com.dbc.javamosdecolar.repository;
 
+import br.com.dbc.javamosdecolar.dto.CompanhiaCreateDTO;
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
+import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
+import br.com.dbc.javamosdecolar.model.Companhia;
 import br.com.dbc.javamosdecolar.model.Comprador;
 
+import br.com.dbc.javamosdecolar.model.TipoUsuario;
+import br.com.dbc.javamosdecolar.model.Usuario;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -34,17 +39,32 @@ public class CompradorRepository {
         comprador.setIdComprador(resultSet.getInt("id_comprador"));
         comprador.setCpf(resultSet.getString("cpf"));
         comprador.setIdUsuario(resultSet.getInt("id_usuario"));
+        comprador.setNome(resultSet.getString("nome"));
+        comprador.setLogin(resultSet.getString("login"));
+        comprador.setSenha(resultSet.getString("senha"));
+
+        int ativo = resultSet.getInt("ativo");
+
+        if(ativo == 1) {
+            comprador.setAtivo(true);
+        } else {
+            comprador.setAtivo(false);
+        }
 
         return comprador;
     }
 
-    public Optional<Comprador> getCompradorPorID(Integer idComprador) throws DatabaseException {
+    public Optional<Comprador> getCompradorPorId(Integer idComprador) throws DatabaseException {
         Connection connection = null;
 
         try {
             connection = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT c.id_usuario, c.id_comprador, c.cpf FROM COMPRADOR c WHERE c.ID_COMPRADOR = ?";
+            String sql = "SELECT c.ID_COMPRADOR, c.CPF, c.ID_USUARIO, u.LOGIN, u.SENHA, u.NOME, u.ATIVO \n" +
+                    "FROM COMPRADOR c \n" +
+                    "INNER JOIN USUARIO u \n" +
+                    "ON u.ID_USUARIO = c.ID_USUARIO\n" +
+                    "WHERE c.ID_COMPRADOR = ?";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, idComprador);
@@ -73,7 +93,7 @@ public class CompradorRepository {
         }
     }
 
-    public Comprador criarComprador(Comprador comprador) throws DatabaseException {
+    public Comprador adicionar(Comprador comprador) throws DatabaseException {
         Connection connection = null;
         try {
             connection = ConexaoBancoDeDados.getConnection();
@@ -96,6 +116,7 @@ public class CompradorRepository {
             return comprador;
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
         } finally {
             try{
@@ -116,7 +137,10 @@ public class CompradorRepository {
             connection = ConexaoBancoDeDados.getConnection();
             Statement statement = connection.createStatement();
 
-            String sql = "SELECT * FROM COMPRADOR";
+            String sql = "SELECT c.ID_COMPRADOR, c.CPF, c.ID_USUARIO, u.LOGIN, u.SENHA, u.NOME, u.ATIVO \n" +
+                    "FROM COMPRADOR c \n" +
+                    "INNER JOIN USUARIO u \n" +
+                    "ON c.ID_USUARIO = u.ID_USUARIO";
 
             ResultSet resultSet = statement.executeQuery(sql);
 
@@ -141,39 +165,6 @@ public class CompradorRepository {
             }
         }
     }
-
-    /*public Comprador editarComprador(Integer idComprador, Comprador comprador) throws DatabaseException {
-        Connection connection = null;
-
-        try {
-            connection = ConexaoBancoDeDados.getConnection();
-
-            String sql = "UPDATE COMPRADOR\n" +
-                    "SET cpf = ?\n" +
-                    "WHERE idComprador = ?";
-
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-            preparedStatement.setString(1, comprador.getCpf());
-            preparedStatement.setInt(2, idComprador);
-
-            preparedStatement.executeUpdate();
-
-            return comprador;
-
-        } catch (SQLException e) {
-            throw new DatabaseException(e.getCause());
-
-        } finally {
-            try{
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }*/
 
     /*public Optional<Comprador> acharCompradorPorIdUsuario(Integer idUsuario) throws DatabaseException {
         Comprador compradorPesquisa = new Comprador();

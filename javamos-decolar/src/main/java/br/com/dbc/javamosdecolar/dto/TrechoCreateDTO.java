@@ -1,6 +1,5 @@
-package br.com.dbc.javamosdecolar.model.dto;
+package br.com.dbc.javamosdecolar.dto;
 
-import br.com.dbc.javamosdecolar.model.Companhia;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,4 +17,6 @@ public class TrechoCreateDTO {
     @NotNull
     @Size(min = 3, max = 3, message = "Campo DESTINO deve ser no formato XXX!")
     private String destino;
+    @NotNull
+    private Integer idCompanhia;
 }

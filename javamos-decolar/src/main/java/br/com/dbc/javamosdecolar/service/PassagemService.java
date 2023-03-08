@@ -5,10 +5,9 @@ import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.Companhia;
 import br.com.dbc.javamosdecolar.model.Passagem;
 import br.com.dbc.javamosdecolar.model.Trecho;
-import br.com.dbc.javamosdecolar.model.dto.CreatePassagemDTO;
-import br.com.dbc.javamosdecolar.model.dto.PassagemDTO;
+import br.com.dbc.javamosdecolar.dto.CreatePassagemDTO;
+import br.com.dbc.javamosdecolar.dto.PassagemDTO;
 import br.com.dbc.javamosdecolar.repository.PassagemRepository;
-import br.com.dbc.javamosdecolar.utils.DataUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,9 @@ public class PassagemService {
             }
 
             UUID codigo = UUID.randomUUID();
-            Trecho trecho = trechoService.getTrechoById(passagemDTO.getIdTrecho());
+
+            Trecho trecho = mapper.convertValue(trechoService.getTrechoById(passagemDTO.getIdTrecho()),
+                    Trecho.class);
 
             Passagem passagem = new Passagem(codigo.toString(), dataPartida, dataPartida,
                     trecho, true, passagemDTO.getValor());
@@ -84,8 +85,8 @@ public class PassagemService {
             if(DIA_ANTERIOR) {
                 throw new RegraDeNegocioException("Data inválida!");
             }
-
-            passagemRepository.editar(passagemId, passagem);
+            passagem.setDisponivel(true);
+            passagemRepository.editar(passagemId, passagem, 0);
 
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
@@ -96,9 +97,9 @@ public class PassagemService {
         passagemRepository.remover(passagemId);
     }
 
-    public boolean editarPassagemVendida(Passagem passagem) throws DatabaseException {
+    public boolean editarPassagemVendida(Passagem passagem, Integer idVenda) throws DatabaseException {
         passagem.setDisponivel(false);
-        return passagemRepository.editar(passagem.getIdPassagem(), passagem);
+        return passagemRepository.editar(passagem.getIdPassagem(), passagem, idVenda);
     }
 
     public List<PassagemDTO> listarPassagemPorData(String dataChegada, String dataPartida) throws RegraDeNegocioException {
@@ -154,6 +155,7 @@ public class PassagemService {
                     }).toList();
 
         } catch (DatabaseException e) {
+            e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
     }
@@ -180,9 +182,5 @@ public class PassagemService {
         } catch (DateTimeParseException e) {
             throw new RegraDeNegocioException("Data inserida no formato incorreto!");
         }
-    }
-
-    private LocalDateTime formataData(LocalDateTime dataPartida) {
-        return LocalDateTime.parse(dataPartida.format(DateTimeFormatter.ofPattern(DataUtil.DATA_FORMAT)));
     }
 }

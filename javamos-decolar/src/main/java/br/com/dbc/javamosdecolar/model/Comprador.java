@@ -12,8 +12,9 @@ public class Comprador extends Usuario {
     private Integer idComprador;
     private String cpf;
 
-    public Comprador(Integer idUsuario, String login, String nome, String senha, TipoUsuario tipoUsuario, String cpf) {
-        super(idUsuario, login, nome, senha, tipoUsuario);
+    public Comprador(Integer idUsuario, String login, String senha,
+                     String nome, TipoUsuario tipoUsuario, boolean ativo, String cpf) {
+        super(idUsuario, login, senha, nome, tipoUsuario, ativo);
         this.cpf = cpf;
     }
 }

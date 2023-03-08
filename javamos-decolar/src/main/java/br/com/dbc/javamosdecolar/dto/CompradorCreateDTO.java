@@ -1,10 +1,14 @@
-package br.com.dbc.javamosdecolar.model.dto;
+package br.com.dbc.javamosdecolar.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.br.CNPJ;
+import org.hibernate.validator.constraints.br.CPF;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -17,16 +21,16 @@ public class CompradorCreateDTO {
 
     @NotNull
     @NotBlank
-    @Size(max = 11)
+    @CPF
     private String cpf;
 
     @NotBlank
-    @Size(min=3, max=20)
+    @Email
     private String login;
 
     @NotBlank
     @Size(min=3, max=20)
-    @JsonIgnoreProperties(allowSetters = true)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String senha;
 
     @NotBlank

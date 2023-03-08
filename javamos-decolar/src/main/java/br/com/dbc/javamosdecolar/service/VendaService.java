@@ -2,12 +2,9 @@ package br.com.dbc.javamosdecolar.service;
 
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
-import br.com.dbc.javamosdecolar.model.Comprador;
-import br.com.dbc.javamosdecolar.model.Passagem;
-import br.com.dbc.javamosdecolar.model.Status;
-import br.com.dbc.javamosdecolar.model.Venda;
-import br.com.dbc.javamosdecolar.model.dto.CreateVendaDTO;
-import br.com.dbc.javamosdecolar.model.dto.VendaDTO;
+import br.com.dbc.javamosdecolar.model.*;
+import br.com.dbc.javamosdecolar.dto.CreateVendaDTO;
+import br.com.dbc.javamosdecolar.dto.VendaDTO;
 import br.com.dbc.javamosdecolar.repository.VendaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -42,14 +39,17 @@ public class VendaService {
             Comprador comprador = mapper.convertValue(compradorService.getCompradorPorID(vendaDTO.getIdComprador()),
                     Comprador.class);
 
+            Companhia companhia = mapper.convertValue(companhiaService.getCompanhiaById(vendaDTO.getIdCompanhia()),
+                    Companhia.class);
+
             Venda vendaEfetuada = vendaRepository.adicionar(new Venda(codigo.toString(), passagem, comprador,
-                    passagem.getTrecho().getCompanhia(), LocalDateTime.now(), Status.CONCLUIDO));
+                    companhia, LocalDateTime.now(), Status.CONCLUIDO));
 
             if(vendaEfetuada.equals(null)) {
                 throw new RegraDeNegocioException("Não foi possível concluir a venda.");
             }
 
-            boolean conseguiuEditar = passagemService.editarPassagemVendida(passagem);
+            boolean conseguiuEditar = passagemService.editarPassagemVendida(passagem, vendaEfetuada.getIdVenda());
 
             if(!conseguiuEditar) {
                 throw new RegraDeNegocioException("Não foi possível concluir a venda.");
@@ -60,7 +60,7 @@ public class VendaService {
             vendaEfetuadaDTO.setIdPassagem(vendaEfetuada.getPassagem().getIdPassagem());
             vendaEfetuadaDTO.setIdComprador(vendaEfetuada.getComprador().getIdComprador());
 
-            emailService.sendEmail(emailService.getVendaTemplate(vendaEfetuada, 1));
+            emailService.sendEmail(vendaEfetuada, "CRIAR", comprador);
 
             return vendaEfetuadaDTO;
         } catch (DatabaseException e) {
@@ -75,11 +75,16 @@ public class VendaService {
             Venda venda = vendaRepository.getVendaPorId(idVenda)
                     .orElseThrow(() -> new RegraDeNegocioException("Venda não encontrada!"));
 
+            //tirar isso quando implementar o springdata
+            Comprador comprador = mapper
+                    .convertValue(compradorService.getCompradorPorID(venda.getComprador().getIdComprador()),
+                    Comprador.class);
+
             if(venda.getStatus().getTipo() == 2) {
                 throw new RegraDeNegocioException("Venda já cancelada!");
             }
 
-            emailService.sendEmail(emailService.getVendaTemplate(venda, 2));
+            emailService.sendEmail(venda, "DELETAR", comprador);
 
             return vendaRepository.cancelarVenda(idVenda);
 
@@ -102,7 +107,6 @@ public class VendaService {
                     }).toList();
 
         } catch (DatabaseException e) {
-            e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
     }

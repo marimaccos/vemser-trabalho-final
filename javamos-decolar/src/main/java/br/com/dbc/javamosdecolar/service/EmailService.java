@@ -1,6 +1,7 @@
 package br.com.dbc.javamosdecolar.service;
 
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
+import br.com.dbc.javamosdecolar.model.Comprador;
 import br.com.dbc.javamosdecolar.model.Venda;
 import freemarker.core.ParseException;
 import freemarker.template.*;
@@ -31,14 +32,14 @@ public class EmailService {
 
     private final JavaMailSender emailSender;
 
-    public void sendEmail(String template) throws RegraDeNegocioException {
+    public void sendEmail(String template, String email) throws RegraDeNegocioException {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         try {
 
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 
             mimeMessageHelper.setFrom(from);
-            mimeMessageHelper.setTo(TO);
+            mimeMessageHelper.setTo(email);
             mimeMessageHelper.setSubject("E-mail Template");
             mimeMessageHelper.setText(template, true);
 
@@ -49,7 +50,12 @@ public class EmailService {
         }
     }
 
-    public String getVendaTemplate(Venda venda, Integer acao) throws RegraDeNegocioException {
+    public void sendEmail(Venda venda, String acao, Comprador comprador) throws RegraDeNegocioException {
+        this.sendEmail(this.getVendaTemplate(venda, acao), comprador.getLogin());
+    }
+
+
+    public String getVendaTemplate(Venda venda, String acao) throws RegraDeNegocioException {
         Map<String, Object> dados = new HashMap<>();
         dados.put("nome", venda.getComprador().getNome());
         dados.put("codigo", venda.getCodigo());
@@ -59,11 +65,11 @@ public class EmailService {
         try {
 
             switch (acao) {
-                case 1:
-                    template = fmConfiguration.getTemplate("venda-cancelada-template.ftl");
-                    break;
-                case 2:
+                case "CRIAR":
                     template = fmConfiguration.getTemplate("venda-realizada-template.ftl");
+                    break;
+                case "DELETAR":
+                    template = fmConfiguration.getTemplate("venda-cancelada-template.ftl");
                     break;
             }
             return FreeMarkerTemplateUtils.processTemplateIntoString(template, dados);

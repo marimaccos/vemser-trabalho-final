@@ -3,29 +3,29 @@
 -- usuarios --
 -- [1] - Companhia
 
-INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo)
-	VALUES (AVIACAO.seq_usuario.nextval, 'tam123', 'senhasecreta', 'companhia tam', '1');
-INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo)
-	VALUES (AVIACAO.seq_usuario.nextval, 'gol123', 'senhagol', 'companhia gol', '1');
-INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo)
-	VALUES (AVIACAO.seq_usuario.nextval, 'azul123', 'senhaazul', 'companhia azul', '1');
-INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo)
-	VALUES (AVIACAO.seq_usuario.nextval, 'fly123', 'senhafly', 'companhia fly emirates', '1');
-INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo)
-	VALUES (AVIACAO.seq_usuario.nextval, 'american123', 'senhaamerican', 'companhia american airlines', '1');
+INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo, ativo)
+	VALUES (AVIACAO.seq_usuario.nextval, 'tam123', 'senhasecreta', 'companhia tam', '1', 1);
+INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo, ativo)
+	VALUES (AVIACAO.seq_usuario.nextval, 'gol123', 'senhagol', 'companhia gol', '1', 1);
+INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo, ativo)
+	VALUES (AVIACAO.seq_usuario.nextval, 'azul123', 'senhaazul', 'companhia azul', '1', 1);
+INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo, ativo)
+	VALUES (AVIACAO.seq_usuario.nextval, 'fly123', 'senhafly', 'companhia fly emirates', '1', 1);
+INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo, ativo)
+	VALUES (AVIACAO.seq_usuario.nextval, 'american123', 'senhaamerican', 'companhia american airlines', '1', 1);
 
 -- [2] - Comprador
 
-INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo)
-	VALUES (AVIACAO.seq_usuario.nextval, 'castelovski', 'umasenha', 'kelly castelo', '2');
-INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo)
-	VALUES (AVIACAO.seq_usuario.nextval, 'bruno123', 'esqueciasenha', 'bruno rodrigues', '2');
-INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo)
-	VALUES (AVIACAO.seq_usuario.nextval, 'alasca123', 'alascalinda', 'alasca rodrigues', '2');
-INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo)
-	VALUES (AVIACAO.seq_usuario.nextval, 'risadinha', 'mari123', 'mariana machado', '2');
-INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo)
-	VALUES (AVIACAO.seq_usuario.nextval, 'robs', 'robervaldo123', 'robervaldo da silva', '2');
+INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo, ativo)
+	VALUES (AVIACAO.seq_usuario.nextval, 'castelovski', 'umasenha', 'kelly castelo', '2', 1);
+INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo, ativo)
+	VALUES (AVIACAO.seq_usuario.nextval, 'bruno123', 'esqueciasenha', 'bruno rodrigues', '2', 1);
+INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo, ativo)
+	VALUES (AVIACAO.seq_usuario.nextval, 'alasca123', 'alascalinda', 'alasca rodrigues', '2', 1);
+INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo, ativo)
+	VALUES (AVIACAO.seq_usuario.nextval, 'risadinha', 'mari123', 'mariana machado', '2', 1);
+INSERT INTO AVIACAO.USUARIO (id_usuario, login, senha, nome, tipo, ativo)
+	VALUES (AVIACAO.seq_usuario.nextval, 'robs', 'robervaldo123', 'robervaldo da silva', '2', 1);
 
 -- companhias --
 
@@ -43,7 +43,7 @@ INSERT INTO AVIACAO.COMPANHIA (id_companhia, cnpj, nome_fantasia, id_usuario)
 -- compradores --
 
 INSERT INTO AVIACAO.COMPRADOR (id_comprador, cpf, id_usuario)
-	VALUES (AVIACAO.seq_comprador.nextval, '11958516007', 2);
+	VALUES (AVIACAO.seq_comprador.nextval, '11958516007', 6);
 INSERT INTO AVIACAO.COMPRADOR (id_comprador, cpf, id_usuario)
 	VALUES (AVIACAO.seq_comprador.nextval, '84825855091', 7);
 INSERT INTO AVIACAO.COMPRADOR (id_comprador, cpf, id_usuario)

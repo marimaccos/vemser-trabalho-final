@@ -3,12 +3,14 @@ package br.com.dbc.javamosdecolar.repository;
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.model.Companhia;
 import br.com.dbc.javamosdecolar.model.Trecho;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
 
     @Override
@@ -28,23 +30,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
         }
     }
 
-    private Trecho getTrechoPorResultSet(ResultSet resultSet) throws SQLException {
-
-        // Retira os dados necessários da companhia para serem usados no trecho
-        Companhia companhia = new Companhia();
-        companhia.setNomeFantasia(resultSet.getString("nome_fantasia"));
-        companhia.setIdCompanhia(resultSet.getInt("id_companhia"));
-
-        Trecho trecho = new Trecho();
-        trecho.setIdTrecho(resultSet.getInt("id_trecho"));
-        trecho.setOrigem(resultSet.getString("origem"));
-        trecho.setDestino(resultSet.getString("destino"));
-        trecho.setCompanhia(companhia);
-
-        return trecho;
-    }
-
-   /* public Optional<Trecho> getTrechoPorId(Integer idTrecho) throws DatabaseException {
+    public Optional<Trecho> getTrechoPorId(Integer idTrecho) throws DatabaseException {
         Connection connection = null;
 
         try {
@@ -71,6 +57,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
             }
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {
@@ -82,7 +69,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
                 e.printStackTrace();
             }
         }
-    }*/
+    }
 
     public Optional<Trecho> getTrecho(String origem, String destino, Companhia companhia) throws DatabaseException {
         Connection connection = null;
@@ -245,7 +232,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
             Statement statement = connection.createStatement();
 
             String sql = "SELECT t.id_trecho, t.origem, t.destino,\n" +
-                    "c.nome_fantasia\n" +
+                    "c.id_companhia, c.nome_fantasia\n" +
                     "FROM TRECHO t\n" +
                     "INNER JOIN COMPANHIA c ON t.id_companhia = c.id_companhia\n";
 
@@ -259,6 +246,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
             return trechos;
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {
@@ -310,5 +298,21 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
                 e.printStackTrace();
             }
         }
+    }
+
+    private Trecho getTrechoPorResultSet(ResultSet resultSet) throws SQLException {
+
+        // Retira os dados necessários da companhia para serem usados no trecho
+        Companhia companhia = new Companhia();
+        companhia.setIdCompanhia(resultSet.getInt("id_companhia"));
+        companhia.setNomeFantasia(resultSet.getString("nome_fantasia"));
+
+        Trecho trecho = new Trecho();
+        trecho.setIdTrecho(resultSet.getInt("id_trecho"));
+        trecho.setOrigem(resultSet.getString("origem"));
+        trecho.setDestino(resultSet.getString("destino"));
+        trecho.setCompanhia(companhia);
+
+        return trecho;
     }
 }
