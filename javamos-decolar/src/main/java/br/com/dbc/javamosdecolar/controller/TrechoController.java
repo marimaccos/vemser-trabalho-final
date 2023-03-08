@@ -26,6 +26,18 @@ public class TrechoController {
         return new ResponseEntity<>(trechoService.listaTrechos(), HttpStatus.OK);
     }
 
+    @GetMapping("/${idTrecho}")
+    public ResponseEntity<TrechoDTO> getTrechoById(@PathVariable("idTrecho") Integer idTrecho)
+            throws RegraDeNegocioException {
+        return new ResponseEntity<>(trechoService.getTrechoById(idTrecho), HttpStatus.OK);
+    }
+
+    @GetMapping("/${idCompanhia}")
+    public ResponseEntity<List<TrechoDTO>> getTrechosPorCompanhia(@PathVariable("idCompanhia") Integer idCompanhia)
+            throws RegraDeNegocioException {
+        return new ResponseEntity<>(trechoService.getTrechosPorCompanhia(idCompanhia), HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<TrechoDTO> create(@Valid @RequestBody TrechoCreateDTO trecho)
             throws RegraDeNegocioException {
