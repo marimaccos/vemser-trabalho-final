@@ -2,6 +2,7 @@ package br.com.dbc.javamosdecolar.service;
 
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.Comprador;
+import br.com.dbc.javamosdecolar.model.Usuario;
 import br.com.dbc.javamosdecolar.model.Venda;
 import freemarker.core.ParseException;
 import freemarker.template.*;
@@ -54,6 +55,9 @@ public class EmailService {
         this.sendEmail(this.getVendaTemplate(venda, acao), comprador.getLogin());
     }
 
+    public void sendEmail(Usuario usuario) throws RegraDeNegocioException {
+        this.sendEmail(this.getNovoUsuarioTemplate(usuario), usuario.getLogin());
+    }
 
     public String getVendaTemplate(Venda venda, String acao) throws RegraDeNegocioException {
         Map<String, Object> dados = new HashMap<>();
@@ -74,6 +78,19 @@ public class EmailService {
             }
             return FreeMarkerTemplateUtils.processTemplateIntoString(template, dados);
 
+        } catch (TemplateException | RuntimeException | IOException e) {
+            throw new RegraDeNegocioException("Erro ao enviar e-mail.");
+        }
+    }
+    public String getNovoUsuarioTemplate(Usuario usuario) throws RegraDeNegocioException {
+        Map<String, Object> dados = new HashMap<>();
+        dados.put("nome", usuario.getNome());
+        dados.put("email", from);
+
+        try {
+            Template template = fmConfiguration.getTemplate("usuario-criado-template.ftl");
+
+            return FreeMarkerTemplateUtils.processTemplateIntoString(template, dados);
         } catch (TemplateException | RuntimeException | IOException e) {
             throw new RegraDeNegocioException("Erro ao enviar e-mail.");
         }

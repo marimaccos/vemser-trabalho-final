@@ -13,10 +13,12 @@ import org.springframework.stereotype.Service;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final EmailService emailService;
 
     public Usuario criarUsuario(Usuario usuario) throws RegraDeNegocioException {
         try{
             if (usuarioRepository.buscaUsuarioPeloLogin(usuario.getLogin()).isEmpty()) {
+                emailService.sendEmail(usuario);
                 return usuarioRepository.adicionar(usuario);
             } else {
                 throw new RegraDeNegocioException("Não foi possível concluir o cadastro.");
