@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PassagemDTO extends CreatePassagemDTO {
+public class PassagemDTO extends PassagemCreateDTO {
     private int idPassagem;
     private String codigo;
     private boolean disponivel;

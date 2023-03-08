@@ -3,7 +3,7 @@ package br.com.dbc.javamosdecolar.service;
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.*;
-import br.com.dbc.javamosdecolar.dto.CreateVendaDTO;
+import br.com.dbc.javamosdecolar.dto.VendaCreateDTO;
 import br.com.dbc.javamosdecolar.dto.VendaDTO;
 import br.com.dbc.javamosdecolar.repository.VendaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,7 +24,7 @@ public class VendaService {
     private final EmailService emailService;
     private final ObjectMapper mapper;
 
-    public VendaDTO efetuarVenda(CreateVendaDTO vendaDTO) throws RegraDeNegocioException {
+    public VendaDTO efetuarVenda(VendaCreateDTO vendaDTO) throws RegraDeNegocioException {
 
         try {
             UUID codigo = UUID.randomUUID();

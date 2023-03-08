@@ -165,43 +165,4 @@ public class CompradorRepository {
             }
         }
     }
-
-    /*public Optional<Comprador> acharCompradorPorIdUsuario(Integer idUsuario) throws DatabaseException {
-        Comprador compradorPesquisa = new Comprador();
-        Connection connection = null;
-        try{
-            connection = ConexaoBancoDeDados.getConnection();
-
-            String sql = "SELECT c.id_comprador, c.cpf, c.id_usuario\n" +
-                    "FROM COMPRADOR c \n" +
-                    "WHERE c.id_usuario = ?";
-
-            PreparedStatement statement = connection.prepareStatement(sql);
-
-            statement.setInt(1, idUsuario);
-
-            ResultSet resultSet = statement.executeQuery();
-
-            if(resultSet.next()) {
-                compradorPesquisa.setIdComprador(resultSet.getInt("id_comprador"));
-                compradorPesquisa.setIdUsuario(resultSet.getInt("id_usuario"));
-                compradorPesquisa.setCpf(resultSet.getString("cpf"));
-                return Optional.of(compradorPesquisa);
-            } else {
-                return Optional.empty();
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DatabaseException(e.getCause());
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }*/
 }

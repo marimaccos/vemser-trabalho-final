@@ -5,7 +5,7 @@ import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.Companhia;
 import br.com.dbc.javamosdecolar.model.Passagem;
 import br.com.dbc.javamosdecolar.model.Trecho;
-import br.com.dbc.javamosdecolar.dto.CreatePassagemDTO;
+import br.com.dbc.javamosdecolar.dto.PassagemCreateDTO;
 import br.com.dbc.javamosdecolar.dto.PassagemDTO;
 import br.com.dbc.javamosdecolar.repository.PassagemRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +27,7 @@ public class PassagemService {
     private final CompanhiaService companhiaService;
     private final ObjectMapper mapper;
 
-    public PassagemDTO cadastrarPassagem(CreatePassagemDTO passagemDTO) throws RegraDeNegocioException {
+    public PassagemDTO cadastrarPassagem(PassagemCreateDTO passagemDTO) throws RegraDeNegocioException {
         try {
 
             LocalDateTime dataPartida = passagemDTO.getDataPartida();
@@ -73,7 +73,7 @@ public class PassagemService {
         }
     }
 
-    public void editarPassagem(Integer passagemId, CreatePassagemDTO passagemDTO) throws RegraDeNegocioException {
+    public void editarPassagem(Integer passagemId, PassagemCreateDTO passagemDTO) throws RegraDeNegocioException {
         try {
             passagemRepository.getPassagemPeloId(passagemId)
                     .orElseThrow(() -> new RegraDeNegocioException("Passagem inválida!"));
