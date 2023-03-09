@@ -14,21 +14,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PassagemCreateDTO {
-    @Schema(description = "Data de partida", example = "03/03/2024")
+    @Schema(description = "Data de partida", example = "03/03/2024", required = true)
     @NotNull(message = "O campo dataPartida não pode estar nulo!")
     @FutureOrPresent(message = "O campo dataPartida deve ser atual ou futuro!")
     private LocalDateTime dataPartida;
 
-    @Schema(description = "Data de chegada", example = "04/03/2024")
+    @Schema(description = "Data de chegada", example = "04/03/2024", required = true)
     @NotNull(message = "O campo dataChegada não pode estar nulo!")
     @FutureOrPresent(message = "O campo dataChegada deve ser atual ou futuro!")
     private LocalDateTime dataChegada;
 
-    @Schema(description = "Valor da passagem", example = "800")
+    @Schema(description = "Valor da passagem", example = "800", required = true)
     @NotNull(message = "O campo valor não pode estar nulo!")
     private BigDecimal valor;
 
-    @Schema(description = "ID do trecho", example = "5")
+    @Schema(description = "ID do trecho", example = "5", required = true)
     @NotNull(message = "O campo idTrecho não pode estar nulo!")
     private Integer idTrecho;
 }

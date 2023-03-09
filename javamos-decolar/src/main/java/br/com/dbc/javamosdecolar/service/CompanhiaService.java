@@ -44,18 +44,6 @@ public class CompanhiaService {
         }
     }
 
-    // talvez remover? não sei se vamos usar
-
-//    public CompanhiaDTO getCompanhiaByUsuarioId(Integer id) throws RegraDeNegocioException {
-//        try {
-//            Companhia companhia = companhiaRepository.buscaCompanhiaPorIdUsuario(id)
-//                    .orElseThrow(() -> new RegraDeNegocioException("Companhia não encontrada"));
-//            return objectMapper.convertValue(companhia, CompanhiaDTO.class);
-//        } catch (DatabaseException e) {
-//            throw new RegraDeNegocioException("Aconteceu algum problema durante a recuperação da companhia.");
-//        }
-//    }
-
     public CompanhiaDTO getCompanhiaById(Integer id) throws RegraDeNegocioException {
         try {
             Companhia companhia = companhiaRepository.buscaCompanhiaPorId(id)

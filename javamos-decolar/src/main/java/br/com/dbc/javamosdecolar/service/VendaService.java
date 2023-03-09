@@ -39,8 +39,16 @@ public class VendaService {
             Comprador comprador = mapper.convertValue(compradorService.getCompradorPorID(vendaDTO.getIdComprador()),
                     Comprador.class);
 
+            if(!comprador.isAtivo()) {
+                throw new RegraDeNegocioException("Comprador indisponível.");
+            }
+
             Companhia companhia = mapper.convertValue(companhiaService.getCompanhiaById(vendaDTO.getIdCompanhia()),
                     Companhia.class);
+
+            if(!companhia.isAtivo()) {
+                throw new RegraDeNegocioException("Companhia indisponível.");
+            }
 
             Venda vendaEfetuada = vendaRepository.adicionar(new Venda(codigo.toString(), passagem, comprador,
                     companhia, LocalDateTime.now(), Status.CONCLUIDO));

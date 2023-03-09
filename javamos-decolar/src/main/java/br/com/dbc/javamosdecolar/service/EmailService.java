@@ -4,7 +4,6 @@ import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.Comprador;
 import br.com.dbc.javamosdecolar.model.Usuario;
 import br.com.dbc.javamosdecolar.model.Venda;
-import freemarker.core.ParseException;
 import freemarker.template.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,9 +27,6 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String from;
 
-    private static final String TO = "kellyplcastelo@gmail.com"; // botei meu email pessoal aqui,
-        // mas acho interessante a gente repensar e quem sabe adicionar um email pros usuarios
-
     private final JavaMailSender emailSender;
 
     public void sendEmail(String template, String email) throws RegraDeNegocioException {
@@ -41,7 +37,7 @@ public class EmailService {
 
             mimeMessageHelper.setFrom(from);
             mimeMessageHelper.setTo(email);
-            mimeMessageHelper.setSubject("E-mail Template");
+            mimeMessageHelper.setSubject("Javamos Decolar");
             mimeMessageHelper.setText(template, true);
 
             emailSender.send(mimeMessageHelper.getMimeMessage());

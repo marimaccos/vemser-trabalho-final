@@ -101,42 +101,6 @@ public class CompanhiaRepository {
         }
     }
 
-    public Optional<Companhia> buscaCompanhiaPorIdUsuario(Integer idUsuario) throws DatabaseException {
-        Connection conexao = null;
-        try{
-            conexao = ConexaoBancoDeDados.getConnection();
-
-            String sql = "SELECT ID_COMPANHIA, CNPJ, NOME_FANTASIA, ID_USUARIO FROM COMPANHIA c \n" +
-                    "WHERE c.ID_USUARIO = ?";
-            PreparedStatement statement = conexao.prepareStatement(sql);
-
-            statement.setInt(1, idUsuario);
-
-            ResultSet resultSet = statement.executeQuery();
-
-            if(resultSet.next()) {
-                Companhia companhiaPesquisa = getCompanhiaPorResultSet(resultSet);
-                return Optional.of(companhiaPesquisa);
-
-            } else {
-                return Optional.empty();
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DatabaseException(e.getCause());
-
-        } finally {
-            try {
-                if (conexao != null) {
-                    conexao.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    
     public List<Companhia> listaCompanhias() throws DatabaseException {
         List<Companhia> companhias = new ArrayList<>();
         Connection conexao = null;
@@ -145,12 +109,11 @@ public class CompanhiaRepository {
             conexao = ConexaoBancoDeDados.getConnection();
             Statement statement = conexao.createStatement();
 
-            String sql = "SELECT c.ID_COMPANHIA, c.CNPJ, c.NOME_FANTASIA, c.ID_USUARIO, " +
+            String sql = "SELECT c.ID_COMPANHIA, c.CNPJ, c.NOME_FANTASIA, c.ID_USUARIO, u.ATIVO, " +
                     "u.LOGIN, u.SENHA, u.NOME \n" +
                     "FROM COMPANHIA c \n" +
                     "INNER JOIN USUARIO u \n" +
-                    "ON c.ID_USUARIO = u.ID_USUARIO\n" +
-                    "WHERE c.ID_COMPANHIA = ?";
+                    "ON c.ID_USUARIO = u.ID_USUARIO";
 
             ResultSet resultSet = statement.executeQuery(sql);
 
@@ -213,7 +176,7 @@ public class CompanhiaRepository {
         try{
             conexao = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT c.ID_COMPANHIA, c.CNPJ, c.NOME_FANTASIA, c.ID_USUARIO, u.LOGIN, u.SENHA, u.NOME \n" +
+            String sql = "SELECT c.ID_COMPANHIA, c.CNPJ, c.NOME_FANTASIA, c.ID_USUARIO, u.LOGIN, u.SENHA, u.NOME, u.ATIVO\n" +
                     "FROM COMPANHIA c \n" +
                     "INNER JOIN USUARIO u \n" +
                     "ON c.ID_USUARIO = u.ID_USUARIO " +
@@ -255,6 +218,14 @@ public class CompanhiaRepository {
         companhia.setLogin(resultSet.getString("login"));
         companhia.setSenha(resultSet.getString("senha"));
         companhia.setNome(resultSet.getString("nome"));
+
+        int ativo = resultSet.getInt("ativo");
+
+        if(ativo == 1) {
+            companhia.setAtivo(true);
+        } else {
+            companhia.setAtivo(false);
+        }
 
         return companhia;
     }

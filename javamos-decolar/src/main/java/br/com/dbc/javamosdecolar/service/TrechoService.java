@@ -26,6 +26,10 @@ public class TrechoService {
                     .convertValue(companhiaService.getCompanhiaById(trechoDTO.getIdCompanhia()),
                             Companhia.class);
 
+            if(!companhia.isAtivo()) {
+                throw new RegraDeNegocioException("Companhia indisponível.");
+            }
+
             // Checa se a companhia já cadastrou esse trecho
             if(trechoRepository.getTrecho(trechoDTO.getOrigem().toUpperCase(),
                     trechoDTO.getDestino().toUpperCase(), companhia).isPresent()) {

@@ -23,22 +23,22 @@ public class CompradorCreateDTO {
     @NotNull
     @NotBlank
     @CPF
-    @Schema(description = "CPF do comprador", example = "123.456.789.10")
+    @Schema(description = "CPF do comprador", example = "123.456.789.10", required = true)
     private String cpf;
 
     @NotBlank
     @Email
-    @Schema(description = "Login do comprador", example = "bruno.rodrigues@gmail.com")
+    @Schema(description = "Login do comprador", example = "bruno.rodrigues@gmail.com", required = true)
     private String login;
 
     @NotBlank
     @Size(min=3, max=20)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Schema(description = "Senha do comprador", example = "123456")
+    @Schema(description = "Senha do comprador", example = "123456", required = true)
     private String senha;
 
     @NotBlank
     @Size(min=3, max=50)
-    @Schema(description = "Nome do comprador", example = "Bruno Rodrigues")
+    @Schema(description = "Nome do comprador", example = "Bruno Rodrigues", required = true)
     private String nome;
 }
