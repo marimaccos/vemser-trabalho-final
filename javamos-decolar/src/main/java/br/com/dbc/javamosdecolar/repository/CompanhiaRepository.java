@@ -67,7 +67,7 @@ public class CompanhiaRepository {
         try{
             conexao = ConexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT c.ID_COMPANHIA, c.CNPJ, c.NOME_FANTASIA, c.ID_USUARIO, u.LOGIN," +
+            String sql = "SELECT c.ID_COMPANHIA, c.CNPJ, c.NOME_FANTASIA, c.ID_USUARIO, u.LOGIN, u.ATIVO," +
                     " u.SENHA, u.NOME \n" +
                     "FROM COMPANHIA c \n" +
                     "INNER JOIN USUARIO u \n" +

@@ -243,7 +243,7 @@ public class PassagemRepository {
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
-                    "WHERE p.data_partida = ?";
+                    "WHERE p.data_partida = ? AND p.disponivel = 1";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -285,7 +285,7 @@ public class PassagemRepository {
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia = t.id_companhia\n" +
-                    "WHERE p.data_chegada = ?";
+                    "WHERE p.data_chegada = ?  AND p.disponivel = 1";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -327,7 +327,7 @@ public class PassagemRepository {
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
-                    "WHERE p.valor <= ?";
+                    "WHERE p.valor <= ?  AND p.disponivel = 1";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -369,7 +369,7 @@ public class PassagemRepository {
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
-                    "WHERE c.id_companhia = ?";
+                    "WHERE c.id_companhia = ?  AND p.disponivel = 1";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -426,40 +426,6 @@ public class PassagemRepository {
                 passagens.add(passagem);
             }
             return passagens;
-
-        } catch (SQLException e) {
-            throw new DatabaseException(e.getCause());
-
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public boolean inserirIdVenda(Integer idPassagem, Integer idVenda) throws DatabaseException {
-        Connection connection = null;
-
-        try {
-            connection = ConexaoBancoDeDados.getConnection();
-
-            StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE PASSAGEM SET ");
-            sql.append(" id_venda = ?\n");
-            sql.append(" WHERE id_passagem = ? ");
-
-            PreparedStatement preparedStatement = connection.prepareStatement(sql.toString());
-
-            preparedStatement.setInt(1, idVenda);
-            preparedStatement.setInt(2, idPassagem);
-
-            // Executa-se a consulta
-            int res = preparedStatement.executeUpdate();
-            return res > 0;
 
         } catch (SQLException e) {
             throw new DatabaseException(e.getCause());
