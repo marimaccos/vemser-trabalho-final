@@ -1,4 +1,4 @@
-package br.com.dbc.javamosdecolar.controller;
+package br.com.dbc.javamosdecolar.docs;
 
 import br.com.dbc.javamosdecolar.dto.PassagemCreateDTO;
 import br.com.dbc.javamosdecolar.dto.PassagemDTO;

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.*;
+
 @Validated
 @RestController
 @RequestMapping("/comprador")
@@ -23,32 +25,32 @@ public class CompradorController {
 
     @GetMapping
     public ResponseEntity<List<CompradorDTO>> list() throws RegraDeNegocioException {
-        return new ResponseEntity<>(compradorService.listaCompradores(), HttpStatus.OK);
+        return new ResponseEntity<>(compradorService.listaCompradores(), OK);
     }
 
     @GetMapping("/{idComprador}")
     public ResponseEntity<CompradorDTO> getCompradorByID(@PathVariable("idComprador") Integer idComprador)
             throws RegraDeNegocioException {
-        return new ResponseEntity<>(compradorService.getCompradorPorID(idComprador), HttpStatus.OK);
+        return new ResponseEntity<>(compradorService.getCompradorPorID(idComprador), OK);
     }
 
     @PostMapping
     public ResponseEntity<CompradorDTO> create(@Valid @RequestBody CompradorCreateDTO comprador)
                                                 throws RegraDeNegocioException{
-        return new ResponseEntity<>(compradorService.criarComprador(comprador), HttpStatus.OK);
+        return new ResponseEntity<>(compradorService.criarComprador(comprador), CREATED);
     }
 
     @PutMapping("/{idComprador}")
     public ResponseEntity<CompradorDTO> update(@PathVariable("idComprador") Integer idComprador,
                                                @Valid @RequestBody CompradorCreateDTO comprador)
                                                 throws RegraDeNegocioException {
-        return new ResponseEntity<>(compradorService.editarComprador(idComprador, comprador), HttpStatus.OK);
+        return new ResponseEntity<>(compradorService.editarComprador(idComprador, comprador), OK);
     }
     
     @DeleteMapping("/{idComprador}")
     public ResponseEntity<Void> delete(@PathVariable("idComprador") Integer idComprador) throws RegraDeNegocioException {
         compradorService.deletarComprador(idComprador);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
 }

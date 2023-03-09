@@ -130,7 +130,11 @@ public class PassagemRepository {
             preparedStatement.setTimestamp(2, java.sql.Timestamp.valueOf(passagem.getDataChegada()));
             preparedStatement.setBoolean(3, passagem.isDisponivel());
             preparedStatement.setBigDecimal(4, passagem.getValor());
-            preparedStatement.setInt(5, vendaId);
+            if(vendaId != 0) {
+                preparedStatement.setInt(5, vendaId);
+            } else {
+                preparedStatement.setObject(5, null);
+            }
             preparedStatement.setInt(6, id);
 
             // Executa-se a consulta
@@ -213,48 +217,6 @@ public class PassagemRepository {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DatabaseException(e.getCause());
-
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public Optional<Passagem> getPassagemPorCodigo(String codigo) throws DatabaseException {
-        Connection connection = null;
-
-        try {
-            connection = ConexaoBancoDeDados.getConnection();
-
-            String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
-                    "t.id_trecho, t.origem, t.destino,\n" +
-                    "c.id_companhia, c.nome_fantasia\n" +
-                    "FROM PASSAGEM p\n" +
-                    "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
-                    "INNER JOIN COMPANHIA c ON c.id_companhia = t.id_companhia\n" +
-                    "WHERE p.codigo = ?";
-
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-            preparedStatement.setString(1, codigo);
-
-            // Executa-se a consulta
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if(resultSet.next()) {
-                Passagem passagem = getPassagemPorResultSet(resultSet);
-                return Optional.of(passagem);
-            } else {
-                return Optional.empty();
-            }
-
-        } catch (SQLException e) {
             throw new DatabaseException(e.getCause());
 
         } finally {

@@ -1,7 +1,7 @@
-package br.com.dbc.javamosdecolar.controller;
+package br.com.dbc.javamosdecolar.docs;
 
-import br.com.dbc.javamosdecolar.dto.CompanhiaCreateDTO;
-import br.com.dbc.javamosdecolar.dto.CompanhiaDTO;
+import br.com.dbc.javamosdecolar.dto.CompradorCreateDTO;
+import br.com.dbc.javamosdecolar.dto.CompradorDTO;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,55 +12,56 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-public interface CompanhiaDoc {
-
-    @Operation(summary = "Listar companhias", description = "Lista todas as companhias cadastradas")
+public interface CompradorDoc {
+    @Operation(summary = "Listar compradores", description = "Lista todos os compradores cadastrados")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "Retorna a lista de companhias cadastradas"),
+                    @ApiResponse(responseCode = "200", description = "Retorna a lista de compradores cadastrados"),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
     @GetMapping
-    public ResponseEntity<List<CompanhiaDTO>> list() throws RegraDeNegocioException;
+    public ResponseEntity<List<CompradorDTO>> list() throws RegraDeNegocioException;
 
-    @Operation(summary = "Buscar companhia por id", description = "Mostra os dados da companhia pelo id")
+    @Operation(summary = "Buscar comprador por id", description = "Mostra os dados do comprador pelo id")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "Retorna a companhia solicitada"),
+                    @ApiResponse(responseCode = "200", description = "Retorna o comprador solicitado"),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @GetMapping("/{idCompanhia}")
-    public ResponseEntity<CompanhiaDTO> getCompanhiaById(@PathVariable("idCompanhia") Integer idCompanhia)
+    @GetMapping("/{idComprador}")
+    public ResponseEntity<CompradorDTO> getCompradorByID(@PathVariable("idComprador") Integer idComprador)
             throws RegraDeNegocioException;
 
-    @Operation(summary = "Criar companhia", description = "Cria uma nova companhia")
+    @Operation(summary = "Criar comprador", description = "Cria um novo comprador")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "Retorna a companhia criada"),
+                    @ApiResponse(responseCode = "200", description = "Retorna o comprador criado"),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
     @PostMapping
-    public ResponseEntity<CompanhiaDTO> create(@Valid @RequestBody CompanhiaCreateDTO companhiaDTO) throws RegraDeNegocioException;
+    public ResponseEntity<CompradorDTO> create(@Valid @RequestBody CompradorCreateDTO comprador)
+            throws RegraDeNegocioException;
 
-    @Operation(summary = "Editar companhia por id", description = "Edita os dados da companhia pelo id")
+    @Operation(summary = "Editar comprador por id", description = "Edita os dados do comprador pelo id")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "Retorna os novos dados da companhia"),
+                    @ApiResponse(responseCode = "200", description = "Retorna os novos dados do comprador"),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @PutMapping("/{idCompanhia}")
-    public ResponseEntity<Void> update(@PathVariable("idCompanhia") Integer idCompanhia,
-                                       @Valid @RequestBody CompanhiaCreateDTO companhiaDTO) throws RegraDeNegocioException;
+    @PutMapping("/{idComprador}")
+    public ResponseEntity<CompradorDTO> update(@PathVariable("idComprador") Integer idComprador,
+                                               @Valid @RequestBody CompradorCreateDTO comprador)
+            throws RegraDeNegocioException;
 
-    @Operation(summary = "Deletar companhia por id", description = "Deleta a companhia selecionado")
+    @Operation(summary = "Deletar comprador por id", description = "Deleta o comprador selecionado")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Retorna que a operação foi realizada"),
@@ -68,6 +69,6 @@ public interface CompanhiaDoc {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @DeleteMapping("/{idCompanhia}")
-    public ResponseEntity<Void> delete(@PathVariable("idCompanhia") Integer idCompanhia) throws RegraDeNegocioException;
+    @DeleteMapping("/{idComprador}")
+    public ResponseEntity<Void> delete(@PathVariable("idComprador") Integer idComprador) throws RegraDeNegocioException;
 }

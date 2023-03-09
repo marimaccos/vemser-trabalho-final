@@ -78,7 +78,7 @@ public class CompanhiaService {
         }
     }
 
-    public Companhia editarCompanhia(Integer id, CompanhiaCreateDTO companhiaDTO) throws RegraDeNegocioException {
+    public CompanhiaDTO editarCompanhia(Integer id, CompanhiaCreateDTO companhiaDTO) throws RegraDeNegocioException {
         try {
             Companhia companhia = companhiaRepository.buscaCompanhiaPorId(id)
                     .orElseThrow(() -> new RegraDeNegocioException("Companhia não existe."));
@@ -97,7 +97,8 @@ public class CompanhiaService {
 
             if(companhiaRepository.editarCompanhia(id, companhiaEditada)) {
                 companhiaEditada.setIdCompanhia(id);
-                return companhiaEditada;
+                companhiaEditada.setAtivo(companhia.isAtivo());
+                return objectMapper.convertValue(companhiaEditada, CompanhiaDTO.class);
             } else {
                 throw new RegraDeNegocioException("Companhia não pode ser editada.");
             }

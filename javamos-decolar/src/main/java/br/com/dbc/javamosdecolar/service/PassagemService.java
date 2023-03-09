@@ -73,10 +73,14 @@ public class PassagemService {
         }
     }
 
-    public void editarPassagem(Integer passagemId, PassagemCreateDTO passagemDTO) throws RegraDeNegocioException {
+    public PassagemDTO editarPassagem(Integer passagemId, PassagemCreateDTO passagemDTO) throws RegraDeNegocioException {
         try {
-            passagemRepository.getPassagemPeloId(passagemId)
+            Passagem passagemEncontrada = passagemRepository.getPassagemPeloId(passagemId)
                     .orElseThrow(() -> new RegraDeNegocioException("Passagem inválida!"));
+
+            if(!passagemEncontrada.isDisponivel()) {
+                throw new RegraDeNegocioException("Edição indisponivel para uma passagem já comprada.");
+            }
 
             Passagem passagem = mapper.convertValue(passagemDTO, Passagem.class);
 
@@ -86,10 +90,16 @@ public class PassagemService {
                 throw new RegraDeNegocioException("Data inválida!");
             }
             passagem.setDisponivel(true);
-            passagemRepository.editar(passagemId, passagem, 0);
+            if(passagemRepository.editar(passagemId, passagem, 0)) {
+                PassagemDTO passagemEditada = mapper.convertValue(passagem, PassagemDTO.class);
+                passagemEditada.setIdPassagem(passagemId);
+                return passagemEditada;
+            } else {
+                throw new RegraDeNegocioException("Aconteceu algum problema durante a edição da passagem.");
+            }
 
         } catch (DatabaseException e) {
-            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a edição da passagem");
         }
     }
 

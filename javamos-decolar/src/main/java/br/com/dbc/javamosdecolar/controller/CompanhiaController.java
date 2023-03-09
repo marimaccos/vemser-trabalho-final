@@ -34,19 +34,18 @@ public class CompanhiaController {
 
     @PostMapping
     public ResponseEntity<CompanhiaDTO> create(@Valid @RequestBody CompanhiaCreateDTO companhiaDTO) throws RegraDeNegocioException {
-        return new ResponseEntity<>(companhiaService.criarCompanhia(companhiaDTO), OK);
+        return new ResponseEntity<>(companhiaService.criarCompanhia(companhiaDTO), CREATED);
     }
 
     @PutMapping("/{idCompanhia}")
-    public ResponseEntity<Void> update(@PathVariable("idCompanhia") Integer idCompanhia,
+    public ResponseEntity<CompanhiaDTO> update(@PathVariable("idCompanhia") Integer idCompanhia,
                                        @Valid @RequestBody CompanhiaCreateDTO companhiaDTO) throws RegraDeNegocioException {
-        companhiaService.editarCompanhia(idCompanhia, companhiaDTO);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(companhiaService.editarCompanhia(idCompanhia, companhiaDTO), OK);
     }
 
     @DeleteMapping("/{idCompanhia}")
     public ResponseEntity<Void> delete(@PathVariable("idCompanhia") Integer idCompanhia) throws RegraDeNegocioException {
         companhiaService.deletarCompanhia(idCompanhia);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
