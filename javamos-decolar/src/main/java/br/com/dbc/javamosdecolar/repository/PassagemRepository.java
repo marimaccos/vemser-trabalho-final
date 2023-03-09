@@ -1,7 +1,9 @@
 package br.com.dbc.javamosdecolar.repository;
 
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
+import br.com.dbc.javamosdecolar.model.Companhia;
 import br.com.dbc.javamosdecolar.model.Passagem;
+import br.com.dbc.javamosdecolar.model.Trecho;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -12,8 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
-    @Override
+public class PassagemRepository {
     public Integer getProximoId(Connection connection) throws SQLException {
         try {
             String sql = "SELECT seq_passagem.nextval mysequence from DUAL";
@@ -30,7 +31,6 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
         }
     }
 
-    @Override
     public Passagem adicionar(Passagem passagem) throws DatabaseException {
         Connection connection = null;
 
@@ -71,7 +71,6 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
         }
     }
 
-    @Override
     public List<Passagem> listar() throws DatabaseException {
         List<Passagem> passagens = new ArrayList<>();
         Connection connection = null;
@@ -110,8 +109,7 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
         }
     }
 
-    @Override
-    public boolean editar(Integer id, Passagem passagem) throws DatabaseException {
+    public boolean editar(Integer id, Passagem passagem, Integer vendaId) throws DatabaseException {
         Connection connection = null;
 
         try {
@@ -122,8 +120,9 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
             sql.append(" data_partida = ?,");
             sql.append(" data_chegada = ?,");
             sql.append(" disponivel = ?,");
-            sql.append(" valor = ?\n");
-            sql.append(" WHERE id_passagem = ? ");
+            sql.append(" valor = ?,\n");
+            sql.append(" id_venda = ?\n");
+            sql.append(" WHERE id_passagem = ?");
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql.toString());
 
@@ -131,13 +130,19 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
             preparedStatement.setTimestamp(2, java.sql.Timestamp.valueOf(passagem.getDataChegada()));
             preparedStatement.setBoolean(3, passagem.isDisponivel());
             preparedStatement.setBigDecimal(4, passagem.getValor());
-            preparedStatement.setInt(5, id);
+            if(vendaId != 0) {
+                preparedStatement.setInt(5, vendaId);
+            } else {
+                preparedStatement.setObject(5, null);
+            }
+            preparedStatement.setInt(6, id);
 
             // Executa-se a consulta
             int res = preparedStatement.executeUpdate();
             return res > 0;
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {
@@ -151,7 +156,6 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
         }
     }
 
-    @Override
     public boolean remover(Integer id) throws DatabaseException {
         Connection connection = null;
 
@@ -169,46 +173,6 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
 
             return res > 0;
 
-        } catch (SQLException e) {
-            throw new DatabaseException(e.getCause());
-
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public boolean editarDisponibilidadeDaPassagem(boolean disponivel, Passagem passagem) throws DatabaseException {
-
-        Connection connection = null;
-
-        Integer boolOracle = 0;
-
-        if(disponivel) {
-            boolOracle = 1;
-        }
-
-        try {
-            connection = ConexaoBancoDeDados.getConnection();
-
-            String sql = "UPDATE PASSAGEM SET " +
-                    " disponivel = ? " +
-                    " WHERE ID_PASSAGEM = ?";
-
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-            preparedStatement.setInt(1, boolOracle);
-            preparedStatement.setInt(2, passagem.getIdPassagem());
-
-            // Executa-se a consulta
-            int res = preparedStatement.executeUpdate();
-
-            return res > 0;
         } catch (SQLException e) {
             throw new DatabaseException(e.getCause());
 
@@ -252,48 +216,7 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
             }
 
         } catch (SQLException e) {
-            throw new DatabaseException(e.getCause());
-
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public Optional<Passagem> getPassagemPorCodigo(String codigo) throws DatabaseException {
-        Connection connection = null;
-
-        try {
-            connection = ConexaoBancoDeDados.getConnection();
-
-            String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
-                    "t.id_trecho, t.origem, t.destino,\n" +
-                    "c.id_companhia, c.nome_fantasia\n" +
-                    "FROM PASSAGEM p\n" +
-                    "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
-                    "INNER JOIN COMPANHIA c ON c.id_companhia = t.id_companhia\n" +
-                    "WHERE p.codigo = ?";
-
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-            preparedStatement.setString(1, codigo);
-
-            // Executa-se a consulta
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if(resultSet.next()) {
-                Passagem passagem = getPassagemPorResultSet(resultSet);
-                return Optional.of(passagem);
-            } else {
-                return Optional.empty();
-            }
-
-        } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {
@@ -320,7 +243,7 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
-                    "WHERE p.data_partida = ?";
+                    "WHERE p.data_partida = ? AND p.disponivel = 1";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -362,7 +285,7 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia = t.id_companhia\n" +
-                    "WHERE p.data_chegada = ?";
+                    "WHERE p.data_chegada = ?  AND p.disponivel = 1";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -404,7 +327,7 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
-                    "WHERE p.valor <= ?";
+                    "WHERE p.valor <= ?  AND p.disponivel = 1";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -446,7 +369,7 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
                     "FROM PASSAGEM p\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n" +
-                    "WHERE c.id_companhia = ?";
+                    "WHERE c.id_companhia = ?  AND p.disponivel = 1";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -503,40 +426,6 @@ public class PassagemRepository implements RepositoryCRUD<Passagem, Integer> {
                 passagens.add(passagem);
             }
             return passagens;
-
-        } catch (SQLException e) {
-            throw new DatabaseException(e.getCause());
-
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public boolean inserirIdVenda(Integer idPassagem, Integer idVenda) throws DatabaseException {
-        Connection connection = null;
-
-        try {
-            connection = ConexaoBancoDeDados.getConnection();
-
-            StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE PASSAGEM SET ");
-            sql.append(" id_venda = ?\n");
-            sql.append(" WHERE id_passagem = ? ");
-
-            PreparedStatement preparedStatement = connection.prepareStatement(sql.toString());
-
-            preparedStatement.setInt(1, idVenda);
-            preparedStatement.setInt(2, idPassagem);
-
-            // Executa-se a consulta
-            int res = preparedStatement.executeUpdate();
-            return res > 0;
 
         } catch (SQLException e) {
             throw new DatabaseException(e.getCause());

@@ -1,9 +1,7 @@
 package br.com.dbc.javamosdecolar.repository;
 
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
-import br.com.dbc.javamosdecolar.model.Passagem;
-import br.com.dbc.javamosdecolar.model.Status;
-import br.com.dbc.javamosdecolar.model.Venda;
+import br.com.dbc.javamosdecolar.model.*;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -329,6 +327,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
             return vendas;
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {
@@ -353,12 +352,14 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
                     "v.id_venda, v.codigo as codigo_venda, v.status, v.data_venda,\n" +
                     "c.id_companhia, c.nome_fantasia,\n" +
                     "t.id_trecho, t.origem, t.destino,\n" +
-                    "cd.id_comprador\n" +
+                    "cd.id_comprador, cd.id_usuario,\n" +
+                    "u.nome\n" +
                     "FROM VENDA v\n" +
                     "INNER JOIN COMPRADOR cd ON cd.id_comprador = v.id_comprador\n" +
                     "INNER JOIN PASSAGEM p ON p.id_venda = v.id_venda \n" +
                     "INNER JOIN COMPANHIA c ON c.id_companhia = v.id_companhia\n" +
                     "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
+                    "INNER JOIN USUARIO u ON cd.id_usuario = u.id_usuario\n" +
                     "WHERE v.id_venda = ?";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -369,7 +370,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if(resultSet.next()) {
-                Venda venda = getVendaPorResultSet(resultSet);
+                Venda venda = getVendaPorResultSetWithCompradorNome(resultSet);
                 return Optional.of(venda);
 
             } else {
@@ -377,6 +378,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
             }
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {
@@ -402,6 +404,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
         venda.setCodigo(resultSet.getString("codigo_venda"));
         venda.setData((resultSet.getTimestamp("data_venda").toLocalDateTime()));
 
+
         if (resultSet.getString("status").equals(Status.CANCELADO.name())) {
             venda.setStatus(Status.CANCELADO);
         } else if (resultSet.getString("status").equals(Status.CONCLUIDO.name())) {
@@ -411,6 +414,46 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
         companhia.setNomeFantasia(resultSet.getString("nome_fantasia"));
         companhia.setIdCompanhia(resultSet.getInt("id_companhia"));
         comprador.setIdComprador(resultSet.getInt("id_comprador"));
+        trecho.setIdTrecho(resultSet.getInt("id_trecho"));
+        trecho.setOrigem(resultSet.getString("origem"));
+        trecho.setDestino(resultSet.getString("destino"));
+        passagem.setCodigo(resultSet.getString("codigo"));
+        passagem.setDataPartida((resultSet.getTimestamp("data_partida").toLocalDateTime()));
+        passagem.setDataChegada((resultSet.getTimestamp("data_chegada").toLocalDateTime()));
+        passagem.setValor((resultSet.getBigDecimal("valor")));
+        passagem.setIdPassagem(resultSet.getInt("id_passagem"));
+        trecho.setCompanhia(companhia);
+        passagem.setTrecho(trecho);
+        venda.setCompanhia(companhia);
+        venda.setComprador(comprador);
+        venda.setPassagem(passagem);
+
+        return venda;
+    }
+
+    private Venda getVendaPorResultSetWithCompradorNome(ResultSet resultSet) throws SQLException {
+
+        Venda venda = new Venda();
+        Companhia companhia = new Companhia();
+        Comprador comprador = new Comprador();
+        Trecho trecho = new Trecho();
+        Passagem passagem = new Passagem();
+
+        venda.setIdVenda(resultSet.getInt("id_venda"));
+        venda.setCodigo(resultSet.getString("codigo_venda"));
+        venda.setData((resultSet.getTimestamp("data_venda").toLocalDateTime()));
+
+
+        if (resultSet.getString("status").equals(Status.CANCELADO.name())) {
+            venda.setStatus(Status.CANCELADO);
+        } else if (resultSet.getString("status").equals(Status.CONCLUIDO.name())) {
+            venda.setStatus(Status.CONCLUIDO);
+        }
+
+        companhia.setNomeFantasia(resultSet.getString("nome_fantasia"));
+        companhia.setIdCompanhia(resultSet.getInt("id_companhia"));
+        comprador.setIdComprador(resultSet.getInt("id_comprador"));
+        comprador.setNome(resultSet.getString("nome"));
         trecho.setIdTrecho(resultSet.getInt("id_trecho"));
         trecho.setOrigem(resultSet.getString("origem"));
         trecho.setDestino(resultSet.getString("destino"));
