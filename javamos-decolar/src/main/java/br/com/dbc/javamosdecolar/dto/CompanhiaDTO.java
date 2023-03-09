@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CompanhiaDTO extends CompanhiaCreateDTO{
     private Integer idCompanhia;
+    private Boolean ativo;
 }

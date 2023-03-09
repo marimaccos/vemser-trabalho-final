@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CompradorDTO extends CompradorCreateDTO {
-
     private Integer idComprador;
+    private Boolean ativo;
 }
