@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VendaDTO extends CreateVendaDTO{
+public class VendaDTO extends VendaCreateDTO {
     private Integer idVenda;
     private String codigo;
     private Status status;

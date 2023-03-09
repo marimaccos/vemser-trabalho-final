@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreatePassagemDTO {
+public class PassagemCreateDTO {
     @NotNull(message = "O campo dataPartida não pode estar nulo!")
     @FutureOrPresent(message = "O campo dataPartida deve ser atual ou futuro!")
     private LocalDateTime dataPartida;

@@ -22,7 +22,6 @@ public class CompradorService {
 
     private final CompradorRepository compradorRepository;
     private final UsuarioService usuarioService;
-    private final VendaService vendaService;
     private final ObjectMapper objectMapper;
 
     public CompradorDTO getCompradorPorID(Integer idComprador) throws RegraDeNegocioException{
@@ -92,14 +91,7 @@ public class CompradorService {
             Comprador compradorEncontrado = compradorRepository.getCompradorPorId(idComprador)
                     .orElseThrow(() -> new RegraDeNegocioException("Comprador não encontrado!"));
 
-            boolean vendasAtivas = vendaService.getHistoricoComprasComprador(idComprador).stream()
-                    .anyMatch(venda -> venda.getStatus().equals(Status.CONCLUIDO));
-
-            if (vendasAtivas) {
-                throw new RegraDeNegocioException("Comprador não pode ser deletado! Existem vendas ativas.");
-            } else {
-                usuarioService.desativarUsuario(compradorEncontrado.getIdUsuario());
-            }
+            usuarioService.desativarUsuario(compradorEncontrado.getIdUsuario());
 
         }catch (DatabaseException e) {
             e.printStackTrace();

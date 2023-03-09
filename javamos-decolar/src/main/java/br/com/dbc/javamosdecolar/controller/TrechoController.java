@@ -26,13 +26,13 @@ public class TrechoController {
         return new ResponseEntity<>(trechoService.listaTrechos(), HttpStatus.OK);
     }
 
-    @GetMapping("/${idTrecho}")
+    @GetMapping("/{idTrecho}")
     public ResponseEntity<TrechoDTO> getTrechoById(@PathVariable("idTrecho") Integer idTrecho)
             throws RegraDeNegocioException {
         return new ResponseEntity<>(trechoService.getTrechoById(idTrecho), HttpStatus.OK);
     }
 
-    @GetMapping("/${idCompanhia}")
+    @GetMapping("/{idCompanhia}")
     public ResponseEntity<List<TrechoDTO>> getTrechosPorCompanhia(@PathVariable("idCompanhia") Integer idCompanhia)
             throws RegraDeNegocioException {
         return new ResponseEntity<>(trechoService.getTrechosPorCompanhia(idCompanhia), HttpStatus.OK);

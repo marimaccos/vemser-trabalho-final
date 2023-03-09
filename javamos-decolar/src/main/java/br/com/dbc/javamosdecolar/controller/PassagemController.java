@@ -2,7 +2,7 @@ package br.com.dbc.javamosdecolar.controller;
 
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
-import br.com.dbc.javamosdecolar.dto.CreatePassagemDTO;
+import br.com.dbc.javamosdecolar.dto.PassagemCreateDTO;
 import br.com.dbc.javamosdecolar.dto.PassagemDTO;
 import br.com.dbc.javamosdecolar.service.PassagemService;
 import lombok.RequiredArgsConstructor;
@@ -52,14 +52,14 @@ public class PassagemController {
     }
 
     @PostMapping
-    public ResponseEntity<PassagemDTO> create(@RequestBody @Valid CreatePassagemDTO passagemDTO)
+    public ResponseEntity<PassagemDTO> create(@RequestBody @Valid PassagemCreateDTO passagemDTO)
             throws RegraDeNegocioException {
         return new ResponseEntity<>(this.passagemService.cadastrarPassagem(passagemDTO), CREATED);
     }
 
     @PutMapping("/{idPassagem}")
     public ResponseEntity<Void> update(@PathVariable("idPassagem") Integer id,
-                       @RequestBody @Valid CreatePassagemDTO passagemDTO)
+                       @RequestBody @Valid PassagemCreateDTO passagemDTO)
             throws RegraDeNegocioException {
         this.passagemService.editarPassagem(id, passagemDTO);
         return ResponseEntity.noContent().build();

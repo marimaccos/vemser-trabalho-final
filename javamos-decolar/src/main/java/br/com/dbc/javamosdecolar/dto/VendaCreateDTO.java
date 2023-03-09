@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateVendaDTO {
+public class VendaCreateDTO {
     @NotNull(message = "O campo idComprador não pode estar nulo!")
     private Integer idComprador;
     @NotNull(message = "O campo idCompanhia não pode estar nulo!")

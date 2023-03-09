@@ -1,7 +1,7 @@
 package br.com.dbc.javamosdecolar.controller;
 
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
-import br.com.dbc.javamosdecolar.dto.CreateVendaDTO;
+import br.com.dbc.javamosdecolar.dto.VendaCreateDTO;
 import br.com.dbc.javamosdecolar.dto.VendaDTO;
 import br.com.dbc.javamosdecolar.service.VendaService;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class VendaController {
     }
 
     @PostMapping
-    public ResponseEntity<VendaDTO> criar(@RequestBody @Valid CreateVendaDTO vendaDTO) throws RegraDeNegocioException {
+    public ResponseEntity<VendaDTO> criar(@RequestBody @Valid VendaCreateDTO vendaDTO) throws RegraDeNegocioException {
         return new ResponseEntity<>(vendaService.efetuarVenda(vendaDTO), CREATED);
     }
 
