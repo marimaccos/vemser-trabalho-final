@@ -327,6 +327,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
             return vendas;
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DatabaseException(e.getCause());
 
         } finally {
@@ -413,7 +414,6 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
         companhia.setNomeFantasia(resultSet.getString("nome_fantasia"));
         companhia.setIdCompanhia(resultSet.getInt("id_companhia"));
         comprador.setIdComprador(resultSet.getInt("id_comprador"));
-        comprador.setNome(resultSet.getString("nome"));
         trecho.setIdTrecho(resultSet.getInt("id_trecho"));
         trecho.setOrigem(resultSet.getString("origem"));
         trecho.setDestino(resultSet.getString("destino"));
