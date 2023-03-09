@@ -20,10 +20,10 @@ public class TrechoService {
     private final CompanhiaService companhiaService;
     private final ObjectMapper objectMapper;
 
-    public TrechoDTO criarTrecho(TrechoCreateDTO trechoDTO) throws RegraDeNegocioException {
+    public TrechoDTO criar(TrechoCreateDTO trechoDTO) throws RegraDeNegocioException {
         try {
             Companhia companhia = objectMapper
-                    .convertValue(companhiaService.getCompanhiaById(trechoDTO.getIdCompanhia()),
+                    .convertValue(companhiaService.getById(trechoDTO.getIdCompanhia()),
                             Companhia.class);
 
             if(!companhia.isAtivo()) {
@@ -51,13 +51,13 @@ public class TrechoService {
         }
     }
 
-    public TrechoDTO editarTrecho(Integer idTrecho, TrechoCreateDTO trechoDTO) throws RegraDeNegocioException {
+    public TrechoDTO editar(Integer idTrecho, TrechoCreateDTO trechoDTO) throws RegraDeNegocioException {
         try {
             trechoRepository.getTrechoPorId(idTrecho)
                     .orElseThrow(() -> new RegraDeNegocioException("Trecho não encontrado!"));
 
             Companhia companhia = objectMapper
-                    .convertValue(companhiaService.getCompanhiaById(trechoDTO.getIdCompanhia()), Companhia.class);
+                    .convertValue(companhiaService.getById(trechoDTO.getIdCompanhia()), Companhia.class);
 
             if(trechoRepository.getTrecho(trechoDTO.getOrigem().toUpperCase(),
                     trechoDTO.getDestino().toUpperCase(), companhia).isPresent()) {
@@ -82,7 +82,7 @@ public class TrechoService {
         }
     }
 
-    public void deletarTrecho(Integer idTrecho) throws RegraDeNegocioException {
+    public void deletar(Integer idTrecho) throws RegraDeNegocioException {
         try {
             trechoRepository.getTrechoPorId(idTrecho)
                     .orElseThrow(() -> new RegraDeNegocioException("Trecho não encontrado!"));
@@ -94,7 +94,7 @@ public class TrechoService {
         }
     }
 
-    public List<TrechoDTO> listaTrechos() throws RegraDeNegocioException {
+    public List<TrechoDTO> lista() throws RegraDeNegocioException {
         try {
             List<TrechoDTO> listaTrechos = trechoRepository.listar().stream()
                     .map(trecho -> {
@@ -114,7 +114,7 @@ public class TrechoService {
     public List<TrechoDTO> getTrechosPorCompanhia(Integer idCompanhia) throws RegraDeNegocioException {
         try {
             // Checa se companhia existe
-            companhiaService.getCompanhiaById(idCompanhia);
+            companhiaService.getById(idCompanhia);
 
             return trechoRepository.getTrechosPorCompanhia(idCompanhia).stream()
                     .map(trecho -> objectMapper.convertValue(trecho, TrechoDTO.class))

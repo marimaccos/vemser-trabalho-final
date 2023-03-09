@@ -26,7 +26,7 @@ public interface TrechoDoc {
             }
     )
     @GetMapping
-    public ResponseEntity<List<TrechoDTO>> list() throws RegraDeNegocioException;
+    ResponseEntity<List<TrechoDTO>> list() throws RegraDeNegocioException;
 
     @Operation(summary = "Retorna um trecho específico", description = "Retorna um trecho a partir de seu id")
     @ApiResponses(
@@ -38,7 +38,7 @@ public interface TrechoDoc {
             }
     )
     @GetMapping("/{idTrecho}")
-    public ResponseEntity<TrechoDTO> getTrechoById(@PathVariable("idTrecho") Integer idTrecho)
+    ResponseEntity<TrechoDTO> getById(@PathVariable("idTrecho") Integer idTrecho)
             throws RegraDeNegocioException;
 
     @Operation(summary = "Retorna trechos de uma companhia", description = "Lista todos os trechos cadastrados" +
@@ -52,7 +52,7 @@ public interface TrechoDoc {
             }
     )
     @GetMapping("/{idCompanhia}")
-    public ResponseEntity<List<TrechoDTO>> getTrechosPorCompanhia(@PathVariable("idCompanhia") Integer idCompanhia)
+    ResponseEntity<List<TrechoDTO>> getPorCompanhia(@PathVariable("idCompanhia") Integer idCompanhia)
             throws RegraDeNegocioException;
 
     @Operation(summary = "Cria um trecho", description = "Cadastra um novo trecho")
@@ -65,7 +65,7 @@ public interface TrechoDoc {
             }
     )
     @PostMapping
-    public ResponseEntity<TrechoDTO> create(@Valid @RequestBody TrechoCreateDTO trecho) throws RegraDeNegocioException;
+    ResponseEntity<TrechoDTO> criar(@Valid @RequestBody TrechoCreateDTO trecho) throws RegraDeNegocioException;
 
     @Operation(summary = "Atualiza um trecho", description = "Atualiza um trecho cadastrado")
     @ApiResponses(
@@ -77,7 +77,7 @@ public interface TrechoDoc {
             }
     )
     @PutMapping("/{idTrecho}")
-    public ResponseEntity<TrechoDTO> update(@PathVariable("idTrecho") Integer idTrecho,
+    ResponseEntity<TrechoDTO> atualizar(@PathVariable("idTrecho") Integer idTrecho,
                                             @Valid @RequestBody TrechoCreateDTO trecho) throws RegraDeNegocioException;
 
     @Operation(summary = "Deleta um trecho", description = "Remove o trecho da base de dados")
@@ -90,5 +90,5 @@ public interface TrechoDoc {
             }
     )
     @DeleteMapping("/{idTrecho}")
-    public ResponseEntity<TrechoDTO> delete(@PathVariable("idTrecho") Integer idTrecho) throws RegraDeNegocioException;
+    ResponseEntity<TrechoDTO> deletar(@PathVariable("idTrecho") Integer idTrecho) throws RegraDeNegocioException;
 }

@@ -24,32 +24,32 @@ public class CompanhiaController implements CompanhiaDoc {
 
     @GetMapping
     public ResponseEntity<List<CompanhiaDTO>> list() throws RegraDeNegocioException {
-        return new ResponseEntity<>(companhiaService.listaCompanhias(), OK);
+        return new ResponseEntity<>(companhiaService.lista(), OK);
     }
 
     @GetMapping("/{idCompanhia}")
-    public ResponseEntity<CompanhiaDTO> getCompanhiaById(@PathVariable("idCompanhia") Integer idCompanhia)
+    public ResponseEntity<CompanhiaDTO> getById(@PathVariable("idCompanhia") Integer idCompanhia)
             throws RegraDeNegocioException {
-        return new ResponseEntity<>(companhiaService.getCompanhiaById(idCompanhia), OK);
+        return new ResponseEntity<>(companhiaService.getById(idCompanhia), OK);
     }
 
     @PostMapping
-    public ResponseEntity<CompanhiaDTO> create(@Valid @RequestBody CompanhiaCreateDTO companhiaDTO)
+    public ResponseEntity<CompanhiaDTO> criar(@Valid @RequestBody CompanhiaCreateDTO companhiaDTO)
             throws RegraDeNegocioException {
-        return new ResponseEntity<>(companhiaService.criarCompanhia(companhiaDTO), CREATED);
+        return new ResponseEntity<>(companhiaService.criar(companhiaDTO), CREATED);
     }
 
     @PutMapping("/{idCompanhia}")
-    public ResponseEntity<CompanhiaDTO> update(@PathVariable("idCompanhia") Integer idCompanhia,
+    public ResponseEntity<CompanhiaDTO> atualizar(@PathVariable("idCompanhia") Integer idCompanhia,
                                        @Valid @RequestBody CompanhiaCreateDTO companhiaDTO)
             throws RegraDeNegocioException {
-        return new ResponseEntity<>(companhiaService.editarCompanhia(idCompanhia, companhiaDTO), OK);
+        return new ResponseEntity<>(companhiaService.editar(idCompanhia, companhiaDTO), OK);
     }
 
     @DeleteMapping("/{idCompanhia}")
-    public ResponseEntity<Void> delete(@PathVariable("idCompanhia") Integer idCompanhia)
+    public ResponseEntity<Void> deletar(@PathVariable("idCompanhia") Integer idCompanhia)
             throws RegraDeNegocioException {
-        companhiaService.deletarCompanhia(idCompanhia);
+        companhiaService.desativar(idCompanhia);
         return ResponseEntity.noContent().build();
     }
 }

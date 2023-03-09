@@ -27,7 +27,7 @@ public class PassagemService {
     private final CompanhiaService companhiaService;
     private final ObjectMapper mapper;
 
-    public PassagemDTO cadastrarPassagem(PassagemCreateDTO passagemDTO) throws RegraDeNegocioException {
+    public PassagemDTO criar(PassagemCreateDTO passagemDTO) throws RegraDeNegocioException {
         try {
 
             LocalDateTime dataPartida = passagemDTO.getDataPartida();
@@ -58,22 +58,20 @@ public class PassagemService {
         }
     }
 
-    public List<PassagemDTO> listarUltimasPassagens() throws RegraDeNegocioException {
+    public PassagemDTO getById(Integer id) throws RegraDeNegocioException {
         try {
-            return passagemRepository.getUltimasPassagens()
-                    .stream()
-                    .map(passagem -> {
-                        PassagemDTO passagemDTO = mapper.convertValue(passagem, PassagemDTO.class);
-                        passagemDTO.setIdTrecho(passagem.getTrecho().getIdTrecho());
-                        return passagemDTO;
-                    })
-                    .toList();
+            Passagem passagem = passagemRepository.getPassagemPeloId(id)
+                    .orElseThrow(() -> new RegraDeNegocioException("Passagem não encontrada!"));
+            PassagemDTO passagemDTO = mapper.convertValue(passagem, PassagemDTO.class);
+            passagemDTO.setIdTrecho(passagem.getTrecho().getIdTrecho());
+
+            return passagemDTO;
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
     }
 
-    public PassagemDTO editarPassagem(Integer passagemId, PassagemCreateDTO passagemDTO) throws RegraDeNegocioException {
+    public PassagemDTO editar(Integer passagemId, PassagemCreateDTO passagemDTO) throws RegraDeNegocioException {
         try {
             Passagem passagemEncontrada = passagemRepository.getPassagemPeloId(passagemId)
                     .orElseThrow(() -> new RegraDeNegocioException("Passagem inválida!"));
@@ -105,16 +103,16 @@ public class PassagemService {
         }
     }
 
-    public void deletarPassagem(Integer passagemId) throws DatabaseException {
-        passagemRepository.remover(passagemId);
-    }
-
     public boolean editarPassagemVendida(Passagem passagem, Integer idVenda) throws DatabaseException {
         passagem.setDisponivel(false);
         return passagemRepository.editar(passagem.getIdPassagem(), passagem, idVenda);
     }
 
-    public List<PassagemDTO> listarPassagemPorData(String dataChegada, String dataPartida) throws RegraDeNegocioException {
+    public void deletar(Integer passagemId) throws DatabaseException {
+        passagemRepository.remover(passagemId);
+    }
+
+    public List<PassagemDTO> listarPorData(String dataChegada, String dataPartida) throws RegraDeNegocioException {
         try {
             if(dataPartida != null) {
                 return passagemRepository.getPassagemPorDataPartida(transformaStringEmLocalDateTime(dataPartida))
@@ -142,7 +140,7 @@ public class PassagemService {
         }
     }
 
-    public List<PassagemDTO> listarPassagemPorValorMaximo(BigDecimal valorMaximo) throws RegraDeNegocioException {
+    public List<PassagemDTO> listarPorValorMaximo(BigDecimal valorMaximo) throws RegraDeNegocioException {
         try {
             return passagemRepository.getPassagemPorValor(valorMaximo).stream()
                     .map(passagem -> {
@@ -155,9 +153,9 @@ public class PassagemService {
         }
     }
 
-    public List<PassagemDTO> listarPassagemPorCompanhia(String nomeCompanhia) throws RegraDeNegocioException {
+    public List<PassagemDTO> listarPorCompanhia(String nomeCompanhia) throws RegraDeNegocioException {
         try {
-            Companhia companhia = companhiaService.getCompanhiaByNome(nomeCompanhia);
+            Companhia companhia = companhiaService.getByNome(nomeCompanhia);
             return passagemRepository
                     .getPassagemPorCompanhia(companhia.getIdCompanhia()).stream()
                     .map(passagem -> {
@@ -172,14 +170,16 @@ public class PassagemService {
         }
     }
 
-    public PassagemDTO getPassagemById(Integer id) throws RegraDeNegocioException {
+    public List<PassagemDTO> listarUltimas() throws RegraDeNegocioException {
         try {
-            Passagem passagem = passagemRepository.getPassagemPeloId(id)
-                    .orElseThrow(() -> new RegraDeNegocioException("Passagem não encontrada!"));
-            PassagemDTO passagemDTO = mapper.convertValue(passagem, PassagemDTO.class);
-            passagemDTO.setIdTrecho(passagem.getTrecho().getIdTrecho());
-
-            return passagemDTO;
+            return passagemRepository.getUltimasPassagens()
+                    .stream()
+                    .map(passagem -> {
+                        PassagemDTO passagemDTO = mapper.convertValue(passagem, PassagemDTO.class);
+                        passagemDTO.setIdTrecho(passagem.getTrecho().getIdTrecho());
+                        return passagemDTO;
+                    })
+                    .toList();
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }

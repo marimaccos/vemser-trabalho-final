@@ -3,7 +3,6 @@ package br.com.dbc.javamosdecolar.service;
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.model.Comprador;
-import br.com.dbc.javamosdecolar.model.Status;
 import br.com.dbc.javamosdecolar.model.TipoUsuario;
 import br.com.dbc.javamosdecolar.model.Usuario;
 import br.com.dbc.javamosdecolar.dto.CompradorCreateDTO;
@@ -14,7 +13,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -24,7 +22,21 @@ public class CompradorService {
     private final UsuarioService usuarioService;
     private final ObjectMapper objectMapper;
 
-    public CompradorDTO getCompradorPorID(Integer idComprador) throws RegraDeNegocioException{
+    public List<CompradorDTO> lista() throws RegraDeNegocioException {
+        try {
+            List<CompradorDTO> listaCompradores = compradorRepository.listaCompradores().stream()
+                    .map(comprador -> objectMapper.convertValue(comprador, CompradorDTO.class))
+                    .toList();
+
+            return listaCompradores;
+
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
+        }
+    }
+
+    public CompradorDTO getById(Integer idComprador) throws RegraDeNegocioException{
         try {
             Comprador compradorEncontrado = compradorRepository.getCompradorPorId(idComprador)
                     .orElseThrow(() -> new RegraDeNegocioException("Comprador não encontrado!"));
@@ -37,7 +49,7 @@ public class CompradorService {
         }
     }
 
-    public CompradorDTO criarComprador(CompradorCreateDTO compradorDTO) throws RegraDeNegocioException {
+    public CompradorDTO criar(CompradorCreateDTO compradorDTO) throws RegraDeNegocioException {
         try {
             Usuario usuarioNovo = new Usuario(
                     compradorDTO.getLogin(),
@@ -46,7 +58,7 @@ public class CompradorService {
                     TipoUsuario.COMPRADOR,
                     true);
 
-            Usuario usuarioCriado = usuarioService.criarUsuario(usuarioNovo);
+            Usuario usuarioCriado = usuarioService.criar(usuarioNovo);
             Comprador comprador = objectMapper.convertValue(compradorDTO, Comprador.class);
             comprador.setIdUsuario(usuarioCriado.getIdUsuario());
 
@@ -59,7 +71,7 @@ public class CompradorService {
         }
     }
 
-    public CompradorDTO editarComprador(Integer idComprador, CompradorCreateDTO compradorDTO)
+    public CompradorDTO editar(Integer idComprador, CompradorCreateDTO compradorDTO)
             throws RegraDeNegocioException{
         try {
             // Retorna o comprador existente
@@ -76,7 +88,7 @@ public class CompradorService {
                     TipoUsuario.COMPRADOR,
                     true);
 
-            Usuario usuarioEditado = usuarioService.editarUsuario(comprador.getIdUsuario(), usuario);
+            Usuario usuarioEditado = usuarioService.editar(comprador.getIdUsuario(), usuario);
             comprador.setNome(usuarioEditado.getNome());
 
             return objectMapper.convertValue(comprador, CompradorDTO.class);
@@ -86,28 +98,14 @@ public class CompradorService {
         }
     }
 
-    public void deletarComprador(Integer idComprador) throws RegraDeNegocioException {
+    public void desativar(Integer idComprador) throws RegraDeNegocioException {
         try {
             Comprador compradorEncontrado = compradorRepository.getCompradorPorId(idComprador)
                     .orElseThrow(() -> new RegraDeNegocioException("Comprador não encontrado!"));
 
-            usuarioService.desativarUsuario(compradorEncontrado.getIdUsuario());
+            usuarioService.desativar(compradorEncontrado.getIdUsuario());
 
         }catch (DatabaseException e) {
-            e.printStackTrace();
-            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
-        }
-    }
-
-    public List<CompradorDTO> listaCompradores() throws RegraDeNegocioException {
-        try {
-            List<CompradorDTO> listaCompradores = compradorRepository.listaCompradores().stream()
-                    .map(comprador -> objectMapper.convertValue(comprador, CompradorDTO.class))
-                    .toList();
-
-            return listaCompradores;
-
-        } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }

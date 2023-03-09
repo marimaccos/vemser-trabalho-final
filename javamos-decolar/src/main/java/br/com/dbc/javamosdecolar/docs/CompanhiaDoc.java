@@ -26,7 +26,7 @@ public interface CompanhiaDoc {
             }
     )
     @GetMapping
-    public ResponseEntity<List<CompanhiaDTO>> list() throws RegraDeNegocioException;
+    ResponseEntity<List<CompanhiaDTO>> list() throws RegraDeNegocioException;
 
     @Operation(summary = "Buscar companhia por id", description = "Mostra os dados da companhia pelo id")
     @ApiResponses(
@@ -38,7 +38,7 @@ public interface CompanhiaDoc {
             }
     )
     @GetMapping("/{idCompanhia}")
-    public ResponseEntity<CompanhiaDTO> getCompanhiaById(@PathVariable("idCompanhia") Integer idCompanhia)
+    ResponseEntity<CompanhiaDTO> getById(@PathVariable("idCompanhia") Integer idCompanhia)
             throws RegraDeNegocioException;
 
     @Operation(summary = "Criar companhia", description = "Cria uma nova companhia")
@@ -51,7 +51,7 @@ public interface CompanhiaDoc {
             }
     )
     @PostMapping
-    public ResponseEntity<CompanhiaDTO> create(@Valid @RequestBody CompanhiaCreateDTO companhiaDTO) throws RegraDeNegocioException;
+    ResponseEntity<CompanhiaDTO> criar(@Valid @RequestBody CompanhiaCreateDTO companhiaDTO) throws RegraDeNegocioException;
 
     @Operation(summary = "Editar companhia por id", description = "Edita os dados da companhia pelo id")
     @ApiResponses(
@@ -63,7 +63,7 @@ public interface CompanhiaDoc {
             }
     )
     @PutMapping("/{idCompanhia}")
-    public ResponseEntity<CompanhiaDTO> update(@PathVariable("idCompanhia") Integer idCompanhia,
+    ResponseEntity<CompanhiaDTO> atualizar(@PathVariable("idCompanhia") Integer idCompanhia,
                                        @Valid @RequestBody CompanhiaCreateDTO companhiaDTO) throws RegraDeNegocioException;
 
     @Operation(summary = "Deletar companhia por id", description = "Deleta a companhia selecionado")
@@ -76,5 +76,5 @@ public interface CompanhiaDoc {
             }
     )
     @DeleteMapping("/{idCompanhia}")
-    public ResponseEntity<Void> delete(@PathVariable("idCompanhia") Integer idCompanhia) throws RegraDeNegocioException;
+    ResponseEntity<Void> deletar(@PathVariable("idCompanhia") Integer idCompanhia) throws RegraDeNegocioException;
 }

@@ -24,26 +24,26 @@ public class VendaService {
     private final EmailService emailService;
     private final ObjectMapper mapper;
 
-    public VendaDTO efetuarVenda(VendaCreateDTO vendaDTO) throws RegraDeNegocioException {
+    public VendaDTO criar(VendaCreateDTO vendaDTO) throws RegraDeNegocioException {
 
         try {
             UUID codigo = UUID.randomUUID();
 
             Passagem passagem = mapper
-                    .convertValue(passagemService.getPassagemById(vendaDTO.getIdPassagem()), Passagem.class);
+                    .convertValue(passagemService.getById(vendaDTO.getIdPassagem()), Passagem.class);
 
             if(!passagem.isDisponivel()) {
                 throw new RegraDeNegocioException("Passagem indisponível.");
             }
 
-            Comprador comprador = mapper.convertValue(compradorService.getCompradorPorID(vendaDTO.getIdComprador()),
+            Comprador comprador = mapper.convertValue(compradorService.getById(vendaDTO.getIdComprador()),
                     Comprador.class);
 
             if(!comprador.isAtivo()) {
                 throw new RegraDeNegocioException("Comprador indisponível.");
             }
 
-            Companhia companhia = mapper.convertValue(companhiaService.getCompanhiaById(vendaDTO.getIdCompanhia()),
+            Companhia companhia = mapper.convertValue(companhiaService.getById(vendaDTO.getIdCompanhia()),
                     Companhia.class);
 
             if(!companhia.isAtivo()) {
@@ -77,7 +77,7 @@ public class VendaService {
         }
     }
 
-    public boolean cancelarVenda(Integer idVenda) throws RegraDeNegocioException {
+    public boolean cancelar(Integer idVenda) throws RegraDeNegocioException {
 
         try {
             Venda venda = vendaRepository.getVendaPorId(idVenda)
@@ -85,7 +85,7 @@ public class VendaService {
 
             //tirar isso quando implementar o springdata
             Comprador comprador = mapper
-                    .convertValue(compradorService.getCompradorPorID(venda.getComprador().getIdComprador()),
+                    .convertValue(compradorService.getById(venda.getComprador().getIdComprador()),
                     Comprador.class);
 
             if(venda.getStatus().getTipo() == 2) {
@@ -103,7 +103,7 @@ public class VendaService {
 
     public List<VendaDTO> getHistoricoComprasComprador(Integer idComprador) throws RegraDeNegocioException {
         try {
-            compradorService.getCompradorPorID(idComprador);
+            compradorService.getById(idComprador);
             return vendaRepository.getVendasPorComprador(idComprador).stream()
                     .map(venda -> {
                         VendaDTO vendaDTO = mapper.convertValue(venda, VendaDTO.class);
@@ -137,7 +137,7 @@ public class VendaService {
 
     public List<VendaDTO> getHistoricoVendasCompanhia(Integer id) throws RegraDeNegocioException {
         try {
-            companhiaService.getCompanhiaById(id);
+            companhiaService.getById(id);
             return vendaRepository.getVendasPorCompanhia(id).stream()
                     .map(venda -> {
                         VendaDTO vendaDTO = mapper.convertValue(venda, VendaDTO.class);

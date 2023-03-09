@@ -26,52 +26,52 @@ public class PassagemController implements PassagemDoc {
     private final PassagemService passagemService;
 
     @GetMapping("/new")
-    public ResponseEntity<List<PassagemDTO>> listUltimasPassagens() throws RegraDeNegocioException {
-        return new ResponseEntity<>(this.passagemService.listarUltimasPassagens(), OK);
+    public ResponseEntity<List<PassagemDTO>> listarUltimas() throws RegraDeNegocioException {
+        return new ResponseEntity<>(this.passagemService.listarUltimas(), OK);
     }
 
     @GetMapping("/data")
-    public ResponseEntity<List<PassagemDTO>> listPassagemPorData(
+    public ResponseEntity<List<PassagemDTO>> listarPorData(
             @RequestParam(value = "dataPartida", required = false) String dataPartida,
             @RequestParam(value = "dataChegada", required = false) String dataChegada)
             throws RegraDeNegocioException {
-        return new ResponseEntity<>(this.passagemService.listarPassagemPorData(dataChegada, dataPartida), OK);
+        return new ResponseEntity<>(this.passagemService.listarPorData(dataChegada, dataPartida), OK);
     }
 
     @GetMapping("/companhia")
-    public ResponseEntity<List<PassagemDTO>> listPassagemPorCompanhia(
+    public ResponseEntity<List<PassagemDTO>> listarPorCompanhia(
             @RequestParam("nome") String nome) throws RegraDeNegocioException {
-        return new ResponseEntity<>(this.passagemService.listarPassagemPorCompanhia(nome), OK);
+        return new ResponseEntity<>(this.passagemService.listarPorCompanhia(nome), OK);
     }
 
     @GetMapping("/valor")
-    public ResponseEntity<List<PassagemDTO>> listUltimasPassagens(
+    public ResponseEntity<List<PassagemDTO>> listarPorValorMaximo(
             @RequestParam("max") BigDecimal valor) throws RegraDeNegocioException {
-        return new ResponseEntity<>(this.passagemService.listarPassagemPorValorMaximo(valor), OK);
+        return new ResponseEntity<>(this.passagemService.listarPorValorMaximo(valor), OK);
     }
 
     @GetMapping("/{idPassagem}")
-    public ResponseEntity<PassagemDTO> getPassagemById(
+    public ResponseEntity<PassagemDTO> getById(
             @PathVariable("idPassagem") Integer id) throws RegraDeNegocioException {
-        return new ResponseEntity<>(this.passagemService.getPassagemById(id), OK);
+        return new ResponseEntity<>(this.passagemService.getById(id), OK);
     }
 
     @PostMapping
-    public ResponseEntity<PassagemDTO> create(@RequestBody @Valid PassagemCreateDTO passagemDTO)
+    public ResponseEntity<PassagemDTO> criar(@RequestBody @Valid PassagemCreateDTO passagemDTO)
             throws RegraDeNegocioException {
-        return new ResponseEntity<>(this.passagemService.cadastrarPassagem(passagemDTO), CREATED);
+        return new ResponseEntity<>(this.passagemService.criar(passagemDTO), CREATED);
     }
 
     @PutMapping("/{idPassagem}")
-    public ResponseEntity<PassagemDTO> update(@PathVariable("idPassagem") Integer id,
+    public ResponseEntity<PassagemDTO> atualizar(@PathVariable("idPassagem") Integer id,
                        @RequestBody @Valid PassagemCreateDTO passagemDTO)
             throws RegraDeNegocioException {
-        return new ResponseEntity<>(this.passagemService.editarPassagem(id, passagemDTO), OK);
+        return new ResponseEntity<>(this.passagemService.editar(id, passagemDTO), OK);
     }
 
     @DeleteMapping("/{idPassagem}")
-    public ResponseEntity<Void> delete(@PathVariable("idPassagem") Integer id) throws DatabaseException {
-        this.passagemService.deletarPassagem(id);
+    public ResponseEntity<Void> deletar(@PathVariable("idPassagem") Integer id) throws DatabaseException {
+        this.passagemService.deletar(id);
         return ResponseEntity.noContent().build();
     }
 }

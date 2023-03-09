@@ -6,7 +6,6 @@ import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.dto.TrechoDTO;
 import br.com.dbc.javamosdecolar.service.TrechoService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -27,37 +26,37 @@ public class TrechoController implements TrechoDoc {
 
     @GetMapping
     public ResponseEntity<List<TrechoDTO>> list() throws RegraDeNegocioException {
-        return new ResponseEntity<>(trechoService.listaTrechos(), OK);
+        return new ResponseEntity<>(trechoService.lista(), OK);
     }
 
     @GetMapping("/{idTrecho}")
-    public ResponseEntity<TrechoDTO> getTrechoById(@PathVariable("idTrecho") Integer idTrecho)
+    public ResponseEntity<TrechoDTO> getById(@PathVariable("idTrecho") Integer idTrecho)
             throws RegraDeNegocioException {
         return new ResponseEntity<>(trechoService.getTrechoById(idTrecho), OK);
     }
 
     @GetMapping("/{idCompanhia}")
-    public ResponseEntity<List<TrechoDTO>> getTrechosPorCompanhia(@PathVariable("idCompanhia") Integer idCompanhia)
+    public ResponseEntity<List<TrechoDTO>> getPorCompanhia(@PathVariable("idCompanhia") Integer idCompanhia)
             throws RegraDeNegocioException {
         return new ResponseEntity<>(trechoService.getTrechosPorCompanhia(idCompanhia), OK);
     }
 
     @PostMapping
-    public ResponseEntity<TrechoDTO> create(@Valid @RequestBody TrechoCreateDTO trecho)
+    public ResponseEntity<TrechoDTO> criar(@Valid @RequestBody TrechoCreateDTO trecho)
             throws RegraDeNegocioException {
-        return new ResponseEntity<>(trechoService.criarTrecho(trecho), CREATED);
+        return new ResponseEntity<>(trechoService.criar(trecho), CREATED);
     }
 
     @PutMapping("/{idTrecho}")
-    public ResponseEntity<TrechoDTO> update(@PathVariable("idTrecho") Integer idTrecho, @Valid @RequestBody TrechoCreateDTO trecho)
+    public ResponseEntity<TrechoDTO> atualizar(@PathVariable("idTrecho") Integer idTrecho, @Valid @RequestBody TrechoCreateDTO trecho)
             throws RegraDeNegocioException {
-        return new ResponseEntity<>(trechoService.editarTrecho(idTrecho, trecho), OK);
+        return new ResponseEntity<>(trechoService.editar(idTrecho, trecho), OK);
     }
 
     @DeleteMapping("/{idTrecho}")
-    public ResponseEntity<TrechoDTO> delete(@PathVariable("idTrecho") Integer idTrecho)
+    public ResponseEntity<TrechoDTO> deletar(@PathVariable("idTrecho") Integer idTrecho)
             throws RegraDeNegocioException {
-        trechoService.deletarTrecho(idTrecho);
+        trechoService.deletar(idTrecho);
         return ResponseEntity.noContent().build();
     }
 

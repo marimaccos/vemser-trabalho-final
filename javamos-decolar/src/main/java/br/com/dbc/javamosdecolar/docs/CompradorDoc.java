@@ -25,7 +25,7 @@ public interface CompradorDoc {
             }
     )
     @GetMapping
-    public ResponseEntity<List<CompradorDTO>> list() throws RegraDeNegocioException;
+    ResponseEntity<List<CompradorDTO>> list() throws RegraDeNegocioException;
 
     @Operation(summary = "Buscar comprador por id", description = "Mostra os dados do comprador pelo id")
     @ApiResponses(
@@ -37,7 +37,7 @@ public interface CompradorDoc {
             }
     )
     @GetMapping("/{idComprador}")
-    public ResponseEntity<CompradorDTO> getCompradorByID(@PathVariable("idComprador") Integer idComprador)
+    ResponseEntity<CompradorDTO> getById(@PathVariable("idComprador") Integer idComprador)
             throws RegraDeNegocioException;
 
     @Operation(summary = "Criar comprador", description = "Cria um novo comprador")
@@ -50,7 +50,7 @@ public interface CompradorDoc {
             }
     )
     @PostMapping
-    public ResponseEntity<CompradorDTO> create(@Valid @RequestBody CompradorCreateDTO comprador)
+    ResponseEntity<CompradorDTO> criar(@Valid @RequestBody CompradorCreateDTO comprador)
             throws RegraDeNegocioException;
 
     @Operation(summary = "Editar comprador por id", description = "Edita os dados do comprador pelo id")
@@ -63,7 +63,7 @@ public interface CompradorDoc {
             }
     )
     @PutMapping("/{idComprador}")
-    public ResponseEntity<CompradorDTO> update(@PathVariable("idComprador") Integer idComprador,
+    ResponseEntity<CompradorDTO> atualizar(@PathVariable("idComprador") Integer idComprador,
                                                @Valid @RequestBody CompradorCreateDTO comprador)
             throws RegraDeNegocioException;
 
@@ -77,5 +77,5 @@ public interface CompradorDoc {
             }
     )
     @DeleteMapping("/{idComprador}")
-    public ResponseEntity<Void> delete(@PathVariable("idComprador") Integer idComprador) throws RegraDeNegocioException;
+    ResponseEntity<Void> deletar(@PathVariable("idComprador") Integer idComprador) throws RegraDeNegocioException;
 }

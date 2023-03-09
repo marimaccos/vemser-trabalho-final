@@ -15,7 +15,7 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final EmailService emailService;
 
-    public Usuario criarUsuario(Usuario usuario) throws RegraDeNegocioException {
+    public Usuario criar(Usuario usuario) throws RegraDeNegocioException {
         try{
             if (usuarioRepository.buscaUsuarioPeloLogin(usuario.getLogin()).isEmpty()) {
                 emailService.sendEmail(usuario);
@@ -29,7 +29,7 @@ public class UsuarioService {
         }
     }
 
-    public Usuario editarUsuario(Integer id, Usuario usuario) throws RegraDeNegocioException {
+    public Usuario editar(Integer id, Usuario usuario) throws RegraDeNegocioException {
         try {
             usuarioRepository.buscarUsuarioById(id)
                     .orElseThrow(() -> new RegraDeNegocioException("Usuário não encontrado!"));
@@ -43,7 +43,7 @@ public class UsuarioService {
         }
     }
 
-    public void desativarUsuario (Integer idUsuario) throws RegraDeNegocioException {
+    public void desativar(Integer idUsuario) throws RegraDeNegocioException {
         try {
             usuarioRepository.buscarUsuarioById(idUsuario)
                     .orElseThrow(() -> new RegraDeNegocioException("Usuário não encontrado!"));
