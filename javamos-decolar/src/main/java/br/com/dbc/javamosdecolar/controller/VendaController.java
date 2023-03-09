@@ -1,5 +1,6 @@
 package br.com.dbc.javamosdecolar.controller;
 
+import br.com.dbc.javamosdecolar.docs.VendaDoc;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.dto.VendaCreateDTO;
 import br.com.dbc.javamosdecolar.dto.VendaDTO;
@@ -18,7 +19,7 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @RequestMapping("/venda")
 @RequiredArgsConstructor
-public class VendaController {
+public class VendaController implements VendaDoc {
 
     private final VendaService vendaService;
 
@@ -35,7 +36,7 @@ public class VendaController {
     }
 
     @GetMapping()
-    public ResponseEntity<VendaDTO> getVendaPorCodigo(@RequestParam(name = "codigo", required = true) String uuid)
+    public ResponseEntity<VendaDTO> getVendaPorCodigo(@RequestParam(name = "codigo") String uuid)
             throws RegraDeNegocioException {
         return new ResponseEntity<>(vendaService.getVendaPorCodigo(uuid), OK);
     }

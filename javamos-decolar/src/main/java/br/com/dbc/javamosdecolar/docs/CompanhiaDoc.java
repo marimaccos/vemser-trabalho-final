@@ -6,18 +6,21 @@ import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
+@Tag(name = "Companhia", description = "Endpoints de companhia")
 public interface CompanhiaDoc {
 
     @Operation(summary = "Listar companhias", description = "Lista todas as companhias cadastradas")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Retorna a lista de companhias cadastradas"),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
@@ -29,6 +32,7 @@ public interface CompanhiaDoc {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Retorna a companhia solicitada"),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
@@ -40,7 +44,8 @@ public interface CompanhiaDoc {
     @Operation(summary = "Criar companhia", description = "Cria uma nova companhia")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "Retorna a companhia criada"),
+                    @ApiResponse(responseCode = "201", description = "Retorna a companhia criada"),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
@@ -52,18 +57,20 @@ public interface CompanhiaDoc {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Retorna os novos dados da companhia"),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
     @PutMapping("/{idCompanhia}")
-    public ResponseEntity<Void> update(@PathVariable("idCompanhia") Integer idCompanhia,
+    public ResponseEntity<CompanhiaDTO> update(@PathVariable("idCompanhia") Integer idCompanhia,
                                        @Valid @RequestBody CompanhiaCreateDTO companhiaDTO) throws RegraDeNegocioException;
 
     @Operation(summary = "Deletar companhia por id", description = "Deleta a companhia selecionado")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "Retorna que a operação foi realizada"),
+                    @ApiResponse(responseCode = "204", description = "No content"),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }

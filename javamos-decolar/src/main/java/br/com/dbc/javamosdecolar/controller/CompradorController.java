@@ -1,5 +1,6 @@
 package br.com.dbc.javamosdecolar.controller;
 
+import br.com.dbc.javamosdecolar.docs.CompradorDoc;
 import br.com.dbc.javamosdecolar.dto.CompradorCreateDTO;
 import br.com.dbc.javamosdecolar.dto.CompradorDTO;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
@@ -19,7 +20,7 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @RequestMapping("/comprador")
 @AllArgsConstructor
-public class CompradorController {
+public class CompradorController implements CompradorDoc {
 
     private final CompradorService compradorService;
 

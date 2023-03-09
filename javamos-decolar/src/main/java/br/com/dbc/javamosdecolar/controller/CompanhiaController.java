@@ -1,5 +1,6 @@
 package br.com.dbc.javamosdecolar.controller;
 
+import br.com.dbc.javamosdecolar.docs.CompanhiaDoc;
 import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
 import br.com.dbc.javamosdecolar.dto.CompanhiaCreateDTO;
 import br.com.dbc.javamosdecolar.dto.CompanhiaDTO;
@@ -18,7 +19,7 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/companhia")
-public class CompanhiaController {
+public class CompanhiaController implements CompanhiaDoc {
     private final CompanhiaService companhiaService;
 
     @GetMapping
@@ -33,18 +34,21 @@ public class CompanhiaController {
     }
 
     @PostMapping
-    public ResponseEntity<CompanhiaDTO> create(@Valid @RequestBody CompanhiaCreateDTO companhiaDTO) throws RegraDeNegocioException {
+    public ResponseEntity<CompanhiaDTO> create(@Valid @RequestBody CompanhiaCreateDTO companhiaDTO)
+            throws RegraDeNegocioException {
         return new ResponseEntity<>(companhiaService.criarCompanhia(companhiaDTO), CREATED);
     }
 
     @PutMapping("/{idCompanhia}")
     public ResponseEntity<CompanhiaDTO> update(@PathVariable("idCompanhia") Integer idCompanhia,
-                                       @Valid @RequestBody CompanhiaCreateDTO companhiaDTO) throws RegraDeNegocioException {
+                                       @Valid @RequestBody CompanhiaCreateDTO companhiaDTO)
+            throws RegraDeNegocioException {
         return new ResponseEntity<>(companhiaService.editarCompanhia(idCompanhia, companhiaDTO), OK);
     }
 
     @DeleteMapping("/{idCompanhia}")
-    public ResponseEntity<Void> delete(@PathVariable("idCompanhia") Integer idCompanhia) throws RegraDeNegocioException {
+    public ResponseEntity<Void> delete(@PathVariable("idCompanhia") Integer idCompanhia)
+            throws RegraDeNegocioException {
         companhiaService.deletarCompanhia(idCompanhia);
         return ResponseEntity.noContent().build();
     }
