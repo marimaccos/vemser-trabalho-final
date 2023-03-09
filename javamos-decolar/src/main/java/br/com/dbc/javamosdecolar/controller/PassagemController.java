@@ -58,11 +58,10 @@ public class PassagemController {
     }
 
     @PutMapping("/{idPassagem}")
-    public ResponseEntity<Void> update(@PathVariable("idPassagem") Integer id,
+    public ResponseEntity<PassagemDTO> update(@PathVariable("idPassagem") Integer id,
                        @RequestBody @Valid PassagemCreateDTO passagemDTO)
             throws RegraDeNegocioException {
-        this.passagemService.editarPassagem(id, passagemDTO);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(this.passagemService.editarPassagem(id, passagemDTO), OK);
     }
 
     @DeleteMapping("/{idPassagem}")

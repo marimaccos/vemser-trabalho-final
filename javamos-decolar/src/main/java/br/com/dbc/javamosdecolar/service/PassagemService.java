@@ -93,6 +93,8 @@ public class PassagemService {
             if(passagemRepository.editar(passagemId, passagem, 0)) {
                 PassagemDTO passagemEditada = mapper.convertValue(passagem, PassagemDTO.class);
                 passagemEditada.setIdPassagem(passagemId);
+                passagemEditada.setIdTrecho(passagemEncontrada.getTrecho().getIdTrecho());
+                passagemEditada.setCodigo(passagemEncontrada.getCodigo());
                 return passagemEditada;
             } else {
                 throw new RegraDeNegocioException("Aconteceu algum problema durante a edição da passagem.");
