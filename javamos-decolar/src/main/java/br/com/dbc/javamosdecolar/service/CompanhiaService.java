@@ -117,4 +117,17 @@ public class CompanhiaService {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
     }
+
+    public void deletarCompanhia(Integer idCompanhia) throws RegraDeNegocioException {
+        try {
+            Companhia companhiaEncontrada = companhiaRepository.buscaCompanhiaPorId(idCompanhia)
+                    .orElseThrow(() -> new RegraDeNegocioException("Companhia não encontrada!"));
+
+            usuarioService.desativarUsuario(companhiaEncontrada.getIdUsuario());
+
+        }catch (DatabaseException e) {
+            e.printStackTrace();
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
+        }
+    }
 }

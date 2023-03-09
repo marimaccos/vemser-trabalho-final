@@ -42,4 +42,15 @@ public class UsuarioService {
             throw new RegraDeNegocioException("Ocorreu um problema durante a edição do cadastro.");
         }
     }
+
+    public void desativarUsuario (Integer idUsuario) throws RegraDeNegocioException {
+        try {
+            usuarioRepository.buscarUsuarioById(idUsuario)
+                    .orElseThrow(() -> new RegraDeNegocioException("Usuário não encontrado!"));
+
+            usuarioRepository.desativarUsuario(idUsuario);
+        } catch (DatabaseException e) {
+            throw new RegraDeNegocioException("Ocorreu um problema durante a edição do cadastro.");
+        }
+    }
 }

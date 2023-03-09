@@ -43,4 +43,10 @@ public class CompanhiaController {
         companhiaService.editarCompanhia(idCompanhia, companhiaDTO);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/{idCompanhia}")
+    public ResponseEntity<Void> delete(@PathVariable("idCompanhia") Integer idCompanhia) throws RegraDeNegocioException {
+        companhiaService.deletarCompanhia(idCompanhia);
+        return ResponseEntity.ok().build();
+    }
 }

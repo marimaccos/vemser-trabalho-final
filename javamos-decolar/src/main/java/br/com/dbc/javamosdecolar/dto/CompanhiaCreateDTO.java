@@ -3,6 +3,7 @@ package br.com.dbc.javamosdecolar.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,23 +20,28 @@ public class CompanhiaCreateDTO {
 
     @NotBlank
     @CNPJ
+    @Schema(description = "CNPJ da companhia", example = "29.406.616/0001-49")
     private String cnpj;
 
     @NotBlank
     @Email
+    @Schema(description = "Login de acesso", example = "companhia.aviao@gmail.com")
     private String login;
 
     @NotBlank
     @Size(min=3, max=20)
+    @Schema(description = "Senha de acesso", example = "123456")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String senha;
 
     @NotBlank
     @Size(min=3, max=50)
+    @Schema(description = "Razão social da companhia", example = "Companhia aérea ltda")
     private String nome;
 
     @NotBlank
     @Size(min=3, max=50)
+    @Schema(description = "Nome fantasia da companhia", example = "Pássaro linhas aéreas")
     private String nomeFantasia;
 
 }

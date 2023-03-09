@@ -2,6 +2,7 @@ package br.com.dbc.javamosdecolar.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,18 +23,22 @@ public class CompradorCreateDTO {
     @NotNull
     @NotBlank
     @CPF
+    @Schema(description = "CPF do comprador", example = "123.456.789.10")
     private String cpf;
 
     @NotBlank
     @Email
+    @Schema(description = "Login do comprador", example = "bruno.rodrigues@gmail.com")
     private String login;
 
     @NotBlank
     @Size(min=3, max=20)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Schema(description = "Senha do comprador", example = "123456")
     private String senha;
 
     @NotBlank
     @Size(min=3, max=50)
+    @Schema(description = "Nome do comprador", example = "Bruno Rodrigues")
     private String nome;
 }

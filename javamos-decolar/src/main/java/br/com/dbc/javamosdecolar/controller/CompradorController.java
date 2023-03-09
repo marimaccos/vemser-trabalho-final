@@ -46,7 +46,7 @@ public class CompradorController {
     }
     
     @DeleteMapping("/{idComprador}")
-    public ResponseEntity<Void> delete(@PathVariable("idComprador") Integer idComprador)  {
+    public ResponseEntity<Void> delete(@PathVariable("idComprador") Integer idComprador) throws RegraDeNegocioException {
         compradorService.deletarComprador(idComprador);
         return ResponseEntity.ok().build();
     }
