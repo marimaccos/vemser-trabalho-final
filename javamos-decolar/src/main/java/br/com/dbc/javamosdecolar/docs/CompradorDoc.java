@@ -15,31 +15,6 @@ import java.util.List;
 
 @Tag(name = "Comprador", description = "Endpoints de comprador")
 public interface CompradorDoc {
-    @Operation(summary = "Listar compradores", description = "Lista todos os compradores cadastrados")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "Retorna a lista de compradores cadastrados"),
-                    @ApiResponse(responseCode = "400", description = "Bad Request"),
-                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
-                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
-            }
-    )
-    @GetMapping
-    ResponseEntity<List<CompradorDTO>> getAll() throws RegraDeNegocioException;
-
-    @Operation(summary = "Buscar comprador por id", description = "Mostra os dados do comprador pelo id")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "Retorna o comprador solicitado"),
-                    @ApiResponse(responseCode = "400", description = "Bad Request"),
-                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
-                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
-            }
-    )
-    @GetMapping("/{idComprador}")
-    ResponseEntity<CompradorDTO> getById(@PathVariable("idComprador") Integer idComprador)
-            throws RegraDeNegocioException;
-
     @Operation(summary = "Criar comprador", description = "Cria um novo comprador")
     @ApiResponses(
             value = {
@@ -78,4 +53,29 @@ public interface CompradorDoc {
     )
     @DeleteMapping("/{idComprador}")
     ResponseEntity<Void> delete(@PathVariable("idComprador") Integer idComprador) throws RegraDeNegocioException;
+
+    @Operation(summary = "Listar compradores", description = "Lista todos os compradores cadastrados")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Retorna a lista de compradores cadastrados"),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping
+    ResponseEntity<List<CompradorDTO>> getAll() throws RegraDeNegocioException;
+
+    @Operation(summary = "Buscar comprador por id", description = "Mostra os dados do comprador pelo id")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Retorna o comprador solicitado"),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/{idComprador}")
+    ResponseEntity<CompradorDTO> getById(@PathVariable("idComprador") Integer idComprador)
+            throws RegraDeNegocioException;
 }

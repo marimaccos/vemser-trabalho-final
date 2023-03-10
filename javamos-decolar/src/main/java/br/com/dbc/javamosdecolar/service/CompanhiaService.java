@@ -44,7 +44,7 @@ public class CompanhiaService {
                     TipoUsuario.COMPANHIA,
                     true);
 
-            Usuario usuarioCriado = usuarioService.criar(usuarioNovo);
+            Usuario usuarioCriado = usuarioService.create(usuarioNovo);
             Companhia companhia = objectMapper.convertValue(companhiaDTO, Companhia.class);
             companhia.setIdUsuario(usuarioCriado.getIdUsuario());
 
@@ -73,7 +73,7 @@ public class CompanhiaService {
                     TipoUsuario.COMPANHIA,
                     true);
 
-            usuarioService.editar(companhia.getIdUsuario(), usuario);
+            usuarioService.update(companhia.getIdUsuario(), usuario);
 
             Companhia companhiaEditada = objectMapper.convertValue(companhiaDTO, Companhia.class);
 
@@ -96,7 +96,7 @@ public class CompanhiaService {
             Companhia companhiaEncontrada = companhiaRepository.getById(idCompanhia)
                     .orElseThrow(() -> new RegraDeNegocioException("Companhia não encontrada!"));
 
-            usuarioService.desativar(companhiaEncontrada.getIdUsuario());
+            usuarioService.delete(companhiaEncontrada.getIdUsuario());
 
         }catch (DatabaseException e) {
             e.printStackTrace();

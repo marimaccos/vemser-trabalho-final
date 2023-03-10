@@ -24,39 +24,39 @@ public class TrechoController implements TrechoDoc {
 
     private final TrechoService trechoService;
 
-    @GetMapping
-    public ResponseEntity<List<TrechoDTO>> getAll() throws RegraDeNegocioException {
-        return new ResponseEntity<>(trechoService.lista(), OK);
-    }
-
-    @GetMapping("/{idTrecho}")
-    public ResponseEntity<TrechoDTO> getById(@PathVariable("idTrecho") Integer idTrecho)
-            throws RegraDeNegocioException {
-        return new ResponseEntity<>(trechoService.getTrechoById(idTrecho), OK);
-    }
-
-    @GetMapping("/{idCompanhia}")
-    public ResponseEntity<List<TrechoDTO>> getByCompanhia(@PathVariable("idCompanhia") Integer idCompanhia)
-            throws RegraDeNegocioException {
-        return new ResponseEntity<>(trechoService.getTrechosPorCompanhia(idCompanhia), OK);
-    }
-
     @PostMapping
     public ResponseEntity<TrechoDTO> create(@Valid @RequestBody TrechoCreateDTO trecho)
             throws RegraDeNegocioException {
-        return new ResponseEntity<>(trechoService.criar(trecho), CREATED);
+        return new ResponseEntity<>(trechoService.create(trecho), CREATED);
     }
 
     @PutMapping("/{idTrecho}")
     public ResponseEntity<TrechoDTO> update(@PathVariable("idTrecho") Integer idTrecho, @Valid @RequestBody TrechoCreateDTO trecho)
             throws RegraDeNegocioException {
-        return new ResponseEntity<>(trechoService.editar(idTrecho, trecho), OK);
+        return new ResponseEntity<>(trechoService.update(idTrecho, trecho), OK);
     }
 
     @DeleteMapping("/{idTrecho}")
     public ResponseEntity<TrechoDTO> delete(@PathVariable("idTrecho") Integer idTrecho)
             throws RegraDeNegocioException {
-        trechoService.deletar(idTrecho);
+        trechoService.delete(idTrecho);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TrechoDTO>> getAll() throws RegraDeNegocioException {
+        return new ResponseEntity<>(trechoService.getAll(), OK);
+    }
+
+    @GetMapping("/{idTrecho}")
+    public ResponseEntity<TrechoDTO> getById(@PathVariable("idTrecho") Integer idTrecho)
+            throws RegraDeNegocioException {
+        return new ResponseEntity<>(trechoService.getById(idTrecho), OK);
+    }
+
+    @GetMapping("/{idCompanhia}")
+    public ResponseEntity<List<TrechoDTO>> getByCompanhia(@PathVariable("idCompanhia") Integer idCompanhia)
+            throws RegraDeNegocioException {
+        return new ResponseEntity<>(trechoService.getByCompanhia(idCompanhia), OK);
     }
 }

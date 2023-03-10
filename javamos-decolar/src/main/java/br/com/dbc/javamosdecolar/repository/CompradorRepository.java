@@ -30,67 +30,7 @@ public class CompradorRepository {
         }
     }
 
-    private Comprador getCompradorPorResultSet(ResultSet resultSet) throws SQLException {
-        Comprador comprador = new Comprador();
-
-        comprador.setIdComprador(resultSet.getInt("id_comprador"));
-        comprador.setCpf(resultSet.getString("cpf"));
-        comprador.setIdUsuario(resultSet.getInt("id_usuario"));
-        comprador.setNome(resultSet.getString("nome"));
-        comprador.setLogin(resultSet.getString("login"));
-        comprador.setSenha(resultSet.getString("senha"));
-
-        int ativo = resultSet.getInt("ativo");
-
-        if(ativo == 1) {
-            comprador.setAtivo(true);
-        } else {
-            comprador.setAtivo(false);
-        }
-
-        return comprador;
-    }
-
-    public Optional<Comprador> getCompradorPorId(Integer idComprador) throws DatabaseException {
-        Connection connection = null;
-
-        try {
-            connection = conexaoBancoDeDados.getConnection();
-
-            String sql = "SELECT c.ID_COMPRADOR, c.CPF, c.ID_USUARIO, u.LOGIN, u.SENHA, u.NOME, u.ATIVO \n" +
-                    "FROM COMPRADOR c \n" +
-                    "INNER JOIN USUARIO u \n" +
-                    "ON u.ID_USUARIO = c.ID_USUARIO\n" +
-                    "WHERE c.ID_COMPRADOR = ?";
-
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, idComprador);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                Comprador compradorEncontrado = getCompradorPorResultSet(resultSet);
-                return Optional.of(compradorEncontrado);
-            } else {
-                return Optional.empty();
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DatabaseException(e.getCause());
-
-        } finally {
-            try{
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public Comprador adicionar(Comprador comprador) throws DatabaseException {
+    public Comprador create(Comprador comprador) throws DatabaseException {
         Connection connection = null;
         try {
             connection = conexaoBancoDeDados.getConnection();
@@ -126,7 +66,7 @@ public class CompradorRepository {
         }
     }
 
-    public List<Comprador> listaCompradores() throws DatabaseException {
+    public List<Comprador> getAll() throws DatabaseException {
         List<Comprador> compradores = new ArrayList<Comprador>();
         Connection connection = null;
 
@@ -142,7 +82,7 @@ public class CompradorRepository {
             ResultSet resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()) {
-                Comprador comprador = getCompradorPorResultSet(resultSet);
+                Comprador comprador = getByResultSet(resultSet);
                 compradores.add(comprador);
             }
 
@@ -161,5 +101,65 @@ public class CompradorRepository {
                 e.printStackTrace();
             }
         }
+    }
+
+    public Optional<Comprador> getById(Integer idComprador) throws DatabaseException {
+        Connection connection = null;
+
+        try {
+            connection = conexaoBancoDeDados.getConnection();
+
+            String sql = "SELECT c.ID_COMPRADOR, c.CPF, c.ID_USUARIO, u.LOGIN, u.SENHA, u.NOME, u.ATIVO \n" +
+                    "FROM COMPRADOR c \n" +
+                    "INNER JOIN USUARIO u \n" +
+                    "ON u.ID_USUARIO = c.ID_USUARIO\n" +
+                    "WHERE c.ID_COMPRADOR = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, idComprador);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                Comprador compradorEncontrado = getByResultSet(resultSet);
+                return Optional.of(compradorEncontrado);
+            } else {
+                return Optional.empty();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DatabaseException(e.getCause());
+
+        } finally {
+            try{
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private Comprador getByResultSet(ResultSet resultSet) throws SQLException {
+        Comprador comprador = new Comprador();
+
+        comprador.setIdComprador(resultSet.getInt("id_comprador"));
+        comprador.setCpf(resultSet.getString("cpf"));
+        comprador.setIdUsuario(resultSet.getInt("id_usuario"));
+        comprador.setNome(resultSet.getString("nome"));
+        comprador.setLogin(resultSet.getString("login"));
+        comprador.setSenha(resultSet.getString("senha"));
+
+        int ativo = resultSet.getInt("ativo");
+
+        if(ativo == 1) {
+            comprador.setAtivo(true);
+        } else {
+            comprador.setAtivo(false);
+        }
+
+        return comprador;
     }
 }

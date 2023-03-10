@@ -29,43 +29,6 @@ public class CompanhiaRepository {
         }
     }
 
-    public List<Companhia> getAll() throws DatabaseException {
-        List<Companhia> companhias = new ArrayList<>();
-        Connection conexao = null;
-
-        try {
-            conexao = conexaoBancoDeDados.getConnection();
-            Statement statement = conexao.createStatement();
-
-            String sql = "SELECT c.ID_COMPANHIA, c.CNPJ, c.NOME_FANTASIA, c.ID_USUARIO, u.ATIVO, " +
-                    "u.LOGIN, u.SENHA, u.NOME \n" +
-                    "FROM COMPANHIA c \n" +
-                    "INNER JOIN USUARIO u \n" +
-                    "ON c.ID_USUARIO = u.ID_USUARIO";
-
-            ResultSet resultSet = statement.executeQuery(sql);
-
-            while (resultSet.next()) {
-                Companhia companhia = getCompanhiaPorResultSet(resultSet);
-                companhias.add(companhia);
-            }
-
-            return companhias;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DatabaseException(e.getCause());
-
-        } finally {
-            try{
-                if (conexao != null) {
-                    conexao.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public Companhia create(Companhia companhia) throws DatabaseException {
         Connection conexao = null;
 
@@ -135,6 +98,43 @@ public class CompanhiaRepository {
         }
     }
 
+    public List<Companhia> getAll() throws DatabaseException {
+        List<Companhia> companhias = new ArrayList<>();
+        Connection conexao = null;
+
+        try {
+            conexao = conexaoBancoDeDados.getConnection();
+            Statement statement = conexao.createStatement();
+
+            String sql = "SELECT c.ID_COMPANHIA, c.CNPJ, c.NOME_FANTASIA, c.ID_USUARIO, u.ATIVO, " +
+                    "u.LOGIN, u.SENHA, u.NOME \n" +
+                    "FROM COMPANHIA c \n" +
+                    "INNER JOIN USUARIO u \n" +
+                    "ON c.ID_USUARIO = u.ID_USUARIO";
+
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                Companhia companhia = getByResultSet(resultSet);
+                companhias.add(companhia);
+            }
+
+            return companhias;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DatabaseException(e.getCause());
+
+        } finally {
+            try{
+                if (conexao != null) {
+                    conexao.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public Optional<Companhia> getByNome(String nome) throws DatabaseException {
         Connection conexao = null;
         try{
@@ -154,7 +154,7 @@ public class CompanhiaRepository {
             ResultSet resultSet = statement.executeQuery();
 
             if(resultSet.next()) {
-                Companhia companhiaPesquisa = getCompanhiaPorResultSet(resultSet);
+                Companhia companhiaPesquisa = getByResultSet(resultSet);
                 return Optional.of(companhiaPesquisa);
             } else {
                 return Optional.empty();
@@ -192,7 +192,7 @@ public class CompanhiaRepository {
             ResultSet resultSet = statement.executeQuery();
 
             if(resultSet.next()) {
-                Companhia companhiaPesquisa = getCompanhiaPorResultSet(resultSet);
+                Companhia companhiaPesquisa = getByResultSet(resultSet);
                 return Optional.of(companhiaPesquisa);
             } else {
                 return Optional.empty();
@@ -211,7 +211,7 @@ public class CompanhiaRepository {
         }
     }
 
-    private Companhia getCompanhiaPorResultSet(ResultSet resultSet) throws SQLException {
+    private Companhia getByResultSet(ResultSet resultSet) throws SQLException {
         Companhia companhia = new Companhia();
 
         companhia.setIdCompanhia(resultSet.getInt("id_companhia"));

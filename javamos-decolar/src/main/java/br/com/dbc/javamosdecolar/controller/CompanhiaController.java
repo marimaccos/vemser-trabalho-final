@@ -22,17 +22,6 @@ import static org.springframework.http.HttpStatus.*;
 public class CompanhiaController implements CompanhiaDoc {
     private final CompanhiaService companhiaService;
 
-    @GetMapping
-    public ResponseEntity<List<CompanhiaDTO>> getAll() throws RegraDeNegocioException {
-        return new ResponseEntity<>(companhiaService.getAll(), OK);
-    }
-
-    @GetMapping("/{idCompanhia}")
-    public ResponseEntity<CompanhiaDTO> getById(@PathVariable("idCompanhia") Integer idCompanhia)
-            throws RegraDeNegocioException {
-        return new ResponseEntity<>(companhiaService.getById(idCompanhia), OK);
-    }
-
     @PostMapping
     public ResponseEntity<CompanhiaDTO> create(@Valid @RequestBody CompanhiaCreateDTO companhiaDTO)
             throws RegraDeNegocioException {
@@ -51,5 +40,16 @@ public class CompanhiaController implements CompanhiaDoc {
             throws RegraDeNegocioException {
         companhiaService.delete(idCompanhia);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CompanhiaDTO>> getAll() throws RegraDeNegocioException {
+        return new ResponseEntity<>(companhiaService.getAll(), OK);
+    }
+
+    @GetMapping("/{idCompanhia}")
+    public ResponseEntity<CompanhiaDTO> getById(@PathVariable("idCompanhia") Integer idCompanhia)
+            throws RegraDeNegocioException {
+        return new ResponseEntity<>(companhiaService.getById(idCompanhia), OK);
     }
 }

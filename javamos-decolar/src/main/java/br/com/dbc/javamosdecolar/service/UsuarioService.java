@@ -15,11 +15,11 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final EmailService emailService;
 
-    public Usuario criar(Usuario usuario) throws RegraDeNegocioException {
+    public Usuario create(Usuario usuario) throws RegraDeNegocioException {
         try{
-            if (usuarioRepository.buscaUsuarioPeloLogin(usuario.getLogin()).isEmpty()) {
+            if (usuarioRepository.getByLogin(usuario.getLogin()).isEmpty()) {
                 emailService.sendEmail(usuario);
-                return usuarioRepository.adicionar(usuario);
+                return usuarioRepository.create(usuario);
 
             } else {
                 throw new RegraDeNegocioException("Não foi possível concluir o cadastro.");
@@ -31,11 +31,11 @@ public class UsuarioService {
         }
     }
 
-    public Usuario editar(Integer id, Usuario usuario) throws RegraDeNegocioException {
+    public Usuario update(Integer id, Usuario usuario) throws RegraDeNegocioException {
         try {
-            usuarioRepository.buscarUsuarioById(id)
+            usuarioRepository.getById(id)
                     .orElseThrow(() -> new RegraDeNegocioException("Usuário não encontrado!"));
-            usuarioRepository.editarUsuario(id, usuario);
+            usuarioRepository.update(id, usuario);
 
             usuario.setIdUsuario(id);
 
@@ -46,11 +46,11 @@ public class UsuarioService {
         }
     }
 
-    public void desativar(Integer idUsuario) throws RegraDeNegocioException {
+    public void delete(Integer idUsuario) throws RegraDeNegocioException {
         try {
-            usuarioRepository.buscarUsuarioById(idUsuario)
+            usuarioRepository.getById(idUsuario)
                     .orElseThrow(() -> new RegraDeNegocioException("Usuário não encontrado!"));
-            usuarioRepository.desativarUsuario(idUsuario);
+            usuarioRepository.delete(idUsuario);
 
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Ocorreu um problema durante a edição do cadastro.");

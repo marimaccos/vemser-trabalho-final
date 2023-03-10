@@ -35,7 +35,7 @@ public class PassagemRepository {
         }
     }
 
-    public Passagem adicionar(Passagem passagem) throws DatabaseException {
+    public Passagem create(Passagem passagem) throws DatabaseException {
         Connection connection = null;
 
         try {
@@ -75,45 +75,7 @@ public class PassagemRepository {
         }
     }
 
-    public List<Passagem> listar() throws DatabaseException {
-        List<Passagem> passagens = new ArrayList<>();
-        Connection connection = null;
-
-        try {
-            connection = conexaoBancoDeDados.getConnection();
-            Statement statement = connection.createStatement();
-
-            String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
-                    "t.id_trecho, t.origem, t.destino,\n" +
-                    "c.id_companhia, c.nome_fantasia\n" +
-                    "FROM PASSAGEM p\n" +
-                    "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
-                    "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n";
-
-            // Executa-se a consulta
-            ResultSet resultSet = statement.executeQuery(sql);
-
-            while (resultSet.next()) {
-                Passagem passagem = getPassagemPorResultSet(resultSet);
-                passagens.add(passagem);
-            }
-            return passagens;
-
-        } catch (SQLException e) {
-            throw new DatabaseException(e.getCause());
-
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public boolean editar(Integer id, Passagem passagem, Integer vendaId) throws DatabaseException {
+    public boolean update(Integer id, Passagem passagem, Integer vendaId) throws DatabaseException {
         Connection connection = null;
 
         try {
@@ -160,7 +122,7 @@ public class PassagemRepository {
         }
     }
 
-    public boolean remover(Integer id) throws DatabaseException {
+    public boolean delete(Integer id) throws DatabaseException {
         Connection connection = null;
 
         try {
@@ -191,7 +153,45 @@ public class PassagemRepository {
         }
     }
 
-    public Optional<Passagem> getPassagemPeloId(Integer id) throws DatabaseException {
+    public List<Passagem> getAll() throws DatabaseException {
+        List<Passagem> passagens = new ArrayList<>();
+        Connection connection = null;
+
+        try {
+            connection = conexaoBancoDeDados.getConnection();
+            Statement statement = connection.createStatement();
+
+            String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
+                    "t.id_trecho, t.origem, t.destino,\n" +
+                    "c.id_companhia, c.nome_fantasia\n" +
+                    "FROM PASSAGEM p\n" +
+                    "INNER JOIN TRECHO t ON t.id_trecho = p.id_trecho\n" +
+                    "INNER JOIN COMPANHIA c ON c.id_companhia  = t.id_companhia\n";
+
+            // Executa-se a consulta
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                Passagem passagem = getByResultSet(resultSet);
+                passagens.add(passagem);
+            }
+            return passagens;
+
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getCause());
+
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public Optional<Passagem> getById(Integer id) throws DatabaseException {
         Connection connection = null;
 
         try {
@@ -213,7 +213,7 @@ public class PassagemRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if(resultSet.next()) {
-                Passagem passagem = getPassagemPorResultSet(resultSet);
+                Passagem passagem = getByResultSet(resultSet);
                 return Optional.of(passagem);
             } else {
                 return Optional.empty();
@@ -234,7 +234,7 @@ public class PassagemRepository {
         }
     }
 
-    public List<Passagem> getPassagemPorDataPartida(LocalDateTime dataPartida) throws DatabaseException {
+    public List<Passagem> getByDataPartida(LocalDateTime dataPartida) throws DatabaseException {
         List<Passagem> passagens = new ArrayList<>();
         Connection connection = null;
 
@@ -257,7 +257,7 @@ public class PassagemRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Passagem passagem = getPassagemPorResultSet(resultSet);
+                Passagem passagem = getByResultSet(resultSet);
                 passagens.add(passagem);
             }
             return passagens;
@@ -276,7 +276,7 @@ public class PassagemRepository {
         }
     }
 
-    public List<Passagem> getPassagemPorDataChegada(LocalDateTime dataChegada) throws DatabaseException {
+    public List<Passagem> getByDataChegada(LocalDateTime dataChegada) throws DatabaseException {
         List<Passagem> passagens = new ArrayList<>();
         Connection connection = null;
 
@@ -299,7 +299,7 @@ public class PassagemRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Passagem passagem = getPassagemPorResultSet(resultSet);
+                Passagem passagem = getByResultSet(resultSet);
                 passagens.add(passagem);
             }
             return passagens;
@@ -318,7 +318,7 @@ public class PassagemRepository {
         }
     }
 
-    public List<Passagem> getPassagemPorValor(BigDecimal valorMaximo) throws DatabaseException {
+    public List<Passagem> getByValor(BigDecimal valorMaximo) throws DatabaseException {
         List<Passagem> passagens = new ArrayList<>();
         Connection connection = null;
 
@@ -341,7 +341,7 @@ public class PassagemRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Passagem passagem = getPassagemPorResultSet(resultSet);
+                Passagem passagem = getByResultSet(resultSet);
                 passagens.add(passagem);
             }
             return passagens;
@@ -360,7 +360,7 @@ public class PassagemRepository {
         }
     }
 
-    public List<Passagem> getPassagemPorCompanhia(Integer idCompanhia) throws DatabaseException {
+    public List<Passagem> getByCompanhia(Integer idCompanhia) throws DatabaseException {
         List<Passagem> passagens = new ArrayList<>();
         Connection connection = null;
 
@@ -383,7 +383,7 @@ public class PassagemRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Passagem passagem = getPassagemPorResultSet(resultSet);
+                Passagem passagem = getByResultSet(resultSet);
                 passagens.add(passagem);
             }
             return passagens;
@@ -426,7 +426,7 @@ public class PassagemRepository {
             ResultSet resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()) {
-                Passagem passagem = getPassagemPorResultSet(resultSet);
+                Passagem passagem = getByResultSet(resultSet);
                 passagens.add(passagem);
             }
             return passagens;
@@ -445,7 +445,7 @@ public class PassagemRepository {
         }
     }
 
-    private Passagem getPassagemPorResultSet(ResultSet resultSet) throws SQLException {
+    private Passagem getByResultSet(ResultSet resultSet) throws SQLException {
         // Retira os dados necessários da companhia para serem usados no trecho
         Companhia companhia = new Companhia();
         companhia.setNomeFantasia(resultSet.getString("nome_fantasia"));

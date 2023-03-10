@@ -24,7 +24,7 @@ public class VendaService {
     private final EmailService emailService;
     private final ObjectMapper mapper;
 
-    public VendaDTO criar(VendaCreateDTO vendaDTO) throws RegraDeNegocioException {
+    public VendaDTO create(VendaCreateDTO vendaDTO) throws RegraDeNegocioException {
 
         try {
             UUID codigo = UUID.randomUUID();
@@ -57,7 +57,7 @@ public class VendaService {
                 throw new RegraDeNegocioException("Não foi possível concluir a venda.");
             }
 
-            boolean conseguiuEditar = passagemService.editarPassagemVendida(passagem, vendaEfetuada.getIdVenda());
+            boolean conseguiuEditar = passagemService.updatePassagemVendida(passagem, vendaEfetuada.getIdVenda());
 
             if(!conseguiuEditar) {
                 throw new RegraDeNegocioException("Não foi possível concluir a venda.");
@@ -77,10 +77,10 @@ public class VendaService {
         }
     }
 
-    public boolean cancelar(Integer idVenda) throws RegraDeNegocioException {
+    public boolean delete(Integer idVenda) throws RegraDeNegocioException {
 
         try {
-            Venda venda = vendaRepository.getVendaPorId(idVenda)
+            Venda venda = vendaRepository.getById(idVenda)
                     .orElseThrow(() -> new RegraDeNegocioException("Venda não encontrada!"));
 
             //tirar isso quando implementar o springdata
@@ -94,17 +94,33 @@ public class VendaService {
 
             emailService.sendEmail(venda, "DELETAR", comprador);
 
-            return vendaRepository.cancelarVenda(idVenda);
+            return vendaRepository.delete(idVenda);
 
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante o cancelamento.");
         }
     }
 
+    public VendaDTO getByCodigo(String uuid) throws RegraDeNegocioException {
+        try {
+            Venda venda = vendaRepository.getByCodigo(uuid)
+                    .orElseThrow(() -> new RegraDeNegocioException("Venda não pode ser localizada."));
+
+            VendaDTO vendaDTO = mapper.convertValue(venda, VendaDTO.class);
+            vendaDTO.setIdComprador(venda.getComprador().getIdComprador());
+            vendaDTO.setIdPassagem(venda.getPassagem().getIdPassagem());
+            vendaDTO.setIdCompanhia(venda.getPassagem().getTrecho().getCompanhia().getIdCompanhia());
+
+            return vendaDTO;
+        } catch (DatabaseException e) {
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a recuperação da venda.");
+        }
+    }
+
     public List<VendaDTO> getHistoricoComprasComprador(Integer idComprador) throws RegraDeNegocioException {
         try {
             compradorService.getById(idComprador);
-            return vendaRepository.getVendasPorComprador(idComprador).stream()
+            return vendaRepository.getByComprador(idComprador).stream()
                     .map(venda -> {
                         VendaDTO vendaDTO = mapper.convertValue(venda, VendaDTO.class);
                         vendaDTO.setIdComprador(venda.getComprador().getIdComprador());
@@ -119,26 +135,10 @@ public class VendaService {
         }
     }
 
-    public VendaDTO getVendaPorCodigo(String uuid) throws RegraDeNegocioException {
-        try {
-            Venda venda = vendaRepository.getVendaPorCodigo(uuid)
-                    .orElseThrow(() -> new RegraDeNegocioException("Venda não pode ser localizada."));
-
-            VendaDTO vendaDTO = mapper.convertValue(venda, VendaDTO.class);
-            vendaDTO.setIdComprador(venda.getComprador().getIdComprador());
-            vendaDTO.setIdPassagem(venda.getPassagem().getIdPassagem());
-            vendaDTO.setIdCompanhia(venda.getPassagem().getTrecho().getCompanhia().getIdCompanhia());
-
-            return vendaDTO;
-        } catch (DatabaseException e) {
-            throw new RegraDeNegocioException("Aconteceu algum problema durante a recuperação da venda.");
-        }
-    }
-
     public List<VendaDTO> getHistoricoVendasCompanhia(Integer id) throws RegraDeNegocioException {
         try {
             companhiaService.getById(id);
-            return vendaRepository.getVendasPorCompanhia(id).stream()
+            return vendaRepository.getByCompanhia(id).stream()
                     .map(venda -> {
                         VendaDTO vendaDTO = mapper.convertValue(venda, VendaDTO.class);
                         vendaDTO.setIdComprador(venda.getComprador().getIdComprador());

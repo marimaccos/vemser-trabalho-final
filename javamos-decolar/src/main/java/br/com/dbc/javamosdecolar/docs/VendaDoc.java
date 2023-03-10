@@ -16,6 +16,30 @@ import java.util.List;
 @Tag(name = "Venda", description = "Endpoints de venda")
 public interface VendaDoc {
 
+    @Operation(summary = "Efetuar Venda", description = "Lista todas as companhias cadastradas")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "201", description = "Venda realizada com sucesso."),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @PostMapping
+    ResponseEntity<VendaDTO> create(@RequestBody @Valid VendaCreateDTO vendaDTO) throws RegraDeNegocioException;
+
+    @Operation(summary = "Cancelar venda", description = "Cancela uma venda realizada")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "204", description = "No content"),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @DeleteMapping("/{idVenda}/cancelar")
+    ResponseEntity<Void> delete(@PathVariable("idVenda") Integer idVenda) throws RegraDeNegocioException;
+
     @Operation(summary = "Historico de compras do comprador", description = "Lista o historico de compras do comprador")
     @ApiResponses(
             value = {
@@ -54,28 +78,4 @@ public interface VendaDoc {
     @GetMapping()
     ResponseEntity<VendaDTO> getByCodigo(@RequestParam(name = "codigo") String uuid)
             throws RegraDeNegocioException;
-
-    @Operation(summary = "Efetuar Venda", description = "Lista todas as companhias cadastradas")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "201", description = "Venda realizada com sucesso."),
-                    @ApiResponse(responseCode = "400", description = "Bad Request"),
-                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
-                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
-            }
-    )
-    @PostMapping
-    ResponseEntity<VendaDTO> create(@RequestBody @Valid VendaCreateDTO vendaDTO) throws RegraDeNegocioException;
-
-    @Operation(summary = "Cancelar venda", description = "Cancela uma venda realizada")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "204", description = "No content"),
-                    @ApiResponse(responseCode = "400", description = "Bad Request"),
-                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
-                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
-            }
-    )
-    @DeleteMapping("/{idVenda}/cancelar")
-    ResponseEntity<Void> delete(@PathVariable("idVenda") Integer idVenda) throws RegraDeNegocioException;
 }

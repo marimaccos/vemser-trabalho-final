@@ -24,7 +24,7 @@ public class CompradorService {
 
     public List<CompradorDTO> getAll() throws RegraDeNegocioException {
         try {
-            List<CompradorDTO> listaCompradores = compradorRepository.listaCompradores().stream()
+            List<CompradorDTO> listaCompradores = compradorRepository.getAll().stream()
                     .map(comprador -> objectMapper.convertValue(comprador, CompradorDTO.class))
                     .toList();
 
@@ -45,11 +45,11 @@ public class CompradorService {
                     TipoUsuario.COMPRADOR,
                     true);
 
-            Usuario usuarioCriado = usuarioService.criar(usuarioNovo);
+            Usuario usuarioCriado = usuarioService.create(usuarioNovo);
             Comprador comprador = objectMapper.convertValue(compradorDTO, Comprador.class);
             comprador.setIdUsuario(usuarioCriado.getIdUsuario());
 
-            CompradorDTO compradorCriado = objectMapper.convertValue(compradorRepository.adicionar(comprador),
+            CompradorDTO compradorCriado = objectMapper.convertValue(compradorRepository.create(comprador),
                     CompradorDTO.class);
             compradorCriado.setAtivo(usuarioCriado.isAtivo());
 
@@ -65,7 +65,7 @@ public class CompradorService {
             throws RegraDeNegocioException{
         try {
             // Retorna o comprador existente
-            Comprador comprador = compradorRepository.getCompradorPorId(idComprador)
+            Comprador comprador = compradorRepository.getById(idComprador)
                     .orElseThrow(() -> new RegraDeNegocioException("Comprador não encontrado!"));
 
             // Cria usuario e passa os dados para edição
@@ -77,7 +77,7 @@ public class CompradorService {
                     TipoUsuario.COMPRADOR,
                     true);
 
-            Usuario usuarioEditado = usuarioService.editar(comprador.getIdUsuario(), usuario);
+            Usuario usuarioEditado = usuarioService.update(comprador.getIdUsuario(), usuario);
             comprador.setNome(usuarioEditado.getNome());
 
             return objectMapper.convertValue(comprador, CompradorDTO.class);
@@ -89,10 +89,10 @@ public class CompradorService {
 
     public void delete(Integer idComprador) throws RegraDeNegocioException {
         try {
-            Comprador compradorEncontrado = compradorRepository.getCompradorPorId(idComprador)
+            Comprador compradorEncontrado = compradorRepository.getById(idComprador)
                     .orElseThrow(() -> new RegraDeNegocioException("Comprador não encontrado!"));
 
-            usuarioService.desativar(compradorEncontrado.getIdUsuario());
+            usuarioService.delete(compradorEncontrado.getIdUsuario());
 
         }catch (DatabaseException e) {
             e.printStackTrace();
@@ -102,7 +102,7 @@ public class CompradorService {
 
     public CompradorDTO getById(Integer idComprador) throws RegraDeNegocioException{
         try {
-            Comprador compradorEncontrado = compradorRepository.getCompradorPorId(idComprador)
+            Comprador compradorEncontrado = compradorRepository.getById(idComprador)
                     .orElseThrow(() -> new RegraDeNegocioException("Comprador não encontrado!"));
 
             return objectMapper.convertValue(compradorEncontrado, CompradorDTO.class);

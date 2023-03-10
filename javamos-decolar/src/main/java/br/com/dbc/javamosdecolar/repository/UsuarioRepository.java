@@ -29,7 +29,7 @@ public class UsuarioRepository{
         }
     }
 
-    public Usuario adicionar(Usuario usuario) throws DatabaseException {
+    public Usuario create(Usuario usuario) throws DatabaseException {
         Connection conexao = null;
         try {
             conexao = conexaoBancoDeDados.getConnection();
@@ -67,7 +67,7 @@ public class UsuarioRepository{
         }
     }
 
-    public boolean editarUsuario(Integer idUsuario, Usuario usuario) throws DatabaseException {
+    public boolean update(Integer idUsuario, Usuario usuario) throws DatabaseException {
         Connection conexao = null;
         try{
             conexao = conexaoBancoDeDados.getConnection();
@@ -99,7 +99,36 @@ public class UsuarioRepository{
         }
     }
 
-    public Optional<Usuario> buscaUsuarioPeloLogin(String login) throws DatabaseException {
+    public boolean delete(Integer id) throws DatabaseException {
+        Connection conexao = null;
+        try{
+            conexao = conexaoBancoDeDados.getConnection();
+
+            StringBuilder sql = new StringBuilder();
+            sql.append("UPDATE USUARIO SET ");
+            sql.append("ativo = 0");
+            sql.append("WHERE id_usuario = ?");
+
+            PreparedStatement statement = conexao.prepareStatement(sql.toString());
+            statement.setInt(1, id);
+
+            int res = statement.executeUpdate();
+            return res  > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DatabaseException(e.getCause());
+        } finally {
+            try {
+                if (conexao != null) {
+                    conexao.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public Optional<Usuario> getByLogin(String login) throws DatabaseException {
         Usuario usuarioPesquisa = new Usuario();
         Connection conexao = null;
         try{
@@ -153,7 +182,7 @@ public class UsuarioRepository{
         }
     }
 
-    public Optional<Usuario> buscarUsuarioById (Integer idUsuario) throws DatabaseException {
+    public Optional<Usuario> getById(Integer idUsuario) throws DatabaseException {
         Usuario usuarioPesquisa = new Usuario();
         Connection conexao = null;
         try{
@@ -192,35 +221,6 @@ public class UsuarioRepository{
                 return Optional.empty();
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DatabaseException(e.getCause());
-        } finally {
-            try {
-                if (conexao != null) {
-                    conexao.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public boolean desativarUsuario(Integer id) throws DatabaseException {
-        Connection conexao = null;
-        try{
-            conexao = conexaoBancoDeDados.getConnection();
-
-            StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE USUARIO SET ");
-            sql.append("ativo = 0");
-            sql.append("WHERE id_usuario = ?");
-
-            PreparedStatement statement = conexao.prepareStatement(sql.toString());
-            statement.setInt(1, id);
-
-            int res = statement.executeUpdate();
-            return res  > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DatabaseException(e.getCause());

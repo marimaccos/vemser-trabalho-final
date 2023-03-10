@@ -33,90 +33,6 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
         }
     }
 
-    public Optional<Trecho> getTrechoPorId(Integer idTrecho) throws DatabaseException {
-        Connection connection = null;
-
-        try {
-            connection = conexaoBancoDeDados.getConnection();
-
-            String sql = "SELECT t.id_trecho, t.origem, t.destino,\n" +
-                    "c.id_companhia, c.nome_fantasia\n" +
-                    "FROM TRECHO t\n" +
-                    "INNER JOIN COMPANHIA c ON t.id_companhia = c.id_companhia\n" +
-                    "WHERE t.id_trecho = ?";
-
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-            preparedStatement.setInt(1, idTrecho);
-
-            // Executa-se a consulta
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if(resultSet.next()) {
-                Trecho trecho = getTrechoPorResultSet(resultSet);
-                return Optional.of(trecho);
-            } else {
-                return Optional.empty();
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DatabaseException(e.getCause());
-
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public Optional<Trecho> getTrecho(String origem, String destino, Companhia companhia) throws DatabaseException {
-        Connection connection = null;
-
-        try {
-            connection = conexaoBancoDeDados.getConnection();
-
-            String sql = "SELECT t.id_trecho, t.origem, t.destino,\n" +
-                    "c.id_companhia, c.nome_fantasia\n" +
-                    "FROM TRECHO t\n" +
-                    "INNER JOIN COMPANHIA c ON t.id_companhia = c.id_companhia\n" +
-                    "WHERE t.origem = UPPER(?) AND t.destino = UPPER(?) AND t.id_companhia = ?";
-
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-            preparedStatement.setString(1, origem);
-            preparedStatement.setString(2, destino);
-            preparedStatement.setInt(3, companhia.getIdCompanhia());
-
-            // Executa-se a consulta
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if(resultSet.next()) {
-                Trecho trecho = getTrechoPorResultSet(resultSet);
-                return Optional.of(trecho);
-            } else {
-                return Optional.empty();
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DatabaseException(e.getCause());
-
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     @Override
     public Trecho create(Trecho trecho) throws DatabaseException {
         Connection connection = null;
@@ -242,7 +158,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
             ResultSet resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()) {
-                Trecho trecho = getTrechoPorResultSet(resultSet);
+                Trecho trecho = getByResultSet(resultSet);
                 trechos.add(trecho);
             }
             return trechos;
@@ -262,7 +178,91 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
         }
     }
 
-    public List<Trecho> getTrechosPorCompanhia(Integer idCompanhia) throws DatabaseException {
+    public Optional<Trecho> getById(Integer idTrecho) throws DatabaseException {
+        Connection connection = null;
+
+        try {
+            connection = conexaoBancoDeDados.getConnection();
+
+            String sql = "SELECT t.id_trecho, t.origem, t.destino,\n" +
+                    "c.id_companhia, c.nome_fantasia\n" +
+                    "FROM TRECHO t\n" +
+                    "INNER JOIN COMPANHIA c ON t.id_companhia = c.id_companhia\n" +
+                    "WHERE t.id_trecho = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, idTrecho);
+
+            // Executa-se a consulta
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()) {
+                Trecho trecho = getByResultSet(resultSet);
+                return Optional.of(trecho);
+            } else {
+                return Optional.empty();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DatabaseException(e.getCause());
+
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public Optional<Trecho> getOne(String origem, String destino, Companhia companhia) throws DatabaseException {
+        Connection connection = null;
+
+        try {
+            connection = conexaoBancoDeDados.getConnection();
+
+            String sql = "SELECT t.id_trecho, t.origem, t.destino,\n" +
+                    "c.id_companhia, c.nome_fantasia\n" +
+                    "FROM TRECHO t\n" +
+                    "INNER JOIN COMPANHIA c ON t.id_companhia = c.id_companhia\n" +
+                    "WHERE t.origem = UPPER(?) AND t.destino = UPPER(?) AND t.id_companhia = ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, origem);
+            preparedStatement.setString(2, destino);
+            preparedStatement.setInt(3, companhia.getIdCompanhia());
+
+            // Executa-se a consulta
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()) {
+                Trecho trecho = getByResultSet(resultSet);
+                return Optional.of(trecho);
+            } else {
+                return Optional.empty();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DatabaseException(e.getCause());
+
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public List<Trecho> getByCompanhia(Integer idCompanhia) throws DatabaseException {
         List<Trecho> trechos = new ArrayList<>();
         Connection connection = null;
 
@@ -283,7 +283,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Trecho trecho = getTrechoPorResultSet(resultSet);
+                Trecho trecho = getByResultSet(resultSet);
                 trechos.add(trecho);
             }
             return trechos;
@@ -302,7 +302,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
         }
     }
 
-    private Trecho getTrechoPorResultSet(ResultSet resultSet) throws SQLException {
+    private Trecho getByResultSet(ResultSet resultSet) throws SQLException {
 
         // Retira os dados necessários da companhia para serem usados no trecho
         Companhia companhia = new Companhia();
