@@ -24,30 +24,30 @@ public class VendaController implements VendaDoc {
     private final VendaService vendaService;
 
     @GetMapping("/{idComprador}/comprador")
-    public ResponseEntity<List<VendaDTO>> listaHistoricoCompras(@PathVariable("idComprador") Integer id)
+    public ResponseEntity<List<VendaDTO>> getByHistoricoCompras(@PathVariable("idComprador") Integer id)
             throws RegraDeNegocioException {
         return new ResponseEntity<>(vendaService.getHistoricoComprasComprador(id), OK);
     }
 
     @GetMapping("/{idCompanhia}/companhia")
-    public ResponseEntity<List<VendaDTO>> listaHistoricoVendas(@PathVariable("idCompanhia") Integer id)
+    public ResponseEntity<List<VendaDTO>> getByHistoricoVendas(@PathVariable("idCompanhia") Integer id)
             throws RegraDeNegocioException {
         return new ResponseEntity<>(vendaService.getHistoricoVendasCompanhia(id), OK);
     }
 
     @GetMapping()
-    public ResponseEntity<VendaDTO> getPorCodigo(@RequestParam(name = "codigo") String uuid)
+    public ResponseEntity<VendaDTO> getByCodigo(@RequestParam(name = "codigo") String uuid)
             throws RegraDeNegocioException {
         return new ResponseEntity<>(vendaService.getVendaPorCodigo(uuid), OK);
     }
 
     @PostMapping
-    public ResponseEntity<VendaDTO> criar(@RequestBody @Valid VendaCreateDTO vendaDTO) throws RegraDeNegocioException {
+    public ResponseEntity<VendaDTO> create(@RequestBody @Valid VendaCreateDTO vendaDTO) throws RegraDeNegocioException {
         return new ResponseEntity<>(vendaService.criar(vendaDTO), CREATED);
     }
 
     @DeleteMapping("/{idVenda}/cancelar")
-    public ResponseEntity<Void> cancelar(@PathVariable("idVenda") Integer idVenda) throws RegraDeNegocioException {
+    public ResponseEntity<Void> delete(@PathVariable("idVenda") Integer idVenda) throws RegraDeNegocioException {
         vendaService.cancelar(idVenda);
         return ResponseEntity.noContent().build();
     }

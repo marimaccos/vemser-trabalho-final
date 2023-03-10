@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface RepositoryCRUD<T, K> {
     Integer getProximoId(Connection connection) throws SQLException;
-    T adicionar(T t) throws DatabaseException;
-    List<T> listar() throws DatabaseException;
-    boolean editar(K id, T t) throws DatabaseException;
-    boolean remover(K id) throws DatabaseException;
+    List<T> getAll() throws DatabaseException;
+    T create(T t) throws DatabaseException;
+    boolean update(K id, T t) throws DatabaseException;
+    boolean delete(K id) throws DatabaseException;
 }

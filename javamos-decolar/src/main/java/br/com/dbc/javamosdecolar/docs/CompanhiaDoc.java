@@ -26,7 +26,7 @@ public interface CompanhiaDoc {
             }
     )
     @GetMapping
-    ResponseEntity<List<CompanhiaDTO>> list() throws RegraDeNegocioException;
+    ResponseEntity<List<CompanhiaDTO>> getAll() throws RegraDeNegocioException;
 
     @Operation(summary = "Buscar companhia por id", description = "Mostra os dados da companhia pelo id")
     @ApiResponses(
@@ -51,7 +51,7 @@ public interface CompanhiaDoc {
             }
     )
     @PostMapping
-    ResponseEntity<CompanhiaDTO> criar(@Valid @RequestBody CompanhiaCreateDTO companhiaDTO) throws RegraDeNegocioException;
+    ResponseEntity<CompanhiaDTO> create(@Valid @RequestBody CompanhiaCreateDTO companhiaDTO) throws RegraDeNegocioException;
 
     @Operation(summary = "Editar companhia por id", description = "Edita os dados da companhia pelo id")
     @ApiResponses(
@@ -63,8 +63,8 @@ public interface CompanhiaDoc {
             }
     )
     @PutMapping("/{idCompanhia}")
-    ResponseEntity<CompanhiaDTO> atualizar(@PathVariable("idCompanhia") Integer idCompanhia,
-                                       @Valid @RequestBody CompanhiaCreateDTO companhiaDTO) throws RegraDeNegocioException;
+    ResponseEntity<CompanhiaDTO> update(@PathVariable("idCompanhia") Integer idCompanhia,
+                                        @Valid @RequestBody CompanhiaCreateDTO companhiaDTO) throws RegraDeNegocioException;
 
     @Operation(summary = "Deletar companhia por id", description = "Deleta a companhia selecionado")
     @ApiResponses(
@@ -76,5 +76,5 @@ public interface CompanhiaDoc {
             }
     )
     @DeleteMapping("/{idCompanhia}")
-    ResponseEntity<Void> deletar(@PathVariable("idCompanhia") Integer idCompanhia) throws RegraDeNegocioException;
+    ResponseEntity<Void> delete(@PathVariable("idCompanhia") Integer idCompanhia) throws RegraDeNegocioException;
 }

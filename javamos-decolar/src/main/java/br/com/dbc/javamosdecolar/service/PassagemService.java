@@ -53,6 +53,7 @@ public class PassagemService {
             passagemCriadaDTO.setIdTrecho(trecho.getIdTrecho());
 
             return passagemCriadaDTO;
+
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante o cadastro.");
         }
@@ -66,6 +67,7 @@ public class PassagemService {
             passagemDTO.setIdTrecho(passagem.getTrecho().getIdTrecho());
 
             return passagemDTO;
+
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
@@ -88,16 +90,18 @@ public class PassagemService {
                 throw new RegraDeNegocioException("Data inválida!");
             }
             passagem.setDisponivel(true);
+
             if(passagemRepository.editar(passagemId, passagem, 0)) {
                 PassagemDTO passagemEditada = mapper.convertValue(passagem, PassagemDTO.class);
                 passagemEditada.setIdPassagem(passagemId);
                 passagemEditada.setIdTrecho(passagemEncontrada.getTrecho().getIdTrecho());
                 passagemEditada.setCodigo(passagemEncontrada.getCodigo());
+
                 return passagemEditada;
+
             } else {
                 throw new RegraDeNegocioException("Aconteceu algum problema durante a edição da passagem.");
             }
-
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a edição da passagem");
         }
@@ -105,6 +109,7 @@ public class PassagemService {
 
     public boolean editarPassagemVendida(Passagem passagem, Integer idVenda) throws DatabaseException {
         passagem.setDisponivel(false);
+
         return passagemRepository.editar(passagem.getIdPassagem(), passagem, idVenda);
     }
 
@@ -122,6 +127,7 @@ public class PassagemService {
                             passagemDTO.setIdTrecho(passagem.getTrecho().getIdTrecho());
                             return passagemDTO;
                         }).toList();
+
             } else if(dataChegada != null){
                 dataChegada = dataChegada.replace("-", "/");
 
@@ -148,6 +154,7 @@ public class PassagemService {
                         passagemDTO.setIdTrecho(passagem.getTrecho().getIdTrecho());
                         return passagemDTO;
                     }).toList();
+
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
@@ -180,6 +187,7 @@ public class PassagemService {
                         return passagemDTO;
                     })
                     .toList();
+
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
         }
@@ -190,7 +198,9 @@ public class PassagemService {
             char[] dataChars = data.replace("-", "/").toCharArray();
             dataChars[10] = ' ';
             data = String.valueOf(dataChars);
+
             return LocalDateTime.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+
         } catch (DateTimeParseException e) {
             throw new RegraDeNegocioException("Data inserida no formato incorreto!");
         }

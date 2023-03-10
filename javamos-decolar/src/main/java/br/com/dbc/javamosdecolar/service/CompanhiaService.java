@@ -21,14 +21,14 @@ public class CompanhiaService {
     private final UsuarioService usuarioService;
     private final ObjectMapper objectMapper;
 
-
-    public List<CompanhiaDTO> lista() throws RegraDeNegocioException {
+    public List<CompanhiaDTO> getAll() throws RegraDeNegocioException {
         try{
-            List<CompanhiaDTO> listaCompradores = companhiaRepository.listaCompanhias().stream()
+            List<CompanhiaDTO> listaCompradores = companhiaRepository.getAll().stream()
                     .map(companhia -> objectMapper.convertValue(companhia, CompanhiaDTO.class))
                     .collect(Collectors.toList());
 
             return listaCompradores;
+
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
@@ -37,8 +37,9 @@ public class CompanhiaService {
 
     public Companhia getByNome(String nome) throws RegraDeNegocioException {
         try {
-            return companhiaRepository.buscaCompanhiaPorNome(nome)
+            return companhiaRepository.getByNome(nome)
                     .orElseThrow(() -> new RegraDeNegocioException("Companhia não Encontrada"));
+
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a recuperação da companhia.");
@@ -47,16 +48,18 @@ public class CompanhiaService {
 
     public CompanhiaDTO getById(Integer id) throws RegraDeNegocioException {
         try {
-            Companhia companhia = companhiaRepository.buscaCompanhiaPorId(id)
+            Companhia companhia = companhiaRepository.getCompanhiaPorId(id)
                     .orElseThrow(() -> new RegraDeNegocioException("Companhia não encontrada"));
+
             return objectMapper.convertValue(companhia, CompanhiaDTO.class);
+
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante a recuperação da companhia.");
         }
     }
 
-    public CompanhiaDTO criar(CompanhiaCreateDTO companhiaDTO) throws RegraDeNegocioException {
+    public CompanhiaDTO createCompanhia(CompanhiaCreateDTO companhiaDTO) throws RegraDeNegocioException {
         try {
             Usuario usuarioNovo = new Usuario(
                     companhiaDTO.getLogin(),
@@ -69,7 +72,7 @@ public class CompanhiaService {
             Companhia companhia = objectMapper.convertValue(companhiaDTO, Companhia.class);
             companhia.setIdUsuario(usuarioCriado.getIdUsuario());
 
-            Companhia companhiaNova = companhiaRepository.adicionar(companhia);
+            Companhia companhiaNova = companhiaRepository.create(companhia);
             return objectMapper.convertValue(companhiaNova, CompanhiaDTO.class);
 
         } catch (DatabaseException e) {
@@ -80,7 +83,7 @@ public class CompanhiaService {
 
     public CompanhiaDTO editar(Integer id, CompanhiaCreateDTO companhiaDTO) throws RegraDeNegocioException {
         try {
-            Companhia companhia = companhiaRepository.buscaCompanhiaPorId(id)
+            Companhia companhia = companhiaRepository.getCompanhiaPorId(id)
                     .orElseThrow(() -> new RegraDeNegocioException("Companhia não existe."));
 
             Usuario usuario = new Usuario(
@@ -95,10 +98,11 @@ public class CompanhiaService {
 
             Companhia companhiaEditada = objectMapper.convertValue(companhiaDTO, Companhia.class);
 
-            if(companhiaRepository.editarCompanhia(id, companhiaEditada)) {
+            if(companhiaRepository.update(id, companhiaEditada)) {
                 companhiaEditada.setIdCompanhia(id);
                 companhiaEditada.setAtivo(companhia.isAtivo());
                 return objectMapper.convertValue(companhiaEditada, CompanhiaDTO.class);
+
             } else {
                 throw new RegraDeNegocioException("Companhia não pode ser editada.");
             }
@@ -109,7 +113,7 @@ public class CompanhiaService {
 
     public void desativar(Integer idCompanhia) throws RegraDeNegocioException {
         try {
-            Companhia companhiaEncontrada = companhiaRepository.buscaCompanhiaPorId(idCompanhia)
+            Companhia companhiaEncontrada = companhiaRepository.getCompanhiaPorId(idCompanhia)
                     .orElseThrow(() -> new RegraDeNegocioException("Companhia não encontrada!"));
 
             usuarioService.desativar(companhiaEncontrada.getIdUsuario());

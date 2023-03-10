@@ -36,12 +36,10 @@ public class TrechoService {
                 throw new RegraDeNegocioException("Trecho já existe!");
             }
             Trecho trecho = objectMapper.convertValue(trechoDTO, Trecho.class);
-
             trecho.setCompanhia(companhia);
 
             TrechoDTO trechoNovo = objectMapper
-                    .convertValue(trechoRepository.adicionar(trecho), TrechoDTO.class);
-
+                    .convertValue(trechoRepository.create(trecho), TrechoDTO.class);
             trechoNovo.setIdCompanhia(companhia.getIdCompanhia());
 
             return trechoNovo;
@@ -67,7 +65,7 @@ public class TrechoService {
             Trecho trechoEditado = objectMapper.convertValue(trechoDTO, Trecho.class);
             trechoEditado.setIdTrecho(idTrecho);
 
-            if(trechoRepository.editar(idTrecho, trechoEditado)){
+            if(trechoRepository.update(idTrecho, trechoEditado)){
                 TrechoDTO trechoEditadoDTO = objectMapper.convertValue(trechoEditado, TrechoDTO.class);
                 trechoEditadoDTO.setIdCompanhia(companhia.getIdCompanhia());
 
@@ -86,8 +84,7 @@ public class TrechoService {
         try {
             trechoRepository.getTrechoPorId(idTrecho)
                     .orElseThrow(() -> new RegraDeNegocioException("Trecho não encontrado!"));
-
-            trechoRepository.remover(idTrecho);
+            trechoRepository.delete(idTrecho);
 
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Aconteceu algum problema durante a exclusão.");
@@ -96,7 +93,7 @@ public class TrechoService {
 
     public List<TrechoDTO> lista() throws RegraDeNegocioException {
         try {
-            List<TrechoDTO> listaTrechos = trechoRepository.listar().stream()
+            List<TrechoDTO> listaTrechos = trechoRepository.getAll().stream()
                     .map(trecho -> {
                         TrechoDTO trechoDTO = objectMapper.convertValue(trecho, TrechoDTO.class);
                         trechoDTO.setIdCompanhia(trecho.getCompanhia().getIdCompanhia());

@@ -23,8 +23,8 @@ public class CompanhiaController implements CompanhiaDoc {
     private final CompanhiaService companhiaService;
 
     @GetMapping
-    public ResponseEntity<List<CompanhiaDTO>> list() throws RegraDeNegocioException {
-        return new ResponseEntity<>(companhiaService.lista(), OK);
+    public ResponseEntity<List<CompanhiaDTO>> getAll() throws RegraDeNegocioException {
+        return new ResponseEntity<>(companhiaService.getAll(), OK);
     }
 
     @GetMapping("/{idCompanhia}")
@@ -34,20 +34,20 @@ public class CompanhiaController implements CompanhiaDoc {
     }
 
     @PostMapping
-    public ResponseEntity<CompanhiaDTO> criar(@Valid @RequestBody CompanhiaCreateDTO companhiaDTO)
+    public ResponseEntity<CompanhiaDTO> create(@Valid @RequestBody CompanhiaCreateDTO companhiaDTO)
             throws RegraDeNegocioException {
-        return new ResponseEntity<>(companhiaService.criar(companhiaDTO), CREATED);
+        return new ResponseEntity<>(companhiaService.createCompanhia(companhiaDTO), CREATED);
     }
 
     @PutMapping("/{idCompanhia}")
-    public ResponseEntity<CompanhiaDTO> atualizar(@PathVariable("idCompanhia") Integer idCompanhia,
-                                       @Valid @RequestBody CompanhiaCreateDTO companhiaDTO)
+    public ResponseEntity<CompanhiaDTO> update(@PathVariable("idCompanhia") Integer idCompanhia,
+                                               @Valid @RequestBody CompanhiaCreateDTO companhiaDTO)
             throws RegraDeNegocioException {
         return new ResponseEntity<>(companhiaService.editar(idCompanhia, companhiaDTO), OK);
     }
 
     @DeleteMapping("/{idCompanhia}")
-    public ResponseEntity<Void> deletar(@PathVariable("idCompanhia") Integer idCompanhia)
+    public ResponseEntity<Void> delete(@PathVariable("idCompanhia") Integer idCompanhia)
             throws RegraDeNegocioException {
         companhiaService.desativar(idCompanhia);
         return ResponseEntity.noContent().build();

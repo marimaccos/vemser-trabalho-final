@@ -31,8 +31,8 @@ public class EmailService {
 
     public void sendEmail(String template, String email) throws RegraDeNegocioException {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
-        try {
 
+        try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 
             mimeMessageHelper.setFrom(from);
@@ -40,7 +40,8 @@ public class EmailService {
             mimeMessageHelper.setSubject("Javamos Decolar");
             mimeMessageHelper.setText(template, true);
 
-            emailSender.send(mimeMessageHelper.getMimeMessage());
+//            emailSender.send(mimeMessageHelper.getMimeMessage());
+
         } catch (MessagingException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Erro ao enviar e-mail.");
@@ -60,10 +61,10 @@ public class EmailService {
         dados.put("nome", venda.getComprador().getNome());
         dados.put("codigo", venda.getCodigo());
         dados.put("email", from);
+
         Template template = null;
 
         try {
-
             switch (acao) {
                 case "CRIAR":
                     template = fmConfiguration.getTemplate("venda-realizada-template.ftl");
@@ -87,6 +88,7 @@ public class EmailService {
             Template template = fmConfiguration.getTemplate("usuario-criado-template.ftl");
 
             return FreeMarkerTemplateUtils.processTemplateIntoString(template, dados);
+
         } catch (TemplateException | RuntimeException | IOException e) {
             throw new RegraDeNegocioException("Erro ao enviar e-mail.");
         }

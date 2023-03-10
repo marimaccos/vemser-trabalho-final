@@ -79,7 +79,6 @@ public class CompradorService {
                     .orElseThrow(() -> new RegraDeNegocioException("Comprador não encontrado!"));
 
             // Cria usuario e passa os dados para edição
-
             Usuario usuario = new Usuario(
                     comprador.getIdUsuario(),
                     compradorDTO.getLogin(),

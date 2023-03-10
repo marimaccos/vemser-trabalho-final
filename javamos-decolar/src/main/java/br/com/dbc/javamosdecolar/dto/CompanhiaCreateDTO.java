@@ -1,7 +1,5 @@
 package br.com.dbc.javamosdecolar.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -25,7 +23,7 @@ public class CompanhiaCreateDTO {
 
     @NotBlank
     @Email
-    @Schema(description = "Login de acesso", example = "companhia.aviao@gmail.com", required = true)
+    @Schema(description = "Login de acesso", example = "companhia.aviao@email.com", required = true)
     private String login;
 
     @NotBlank

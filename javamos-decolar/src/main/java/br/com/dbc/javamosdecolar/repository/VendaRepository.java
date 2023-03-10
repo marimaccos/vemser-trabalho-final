@@ -16,6 +16,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
     public Integer getProximoId(Connection connection) throws SQLException {
         try {
             String sql = "SELECT seq_venda.nextval mysequence from DUAL";
+
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
 
@@ -23,14 +24,16 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
                 return resultSet.getInt("mysequence");
             }
             return null;
+
         } catch (SQLException e) {
             throw new DatabaseException(e.getCause());
         }
     }
 
     @Override
-    public Venda adicionar(Venda venda) throws DatabaseException {
+    public Venda create(Venda venda) throws DatabaseException {
         Connection conexao = null;
+
         try {
             conexao = ConexaoBancoDeDados.getConnection();
 
@@ -42,7 +45,6 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
                     "VALUES(?, ?, ?, ?, ?, ?)";
 
             PreparedStatement preparedStatement = conexao.prepareStatement(sql);
-
 
             preparedStatement.setInt(1, venda.getIdVenda());
             preparedStatement.setObject(2, venda.getComprador().getIdComprador());
@@ -57,6 +59,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
 
         } catch (SQLException e) {
             throw new DatabaseException(e.getCause());
+
         } finally {
             try{
                 if (conexao != null) {
@@ -69,12 +72,13 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
     }
 
     @Override
-    public List<Venda> listar() throws DatabaseException {
+    public List<Venda> getAll() throws DatabaseException {
         List<Venda> vendas = new ArrayList<>();
         Connection conexao = null;
 
         try{
             conexao = ConexaoBancoDeDados.getConnection();
+
             Statement statement = conexao.createStatement();
 
             String sql = "SELECT * FROM VENDA";
@@ -90,8 +94,11 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
                 venda.setStatus((Status) resultSet.getObject("status"));
                 vendas.add(venda);
             }
+            return vendas;
+
         } catch (SQLException e) {
             throw new DatabaseException(e.getCause());
+
         } finally {
             try {
                 if (conexao != null) {
@@ -101,12 +108,12 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
                 e.printStackTrace();
             }
         }
-        return vendas;
     }
 
     @Override
-    public boolean editar(Integer id, Venda venda) throws DatabaseException {
+    public boolean update(Integer id, Venda venda) throws DatabaseException {
         Connection conexao = null;
+
         try {
             conexao = ConexaoBancoDeDados.getConnection();
 
@@ -131,6 +138,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
 
         } catch (SQLException e) {
             throw new DatabaseException(e.getCause());
+
         } finally {
             try {
                 if (conexao != null) {
@@ -143,8 +151,9 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
     }
 
     @Override
-    public boolean remover(Integer id) throws DatabaseException {
+    public boolean delete(Integer id) throws DatabaseException {
         Connection conexao = null;
+
         try{
             conexao = ConexaoBancoDeDados.getConnection();
 
@@ -159,6 +168,40 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
 
         } catch (SQLException e) {
             throw new DatabaseException(e.getCause());
+
+        } finally {
+            try {
+                if (conexao != null) {
+                    conexao.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean cancelarVenda(Integer idVenda) throws DatabaseException  {
+        Connection conexao = null;
+
+        try {
+            conexao = ConexaoBancoDeDados.getConnection();
+
+            StringBuilder sql = new StringBuilder();
+            sql.append("UPDATE VENDA SET ");
+            sql.append("status = ?");
+            sql.append("WHERE id_venda = ?");
+
+            PreparedStatement statement = conexao.prepareStatement(sql.toString());
+
+            statement.setString(1, Status.CANCELADO.name());
+            statement.setInt(2, idVenda);
+
+            int res = statement.executeUpdate();
+            return res > 0;
+
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getCause());
+
         } finally {
             try {
                 if (conexao != null) {
@@ -218,40 +261,10 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
         }
     }
 
-    public boolean cancelarVenda(Integer idVenda) throws DatabaseException  {
-        Connection conexao = null;
-        try {
-            conexao = ConexaoBancoDeDados.getConnection();
-
-            StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE VENDA SET ");
-            sql.append("status = ?");
-            sql.append("WHERE id_venda = ?");
-
-            PreparedStatement statement = conexao.prepareStatement(sql.toString());
-
-            statement.setString(1, Status.CANCELADO.name());
-            statement.setInt(2, idVenda);
-
-            int res = statement.executeUpdate();
-            return res > 0;
-
-        } catch (SQLException e) {
-            throw new DatabaseException(e.getCause());
-        } finally {
-            try {
-                if (conexao != null) {
-                    conexao.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public List<Venda> getVendasPorCompanhia(Integer idCompanhia) throws DatabaseException {
         List<Venda> vendas = new ArrayList<>();
         Connection conexao = null;
+
         try{
             conexao = ConexaoBancoDeDados.getConnection();
 
@@ -282,6 +295,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
 
         } catch (SQLException e) {
             throw new DatabaseException(e.getCause());
+
         } finally {
             try {
                 if (conexao != null) {
@@ -404,7 +418,6 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
         venda.setCodigo(resultSet.getString("codigo_venda"));
         venda.setData((resultSet.getTimestamp("data_venda").toLocalDateTime()));
 
-
         if (resultSet.getString("status").equals(Status.CANCELADO.name())) {
             venda.setStatus(Status.CANCELADO);
         } else if (resultSet.getString("status").equals(Status.CONCLUIDO.name())) {
@@ -443,7 +456,6 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
         venda.setCodigo(resultSet.getString("codigo_venda"));
         venda.setData((resultSet.getTimestamp("data_venda").toLocalDateTime()));
 
-
         if (resultSet.getString("status").equals(Status.CANCELADO.name())) {
             venda.setStatus(Status.CANCELADO);
         } else if (resultSet.getString("status").equals(Status.CONCLUIDO.name())) {
@@ -470,5 +482,4 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
 
         return venda;
     }
-
 }

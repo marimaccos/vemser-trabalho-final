@@ -26,7 +26,7 @@ public interface VendaDoc {
             }
     )
     @GetMapping("/{idComprador}/comprador")
-    ResponseEntity<List<VendaDTO>> listaHistoricoCompras(@PathVariable("idComprador") Integer id)
+    ResponseEntity<List<VendaDTO>> getByHistoricoCompras(@PathVariable("idComprador") Integer id)
             throws RegraDeNegocioException;
 
     @Operation(summary = "Historico de vendas da companhia", description = "Lista o historico de vendas da companhia")
@@ -39,7 +39,7 @@ public interface VendaDoc {
             }
     )
     @GetMapping("/{idCompanhia}/companhia")
-    ResponseEntity<List<VendaDTO>> listaHistoricoVendas(@PathVariable("idCompanhia") Integer id)
+    ResponseEntity<List<VendaDTO>> getByHistoricoVendas(@PathVariable("idCompanhia") Integer id)
             throws RegraDeNegocioException;
 
     @Operation(summary = "Pegar venda por código", description = "Pega uma venda pelo código")
@@ -52,7 +52,7 @@ public interface VendaDoc {
             }
     )
     @GetMapping()
-    ResponseEntity<VendaDTO> getPorCodigo(@RequestParam(name = "codigo") String uuid)
+    ResponseEntity<VendaDTO> getByCodigo(@RequestParam(name = "codigo") String uuid)
             throws RegraDeNegocioException;
 
     @Operation(summary = "Efetuar Venda", description = "Lista todas as companhias cadastradas")
@@ -65,7 +65,7 @@ public interface VendaDoc {
             }
     )
     @PostMapping
-    ResponseEntity<VendaDTO> criar(@RequestBody @Valid VendaCreateDTO vendaDTO) throws RegraDeNegocioException;
+    ResponseEntity<VendaDTO> create(@RequestBody @Valid VendaCreateDTO vendaDTO) throws RegraDeNegocioException;
 
     @Operation(summary = "Cancelar venda", description = "Cancela uma venda realizada")
     @ApiResponses(
@@ -77,5 +77,5 @@ public interface VendaDoc {
             }
     )
     @DeleteMapping("/{idVenda}/cancelar")
-    ResponseEntity<Void> cancelar(@PathVariable("idVenda") Integer idVenda) throws RegraDeNegocioException;
+    ResponseEntity<Void> delete(@PathVariable("idVenda") Integer idVenda) throws RegraDeNegocioException;
 }

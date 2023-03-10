@@ -115,7 +115,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
     }
 
     @Override
-    public Trecho adicionar(Trecho trecho) throws DatabaseException {
+    public Trecho create(Trecho trecho) throws DatabaseException {
         Connection connection = null;
 
         try {
@@ -154,7 +154,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
     }
 
     @Override
-    public boolean editar(Integer id, Trecho trecho) throws DatabaseException {
+    public boolean update(Integer id, Trecho trecho) throws DatabaseException {
         Connection connection = null;
 
         try {
@@ -191,7 +191,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
     }
 
     @Override
-    public boolean remover(Integer id) throws DatabaseException {
+    public boolean delete(Integer id) throws DatabaseException {
         Connection connection = null;
 
         try {
@@ -222,7 +222,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
     }
 
     @Override
-    public List<Trecho> listar() throws DatabaseException {
+    public List<Trecho> getAll() throws DatabaseException {
         List<Trecho> trechos = new ArrayList<>();
         Connection connection = null;
 

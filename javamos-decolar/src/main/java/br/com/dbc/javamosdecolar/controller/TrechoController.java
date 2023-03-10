@@ -25,7 +25,7 @@ public class TrechoController implements TrechoDoc {
     private final TrechoService trechoService;
 
     @GetMapping
-    public ResponseEntity<List<TrechoDTO>> list() throws RegraDeNegocioException {
+    public ResponseEntity<List<TrechoDTO>> getAll() throws RegraDeNegocioException {
         return new ResponseEntity<>(trechoService.lista(), OK);
     }
 
@@ -36,28 +36,27 @@ public class TrechoController implements TrechoDoc {
     }
 
     @GetMapping("/{idCompanhia}")
-    public ResponseEntity<List<TrechoDTO>> getPorCompanhia(@PathVariable("idCompanhia") Integer idCompanhia)
+    public ResponseEntity<List<TrechoDTO>> getByCompanhia(@PathVariable("idCompanhia") Integer idCompanhia)
             throws RegraDeNegocioException {
         return new ResponseEntity<>(trechoService.getTrechosPorCompanhia(idCompanhia), OK);
     }
 
     @PostMapping
-    public ResponseEntity<TrechoDTO> criar(@Valid @RequestBody TrechoCreateDTO trecho)
+    public ResponseEntity<TrechoDTO> create(@Valid @RequestBody TrechoCreateDTO trecho)
             throws RegraDeNegocioException {
         return new ResponseEntity<>(trechoService.criar(trecho), CREATED);
     }
 
     @PutMapping("/{idTrecho}")
-    public ResponseEntity<TrechoDTO> atualizar(@PathVariable("idTrecho") Integer idTrecho, @Valid @RequestBody TrechoCreateDTO trecho)
+    public ResponseEntity<TrechoDTO> update(@PathVariable("idTrecho") Integer idTrecho, @Valid @RequestBody TrechoCreateDTO trecho)
             throws RegraDeNegocioException {
         return new ResponseEntity<>(trechoService.editar(idTrecho, trecho), OK);
     }
 
     @DeleteMapping("/{idTrecho}")
-    public ResponseEntity<TrechoDTO> deletar(@PathVariable("idTrecho") Integer idTrecho)
+    public ResponseEntity<TrechoDTO> delete(@PathVariable("idTrecho") Integer idTrecho)
             throws RegraDeNegocioException {
         trechoService.deletar(idTrecho);
         return ResponseEntity.noContent().build();
     }
-
 }

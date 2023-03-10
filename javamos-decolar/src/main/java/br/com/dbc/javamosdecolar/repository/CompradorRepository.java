@@ -1,13 +1,7 @@
 package br.com.dbc.javamosdecolar.repository;
 
-import br.com.dbc.javamosdecolar.dto.CompanhiaCreateDTO;
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
-import br.com.dbc.javamosdecolar.exception.RegraDeNegocioException;
-import br.com.dbc.javamosdecolar.model.Companhia;
 import br.com.dbc.javamosdecolar.model.Comprador;
-
-import br.com.dbc.javamosdecolar.model.TipoUsuario;
-import br.com.dbc.javamosdecolar.model.Usuario;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;

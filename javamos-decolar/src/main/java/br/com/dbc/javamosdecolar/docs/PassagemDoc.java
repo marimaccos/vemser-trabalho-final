@@ -28,7 +28,7 @@ public interface PassagemDoc {
             }
     )
     @GetMapping("/new")
-    ResponseEntity<List<PassagemDTO>> listarUltimas() throws RegraDeNegocioException;
+    ResponseEntity<List<PassagemDTO>> getUltimasPassagens() throws RegraDeNegocioException;
 
     @Operation(summary = "Buscar passagem por data", description = "Lista as passagens por data")
     @ApiResponses(
@@ -40,8 +40,8 @@ public interface PassagemDoc {
             }
     )
     @GetMapping("/data")
-    ResponseEntity<List<PassagemDTO>> listarPorData(@RequestParam(value = "dataPartida", required = false) String dataPartida,
-                                                                 @RequestParam(value = "dataChegada", required = false) String dataChegada)
+    ResponseEntity<List<PassagemDTO>> getByData(@RequestParam(value = "dataPartida", required = false) String dataPartida,
+                                                @RequestParam(value = "dataChegada", required = false) String dataChegada)
             throws RegraDeNegocioException;
 
     @Operation(summary = "Buscar passagens por id da companhia", description = "Lista as passagens id da companhia")
@@ -54,7 +54,7 @@ public interface PassagemDoc {
             }
     )
     @GetMapping("/companhia")
-    ResponseEntity<List<PassagemDTO>> listarPorCompanhia(@RequestParam("nome") String nome) throws RegraDeNegocioException;
+    ResponseEntity<List<PassagemDTO>> getByCompanhia(@RequestParam("nome") String nome) throws RegraDeNegocioException;
 
     @Operation(summary = "Buscar passagem por valor", description = "Lista as passagens até o limite de valor selecionado")
     @ApiResponses(
@@ -66,7 +66,7 @@ public interface PassagemDoc {
             }
     )
     @GetMapping("/valor")
-    ResponseEntity<List<PassagemDTO>> listarPorValorMaximo(@RequestParam("max") BigDecimal valor) throws RegraDeNegocioException;
+    ResponseEntity<List<PassagemDTO>> getByValorMaximo(@RequestParam("max") BigDecimal valor) throws RegraDeNegocioException;
 
     @Operation(summary = "Buscar passagem por id", description = "Mostra os dados da passagem pelo id")
     @ApiResponses(
@@ -90,7 +90,7 @@ public interface PassagemDoc {
             }
     )
     @PostMapping
-    ResponseEntity<PassagemDTO> criar(@RequestBody @Valid PassagemCreateDTO passagemDTO)
+    ResponseEntity<PassagemDTO> create(@RequestBody @Valid PassagemCreateDTO passagemDTO)
             throws RegraDeNegocioException;
 
     @Operation(summary = "Editar passagem por id", description = "Edita os dados da passagem pelo id")
@@ -103,7 +103,7 @@ public interface PassagemDoc {
             }
     )
     @PutMapping("/{idPassagem}")
-    ResponseEntity<PassagemDTO> atualizar(@PathVariable("idPassagem") Integer id,
+    ResponseEntity<PassagemDTO> update(@PathVariable("idPassagem") Integer id,
                                        @RequestBody @Valid PassagemCreateDTO passagemDTO)
             throws RegraDeNegocioException;
 
@@ -117,5 +117,5 @@ public interface PassagemDoc {
             }
     )
     @DeleteMapping("/{idPassagem}")
-    ResponseEntity<Void> deletar(@PathVariable("idPassagem") Integer id) throws DatabaseException;
+    ResponseEntity<Void> delete(@PathVariable("idPassagem") Integer id) throws DatabaseException;
 }

@@ -20,9 +20,11 @@ public class UsuarioService {
             if (usuarioRepository.buscaUsuarioPeloLogin(usuario.getLogin()).isEmpty()) {
                 emailService.sendEmail(usuario);
                 return usuarioRepository.adicionar(usuario);
+
             } else {
                 throw new RegraDeNegocioException("Não foi possível concluir o cadastro.");
             }
+
         } catch (DatabaseException e) {
             e.printStackTrace();
             throw new RegraDeNegocioException("Aconteceu algum problema durante o cadastro");
@@ -33,11 +35,12 @@ public class UsuarioService {
         try {
             usuarioRepository.buscarUsuarioById(id)
                     .orElseThrow(() -> new RegraDeNegocioException("Usuário não encontrado!"));
-
             usuarioRepository.editarUsuario(id, usuario);
 
             usuario.setIdUsuario(id);
+
             return usuario;
+
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Ocorreu um problema durante a edição do cadastro.");
         }
@@ -47,8 +50,8 @@ public class UsuarioService {
         try {
             usuarioRepository.buscarUsuarioById(idUsuario)
                     .orElseThrow(() -> new RegraDeNegocioException("Usuário não encontrado!"));
-
             usuarioRepository.desativarUsuario(idUsuario);
+
         } catch (DatabaseException e) {
             throw new RegraDeNegocioException("Ocorreu um problema durante a edição do cadastro.");
         }

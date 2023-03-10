@@ -1,12 +1,10 @@
 package br.com.dbc.javamosdecolar.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.validation.constraints.Email;
@@ -28,7 +26,7 @@ public class CompradorCreateDTO {
 
     @NotBlank
     @Email
-    @Schema(description = "Login do comprador", example = "bruno.rodrigues@gmail.com", required = true)
+    @Schema(description = "Login do comprador", example = "bruno.rodrigues@email.com", required = true)
     private String login;
 
     @NotBlank

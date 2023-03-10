@@ -50,7 +50,7 @@ public class VendaService {
                 throw new RegraDeNegocioException("Companhia indisponível.");
             }
 
-            Venda vendaEfetuada = vendaRepository.adicionar(new Venda(codigo.toString(), passagem, comprador,
+            Venda vendaEfetuada = vendaRepository.create(new Venda(codigo.toString(), passagem, comprador,
                     companhia, LocalDateTime.now(), Status.CONCLUIDO));
 
             if(vendaEfetuada.equals(null)) {
