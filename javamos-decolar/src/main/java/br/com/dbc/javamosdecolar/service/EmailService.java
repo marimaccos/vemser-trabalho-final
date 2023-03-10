@@ -23,11 +23,10 @@ import java.util.Map;
 public class EmailService {
 
     private final Configuration fmConfiguration;
+    private final JavaMailSender emailSender;
 
     @Value("${spring.mail.username}")
     private String from;
-
-    private final JavaMailSender emailSender;
 
     public void sendEmail(String template, String email) throws RegraDeNegocioException {
         MimeMessage mimeMessage = emailSender.createMimeMessage();

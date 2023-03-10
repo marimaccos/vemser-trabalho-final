@@ -2,6 +2,7 @@ package br.com.dbc.javamosdecolar.repository;
 
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.model.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -11,7 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
 public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
+
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
+    
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         try {
@@ -35,7 +40,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
         Connection conexao = null;
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             Integer proximoId = this.getProximoId(conexao);
             venda.setIdVenda(proximoId);
@@ -77,7 +82,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
         Connection conexao = null;
 
         try{
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             Statement statement = conexao.createStatement();
 
@@ -115,7 +120,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
         Connection conexao = null;
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE VENDA SET ");
@@ -155,7 +160,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
         Connection conexao = null;
 
         try{
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             String sql = "DELETE FROM COMPANHIA WHERE id_venda = ?";
 
@@ -184,7 +189,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
         Connection conexao = null;
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE VENDA SET ");
@@ -218,7 +223,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
         Connection conexao = null;
 
         try{
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor, " +
                     "p.id_passagem,\n" +
@@ -266,7 +271,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
         Connection conexao = null;
 
         try{
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor, " +
                     "p.id_passagem,\n" +
@@ -312,7 +317,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor, " +
                     "p.id_passagem,\n" +
@@ -359,7 +364,7 @@ public class VendaRepository implements RepositoryCRUD<Venda, Integer> {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor, " +
                     "p.id_passagem,\n" +

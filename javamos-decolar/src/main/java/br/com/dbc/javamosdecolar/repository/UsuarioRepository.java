@@ -3,12 +3,17 @@ package br.com.dbc.javamosdecolar.repository;
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.model.TipoUsuario;
 import br.com.dbc.javamosdecolar.model.Usuario;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.Optional;
 @Repository
+@RequiredArgsConstructor
 public class UsuarioRepository{
+
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
+    
     public Integer getProximoId(Connection connection) throws SQLException {
         try {
             String sql = "SELECT seq_usuario.nextval mysequence from DUAL";
@@ -27,7 +32,7 @@ public class UsuarioRepository{
     public Usuario adicionar(Usuario usuario) throws DatabaseException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             Integer proximoId = this.getProximoId(conexao);
             usuario.setIdUsuario(proximoId);
@@ -65,7 +70,7 @@ public class UsuarioRepository{
     public boolean editarUsuario(Integer idUsuario, Usuario usuario) throws DatabaseException {
         Connection conexao = null;
         try{
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE USUARIO SET ");
@@ -98,7 +103,7 @@ public class UsuarioRepository{
         Usuario usuarioPesquisa = new Usuario();
         Connection conexao = null;
         try{
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT * FROM USUARIO WHERE login = LOWER(?)";
             PreparedStatement statement = conexao.prepareStatement(sql);
@@ -152,7 +157,7 @@ public class UsuarioRepository{
         Usuario usuarioPesquisa = new Usuario();
         Connection conexao = null;
         try{
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT ID_USUARIO, LOGIN, SENHA, NOME, TIPO, ATIVO FROM USUARIO u \n" +
                     "WHERE u.ID_USUARIO = ?";
@@ -204,7 +209,7 @@ public class UsuarioRepository{
     public boolean desativarUsuario(Integer id) throws DatabaseException {
         Connection conexao = null;
         try{
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE USUARIO SET ");

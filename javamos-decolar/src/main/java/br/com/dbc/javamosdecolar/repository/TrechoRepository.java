@@ -3,6 +3,7 @@ package br.com.dbc.javamosdecolar.repository;
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.model.Companhia;
 import br.com.dbc.javamosdecolar.model.Trecho;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -11,8 +12,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
 public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
 
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         try {
@@ -34,7 +37,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT t.id_trecho, t.origem, t.destino,\n" +
                     "c.id_companhia, c.nome_fantasia\n" +
@@ -75,7 +78,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT t.id_trecho, t.origem, t.destino,\n" +
                     "c.id_companhia, c.nome_fantasia\n" +
@@ -119,7 +122,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
 
             Integer proximoId = this.getProximoId(connection);
             trecho.setIdTrecho(proximoId);
@@ -158,7 +161,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE TRECHO SET ");
@@ -195,7 +198,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
 
             String sql = "DELETE FROM TRECHO WHERE id_trecho = ?";
 
@@ -227,7 +230,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
             Statement statement = connection.createStatement();
 
             String sql = "SELECT t.id_trecho, t.origem, t.destino,\n" +
@@ -264,7 +267,7 @@ public class TrechoRepository implements RepositoryCRUD<Trecho, Integer> {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT t.id_trecho, t.origem, t.destino,\n" +
                     "c.id_companhia, c.nome_fantasia\n" +

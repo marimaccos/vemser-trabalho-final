@@ -27,7 +27,7 @@ public class PassagemService {
     private final CompanhiaService companhiaService;
     private final ObjectMapper mapper;
 
-    public PassagemDTO criar(PassagemCreateDTO passagemDTO) throws RegraDeNegocioException {
+    public PassagemDTO create(PassagemCreateDTO passagemDTO) throws RegraDeNegocioException {
         try {
 
             LocalDateTime dataPartida = passagemDTO.getDataPartida();
@@ -59,21 +59,7 @@ public class PassagemService {
         }
     }
 
-    public PassagemDTO getById(Integer id) throws RegraDeNegocioException {
-        try {
-            Passagem passagem = passagemRepository.getPassagemPeloId(id)
-                    .orElseThrow(() -> new RegraDeNegocioException("Passagem não encontrada!"));
-            PassagemDTO passagemDTO = mapper.convertValue(passagem, PassagemDTO.class);
-            passagemDTO.setIdTrecho(passagem.getTrecho().getIdTrecho());
-
-            return passagemDTO;
-
-        } catch (DatabaseException e) {
-            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
-        }
-    }
-
-    public PassagemDTO editar(Integer passagemId, PassagemCreateDTO passagemDTO) throws RegraDeNegocioException {
+    public PassagemDTO update(Integer passagemId, PassagemCreateDTO passagemDTO) throws RegraDeNegocioException {
         try {
             Passagem passagemEncontrada = passagemRepository.getPassagemPeloId(passagemId)
                     .orElseThrow(() -> new RegraDeNegocioException("Passagem inválida!"));
@@ -115,6 +101,20 @@ public class PassagemService {
 
     public void deletar(Integer passagemId) throws DatabaseException {
         passagemRepository.remover(passagemId);
+    }
+
+    public PassagemDTO getById(Integer id) throws RegraDeNegocioException {
+        try {
+            Passagem passagem = passagemRepository.getPassagemPeloId(id)
+                    .orElseThrow(() -> new RegraDeNegocioException("Passagem não encontrada!"));
+            PassagemDTO passagemDTO = mapper.convertValue(passagem, PassagemDTO.class);
+            passagemDTO.setIdTrecho(passagem.getTrecho().getIdTrecho());
+
+            return passagemDTO;
+
+        } catch (DatabaseException e) {
+            throw new RegraDeNegocioException("Aconteceu algum problema durante a listagem.");
+        }
     }
 
     public List<PassagemDTO> listarPorData(String dataChegada, String dataPartida) throws RegraDeNegocioException {

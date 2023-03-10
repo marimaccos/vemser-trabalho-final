@@ -25,7 +25,7 @@ public class CompradorController implements CompradorDoc {
 
     @GetMapping
     public ResponseEntity<List<CompradorDTO>> getAll() throws RegraDeNegocioException {
-        return new ResponseEntity<>(compradorService.lista(), OK);
+        return new ResponseEntity<>(compradorService.getAll(), OK);
     }
 
     @GetMapping("/{idComprador}")
@@ -37,19 +37,19 @@ public class CompradorController implements CompradorDoc {
     @PostMapping
     public ResponseEntity<CompradorDTO> create(@Valid @RequestBody CompradorCreateDTO comprador)
                                                 throws RegraDeNegocioException{
-        return new ResponseEntity<>(compradorService.criar(comprador), CREATED);
+        return new ResponseEntity<>(compradorService.create(comprador), CREATED);
     }
 
     @PutMapping("/{idComprador}")
     public ResponseEntity<CompradorDTO> update(@PathVariable("idComprador") Integer idComprador,
                                                @Valid @RequestBody CompradorCreateDTO comprador)
                                                 throws RegraDeNegocioException {
-        return new ResponseEntity<>(compradorService.editar(idComprador, comprador), OK);
+        return new ResponseEntity<>(compradorService.update(idComprador, comprador), OK);
     }
     
     @DeleteMapping("/{idComprador}")
     public ResponseEntity<Void> delete(@PathVariable("idComprador") Integer idComprador) throws RegraDeNegocioException {
-        compradorService.desativar(idComprador);
+        compradorService.delete(idComprador);
         return ResponseEntity.noContent().build();
     }
 

@@ -59,14 +59,14 @@ public class PassagemController implements PassagemDoc {
     @PostMapping
     public ResponseEntity<PassagemDTO> create(@RequestBody @Valid PassagemCreateDTO passagemDTO)
             throws RegraDeNegocioException {
-        return new ResponseEntity<>(this.passagemService.criar(passagemDTO), CREATED);
+        return new ResponseEntity<>(this.passagemService.create(passagemDTO), CREATED);
     }
 
     @PutMapping("/{idPassagem}")
     public ResponseEntity<PassagemDTO> update(@PathVariable("idPassagem") Integer id,
                                               @RequestBody @Valid PassagemCreateDTO passagemDTO)
             throws RegraDeNegocioException {
-        return new ResponseEntity<>(this.passagemService.editar(id, passagemDTO), OK);
+        return new ResponseEntity<>(this.passagemService.update(id, passagemDTO), OK);
     }
 
     @DeleteMapping("/{idPassagem}")

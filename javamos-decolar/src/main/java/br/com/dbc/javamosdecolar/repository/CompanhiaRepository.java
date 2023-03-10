@@ -2,6 +2,7 @@ package br.com.dbc.javamosdecolar.repository;
 
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.model.Companhia;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -9,8 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 @Repository
+@RequiredArgsConstructor
 public class CompanhiaRepository {
 
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
     public Integer getProximoId(Connection connection) throws SQLException {
         try {
             String sql = "SELECT seq_companhia.nextval mysequence from DUAL";
@@ -31,7 +34,7 @@ public class CompanhiaRepository {
         Connection conexao = null;
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
             Statement statement = conexao.createStatement();
 
             String sql = "SELECT c.ID_COMPANHIA, c.CNPJ, c.NOME_FANTASIA, c.ID_USUARIO, u.ATIVO, " +
@@ -67,7 +70,7 @@ public class CompanhiaRepository {
         Connection conexao = null;
 
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             Integer proximoId = this.getProximoId(conexao);
             companhia.setIdCompanhia(proximoId);
@@ -102,7 +105,7 @@ public class CompanhiaRepository {
     public boolean update(Integer idCompanhia, Companhia companhia) throws DatabaseException {
         Connection conexao = null;
         try {
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
 
@@ -135,7 +138,7 @@ public class CompanhiaRepository {
     public Optional<Companhia> getByNome(String nome) throws DatabaseException {
         Connection conexao = null;
         try{
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT c.ID_COMPANHIA, c.CNPJ, c.NOME_FANTASIA, c.ID_USUARIO, u.LOGIN, u.ATIVO," +
                     " u.SENHA, u.NOME \n" +
@@ -171,10 +174,10 @@ public class CompanhiaRepository {
         }
     }
 
-    public Optional<Companhia> getCompanhiaPorId(Integer id) throws DatabaseException {
+    public Optional<Companhia> getById(Integer id) throws DatabaseException {
         Connection conexao = null;
         try{
-            conexao = ConexaoBancoDeDados.getConnection();
+            conexao = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT c.ID_COMPANHIA, c.CNPJ, c.NOME_FANTASIA, c.ID_USUARIO, u.LOGIN, u.SENHA, u.NOME, u.ATIVO\n" +
                     "FROM COMPANHIA c \n" +

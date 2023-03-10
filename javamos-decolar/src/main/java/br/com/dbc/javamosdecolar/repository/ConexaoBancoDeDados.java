@@ -1,28 +1,43 @@
 package br.com.dbc.javamosdecolar.repository;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+@Service
 public class ConexaoBancoDeDados {
-    private static final String SERVER = "vemser-dbc.dbccompany.com.br";
-    private static final String PORT = "25000";
-    private static final String DATABASE = "xe";
+
+    @Value("${db.oracle.server}")
+    private String server;
+
+    @Value("${db.oracle.port}")
+    private String port;
+   
+    @Value("${db.oracle.database}")
+    private String database;
 
     // Configuração dos parâmetros de autenticação
-    private static final String USER = "AVIACAO";
-    private static final String PASS = "YKvrXrIlwWsz";
-    private static final String SCHEMA = "AVIACAO";
+    @Value("${db.oracle.schema}")
+    private String schema;
 
-    public static Connection getConnection() throws SQLException {
+    @Value("${db.oracle.user}")
+    private String user;
+
+    @Value("${db.oracle.password}")
+    private String password;
+
+    public Connection getConnection() throws SQLException {
         // Formatação do Oracle
-        String url = "jdbc:oracle:thin:@" + SERVER + ":" + PORT + ":" + DATABASE;
+        String url = "jdbc:oracle:thin:@" + server + ":" + port + ":" + database;
 
         // Abre-se a conexão com o Banco de Dados
-        Connection connection = DriverManager.getConnection(url, USER, PASS);
+        Connection connection = DriverManager.getConnection(url, user, password);
 
         // Seleciona o schema
-        connection.createStatement().execute("alter session set current_schema=" + SCHEMA);
+        connection.createStatement().execute("alter session set current_schema=" + schema);
 
         return connection;
     }

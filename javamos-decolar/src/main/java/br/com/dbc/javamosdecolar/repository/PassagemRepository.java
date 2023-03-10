@@ -4,6 +4,7 @@ import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.model.Companhia;
 import br.com.dbc.javamosdecolar.model.Passagem;
 import br.com.dbc.javamosdecolar.model.Trecho;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -14,7 +15,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
 public class PassagemRepository {
+
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
     public Integer getProximoId(Connection connection) throws SQLException {
         try {
             String sql = "SELECT seq_passagem.nextval mysequence from DUAL";
@@ -35,7 +39,7 @@ public class PassagemRepository {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
 
             Integer proximoId = this.getProximoId(connection);
             passagem.setIdPassagem(proximoId);
@@ -76,7 +80,7 @@ public class PassagemRepository {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
             Statement statement = connection.createStatement();
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
@@ -113,7 +117,7 @@ public class PassagemRepository {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE PASSAGEM SET ");
@@ -160,7 +164,7 @@ public class PassagemRepository {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
 
             String sql = "DELETE FROM PASSAGEM WHERE id_passagem = ?";
 
@@ -191,7 +195,7 @@ public class PassagemRepository {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "t.id_trecho, t.origem, t.destino,\n" +
@@ -235,7 +239,7 @@ public class PassagemRepository {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "t.id_trecho, t.origem, t.destino,\n" +
@@ -277,7 +281,7 @@ public class PassagemRepository {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "t.id_trecho, t.origem, t.destino,\n" +
@@ -319,7 +323,7 @@ public class PassagemRepository {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "t.id_trecho, t.origem, t.destino,\n" +
@@ -361,7 +365,7 @@ public class PassagemRepository {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT p.id_passagem, p.codigo, p.data_partida, p.data_chegada, p.disponivel, p.valor,\n" +
                     "t.id_trecho, t.origem, t.destino,\n" +
@@ -403,7 +407,7 @@ public class PassagemRepository {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
             Statement statement = connection.createStatement();
 
             // Seleciona as 5 últimas passagens adicionadas

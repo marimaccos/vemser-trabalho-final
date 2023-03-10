@@ -2,6 +2,7 @@ package br.com.dbc.javamosdecolar.repository;
 
 import br.com.dbc.javamosdecolar.exception.DatabaseException;
 import br.com.dbc.javamosdecolar.model.Comprador;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -10,8 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
 public class CompradorRepository {
 
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
     public Integer getProximoId(Connection connection) throws DatabaseException {
         try {
             String sql = "SELECT seq_comprador.nextval mysequence from DUAL";
@@ -52,7 +55,7 @@ public class CompradorRepository {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT c.ID_COMPRADOR, c.CPF, c.ID_USUARIO, u.LOGIN, u.SENHA, u.NOME, u.ATIVO \n" +
                     "FROM COMPRADOR c \n" +
@@ -90,7 +93,7 @@ public class CompradorRepository {
     public Comprador adicionar(Comprador comprador) throws DatabaseException {
         Connection connection = null;
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
 
             Integer proximoId = this.getProximoId(connection);
             comprador.setIdComprador(proximoId);
@@ -128,7 +131,7 @@ public class CompradorRepository {
         Connection connection = null;
 
         try {
-            connection = ConexaoBancoDeDados.getConnection();
+            connection = conexaoBancoDeDados.getConnection();
             Statement statement = connection.createStatement();
 
             String sql = "SELECT c.ID_COMPRADOR, c.CPF, c.ID_USUARIO, u.LOGIN, u.SENHA, u.NOME, u.ATIVO \n" +
