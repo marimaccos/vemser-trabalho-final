@@ -49,8 +49,11 @@ public class CompradorService {
             Comprador comprador = objectMapper.convertValue(compradorDTO, Comprador.class);
             comprador.setIdUsuario(usuarioCriado.getIdUsuario());
 
-            Comprador compradorNovo= compradorRepository.adicionar(comprador);
-            return objectMapper.convertValue(compradorNovo, CompradorDTO.class);
+            CompradorDTO compradorCriado = objectMapper.convertValue(compradorRepository.adicionar(comprador),
+                    CompradorDTO.class);
+            compradorCriado.setAtivo(usuarioCriado.isAtivo());
+
+            return compradorCriado;
 
         } catch (DatabaseException e) {
             e.printStackTrace();

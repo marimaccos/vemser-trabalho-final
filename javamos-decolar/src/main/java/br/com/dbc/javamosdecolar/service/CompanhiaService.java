@@ -48,8 +48,11 @@ public class CompanhiaService {
             Companhia companhia = objectMapper.convertValue(companhiaDTO, Companhia.class);
             companhia.setIdUsuario(usuarioCriado.getIdUsuario());
 
-            Companhia companhiaNova = companhiaRepository.create(companhia);
-            return objectMapper.convertValue(companhiaNova, CompanhiaDTO.class);
+            CompanhiaDTO companhiaCriada = objectMapper.convertValue(companhiaRepository.create(companhia),
+                    CompanhiaDTO.class);
+            companhiaCriada.setAtivo(usuarioCriado.isAtivo());
+
+            return companhiaCriada;
 
         } catch (DatabaseException e) {
             e.printStackTrace();
@@ -77,6 +80,7 @@ public class CompanhiaService {
             if(companhiaRepository.update(id, companhiaEditada)) {
                 companhiaEditada.setIdCompanhia(id);
                 companhiaEditada.setAtivo(companhia.isAtivo());
+
                 return objectMapper.convertValue(companhiaEditada, CompanhiaDTO.class);
 
             } else {
