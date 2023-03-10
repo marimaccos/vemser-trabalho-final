@@ -31,7 +31,7 @@ public class ConexaoBancoDeDados {
 
     public Connection getConnection() throws SQLException {
         // Formatação do Oracle
-        String url = "jdbc:oracle:thin:@" + server + ":" + port + ":" + database;
+        String url = "jdbc:oracle:thin:@" + server + ":" + port + ":" + database + "?serverTimezone=UTC" ;
 
         // Abre-se a conexão com o Banco de Dados
         Connection connection = DriverManager.getConnection(url, user, password);
